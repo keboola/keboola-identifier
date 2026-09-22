@@ -74,8 +74,11 @@ where applicable, the offending segment.
 ```php
 use Keboola\Identifier\Kid;
 
-$kid = Kid::create('kbc-eu-central-1', ['p' => '9876', 'config' => 'my config']);
-echo $kid; // KID:kbc-eu-central-1:p-9876:config-my%20config
+$kid = Kid::fromString('KID:kbc-eu-central-1:p-9876:config-my%20config');
+
+echo $kid->stack();   // kbc-eu-central-1
+echo $kid->project(); // 9876
+echo $kid->get('config'); // my config
 ```
 
 ### TypeScript
@@ -83,8 +86,11 @@ echo $kid; // KID:kbc-eu-central-1:p-9876:config-my%20config
 ```ts
 import {Kid} from '@keboola/identifier';
 
-const kid = Kid.create('kbc-eu-central-1', {p: '9876', config: 'my config'});
-console.log(kid.toString());
+const kid = Kid.fromString('KID:kbc-eu-central-1:p-9876:config-my%20config');
+
+console.log(kid.stack());       // kbc-eu-central-1
+console.log(kid.project());     // 9876
+console.log(kid.get('config')); // my config
 ```
 
 ### Python
@@ -92,16 +98,24 @@ console.log(kid.toString());
 ```python
 from keboola_identifier import Kid
 
-kid = Kid.create("kbc-eu-central-1", {"p": "9876", "config": "my config"})
-print(kid)
+kid = Kid.from_string("KID:kbc-eu-central-1:p-9876:config-my%20config")
+
+print(kid.stack)         # kbc-eu-central-1
+print(kid.project)       # 9876
+print(kid.get("config")) # my config
 ```
 
 ### Go
 
 ```go
-identifier, err := kid.New("kbc-eu-central-1", map[string]string{
-    "p": "9876", "config": "my config",
-})
+identifier, err := kid.FromString("KID:kbc-eu-central-1:p-9876:config-my%20config")
+if err != nil {
+    // handle invalid KID
+}
+
+stack := identifier.Stack()          // kbc-eu-central-1
+project, _ := identifier.Project()   // 9876
+config, _ := identifier.Get("config") // my config
 ```
 
 Parsing encoded text and creating a KID from decoded values are intentionally
