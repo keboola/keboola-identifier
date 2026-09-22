@@ -21,10 +21,7 @@ Implementation is independently written from the specification and test vectors.
 |---|---|
 | [SPEC.md](SPEC.md) | Normative KID 1.0 grammar and API |
 | [spec/entities.json](spec/entities.json) | Open entity catalog |
-| [spec/test-vectors.json](spec/test-vectors.json) | Shared normative cases plus regressions |
-| [spec/generate_vectors.py](spec/generate_vectors.py) | Deterministic vector generator |
-| [spec/check_vectors.py](spec/check_vectors.py) | Regeneration and migrated-case preservation check |
-| [spec/snapshot_cases.py](spec/snapshot_cases.py) | Migrate historical fixture names and serialization to the current draft |
+| [spec/test-vectors.json](spec/test-vectors.json) | Committed shared test data, including regressions |
 | [php/](php/) | Composer package, examples and tests |
 | [handoff/pr1-reimplementation/](handoff/pr1-reimplementation/PROMPT.md) | Frozen task and source materials |
 | [.github/workflows/php.yml](.github/workflows/php.yml) | PHP 8.2–8.5 and shared-vector CI |
@@ -77,25 +74,12 @@ data providers. `SharedVectorsTest` loads the committed JSON vectors directly;
 ASCII encoding, error precedence, immutability, ordering and literal-star equality.
 The committed Composer lockfile pins development dependencies for CI.
 
-No generation or Python execution happens during PHP tests. The Python tools below
-only maintain shared fixtures when the specification changes and verify them in CI.
-
-From the repository root:
-
-```bash
-python3 spec/generate_vectors.py
-python3 spec/check_vectors.py
-```
-
-The check fails if committed vectors differ from regenerated output or migrated
-snapshot cases were changed. The generator retains every historical case with entity
-names and expected canonical order updated; raw values and stack names are not rewritten.
+No generation or Python execution happens anywhere in this workflow. PHP tests read
+the committed JSON vectors directly; PHP-specific regressions live in `KidTest`
+providers. There are no fixture generator scripts to run.
 Added regressions preserve U+FEFF (including a value
 consisting only of U+FEFF), control characters and open entity `constructor`, and
 exercise trailing line terminators and the distinction between input/output limits.
-Boundary cases use `€` for three-byte UTF-8 and generic entities for opaque values.
-Additional cases exercise all four named entities and the 2048-byte boundary with
-their longer prefixes. Python 3.10+ is required for the generator and check script.
 
 ## Producer conventions and scope
 

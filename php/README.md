@@ -169,8 +169,9 @@ composer archive --format=tar --dir=/path/to/output
   order permutations. It deliberately uses PHP's default coercive mode to verify
   that non-string input is rejected even without `strict_types`.
 
-The JSON is committed test data, not generated during a PHP test run. Python is
-only needed to regenerate or verify shared vectors after specification changes.
+The JSON is committed static test data. There are no generator scripts and no
+Python involvement: PHPUnit reads the file directly, and new PHP-specific cases
+belong in `KidTest` data providers.
 PHPUnit is a development-only dependency; runtime dependencies are unchanged.
 The committed `composer.lock` makes development and CI installs reproducible.
 
