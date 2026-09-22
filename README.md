@@ -19,8 +19,7 @@ Implementation is independently written from the specification and test vectors.
 
 | Path | Contents |
 |---|---|
-| [SPEC.md](SPEC.md) | Normative KID 1.0 grammar and API |
-| [spec/entities.json](spec/entities.json) | Open entity catalog |
+| [SPEC.md](SPEC.md) | Normative KID 1.0 grammar, API and entity catalog (§4.3) |
 | [spec/test-vectors.json](spec/test-vectors.json) | Committed shared test data, including regressions |
 | [php/](php/) | Composer package, examples and tests |
 | [handoff/pr1-reimplementation/](handoff/pr1-reimplementation/PROMPT.md) | Frozen task and source materials |

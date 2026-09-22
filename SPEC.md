@@ -61,9 +61,9 @@ identifier. One canonical stack identifier for both, or a mapping table, is to b
 
 - Entity regex: `^[a-z][a-z0-9]*$`. Lowercase, no hyphen, no underscore.
 - The catalog of entities is **open**: an unknown entity passes validation and its value is
-  treated as an opaque string. Known entities are registered in this repository
-  (`spec/entities.json`) and gain typed accessors and value constraints; adding an entity
-  to the catalog is a pull request here, it is not required for validation to pass.
+  treated as an opaque string. Known entities are listed in §4.3 below and gain
+  typed accessors and value constraints; adding an entity to the catalog is a
+  pull request amending that table, it is not required for validation to pass.
 - No aliases: one object kind has exactly one registered entity name. Unknown names
   remain opaque entities; they are never translated to known names or read by typed accessors.
 - Combinations are not interpreted. `project-1:user-5` is syntactically valid; what it means is
