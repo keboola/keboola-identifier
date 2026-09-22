@@ -13,8 +13,7 @@ This reimplementation currently delivers the [PHP package](php/README.md)
 
 The current contract uses `maintainer`, `org`, `project` and `branch`, with no
 entity-specific ordering priority. This is an
-intentional draft revision of PR #1 commit `1f6eed74c198460f8160daa425b6e3e680a88a06`;
-the original handoff materials are preserved verbatim as historical reference.
+intentional draft revision of PR #1 commit `1f6eed74c198460f8160daa425b6e3e680a88a06`.
 Implementation is independently written from the specification and test vectors.
 
 | Path | Contents |
@@ -22,8 +21,7 @@ Implementation is independently written from the specification and test vectors.
 | [SPEC.md](SPEC.md) | Normative KID 1.0 grammar, API and entity catalog (§4.3) |
 | [spec/test-vectors.json](spec/test-vectors.json) | Committed shared test data, including regressions |
 | [php/](php/) | Composer package, examples and tests |
-| [handoff/pr1-reimplementation/](handoff/pr1-reimplementation/PROMPT.md) | Frozen task and source materials |
-| [.github/workflows/php.yml](.github/workflows/php.yml) | PHP 8.2–8.5 and shared-vector CI |
+| [.github/workflows/php.yml](.github/workflows/php.yml) | PHP 8.3–8.5 CI |
 
 ## Format at a glance
 

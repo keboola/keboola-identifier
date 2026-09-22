@@ -6,9 +6,8 @@ part of this specification; an implementation that disagrees with a vector is wr
 
 This draft intentionally supersedes the entity naming and special head ordering
 in PR #1: the hierarchy entities are `maintainer`, `org`, `project`, `branch`, with
-no ordering priority over any other entity. The original snapshot is
-preserved in `handoff/pr1-reimplementation/` for historical reference, not as the
-current naming contract. No automatic conversion or aliasing of old names occurs.
+no ordering priority over any other entity. No automatic conversion or aliasing
+of old names occurs.
 
 ## 1. Purpose
 
