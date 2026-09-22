@@ -170,18 +170,19 @@ V.append(valid(kid("b-*", "p-9876", "b2-x", "a-1"), kid("p-9876", "b-*", "a-1", 
 v255 = "a" * 255
 V.append(valid(kid("p-9876", "config-" + v255), kid("p-9876", "config-" + v255), STACK,
                {"p": "9876", "config": v255}, {"p": "9876", "config": v255}, note="raw value at 255 bytes"))
-v85 = "ř" * 85  # 85 * 3 bytes = 255 raw bytes -> 765 encoded
+v85 = "€" * 85  # 85 * 3 bytes = 255 raw bytes -> 765 encoded
 V.append(valid(kid("p-9876", "config-" + enc(v85)), kid("p-9876", "config-" + enc(v85)), STACK,
                {"p": "9876", "config": enc(v85)}, {"p": "9876", "config": v85},
                note="255 raw bytes of multibyte text = 765 encoded bytes; the cap is on raw bytes"))
 head = kid(stack="s")  # "KID:s" = 5 bytes
-segs = [f"{e}-{'a' * 255}" for e in "abcdefg"]  # 7 * (1 + 2 + 255) = 1806
+boundary_entities = "acdefgh"  # Avoid b: it is the constrained branch entity.
+segs = [f"{e}-{'a' * 255}" for e in boundary_entities]  # 7 * (1 + 2 + 255) = 1806
 total_so_far = len(head) + sum(1 + len(s) for s in segs)
 tail_len = 2048 - total_so_far - len(":z-")
 k2048 = ":".join([head, *segs, "z-" + "a" * tail_len])
 assert len(k2048.encode()) == 2048, len(k2048.encode())
-V.append(valid(k2048, k2048, "s", {**{e: "a" * 255 for e in "abcdefg"}, "z": "a" * tail_len},
-                {**{e: "a" * 255 for e in "abcdefg"}, "z": "a" * tail_len}, note="exactly 2048 bytes"))
+V.append(valid(k2048, k2048, "s", {**{e: "a" * 255 for e in boundary_entities}, "z": "a" * tail_len},
+                {**{e: "a" * 255 for e in boundary_entities}, "z": "a" * tail_len}, note="exactly 2048 bytes"))
 
 # ---------------------------------------------------------------- invalid
 I.append(invalid("kid:kbc-eu-central-1", "bad_prefix", note="prefix is case-sensitive"))
@@ -246,7 +247,7 @@ I.append(invalid("KID:s:p-1:config-%ED%A0%80", "bad_utf8", "config-%ED%A0%80", n
 I.append(invalid("KID:s:p-1:config-%C0%AF", "bad_utf8", "config-%C0%AF", note="overlong encoding of /"))
 I.append(invalid("KID:s:p-1:config-%F4%90%80%80", "bad_utf8", "config-%F4%90%80%80", note="above U+10FFFF"))
 I.append(invalid("KID:s:p-1:config-" + "a" * 256, "too_long", "config-" + "a" * 256, note="raw value 256 bytes; segment set"))
-v86 = "ř" * 86  # 258 raw bytes
+v86 = "€" * 86  # 258 raw bytes
 I.append(invalid("KID:s:p-1:config-" + enc(v86), "too_long", "config-" + enc(v86), note="86 three-byte chars = 258 raw bytes"))
 k2049 = k2048 + "a"
 I.append(invalid(k2049, "too_long", None, note="2049 bytes; whole-KID limit, no segment"))
@@ -308,8 +309,8 @@ CI.append(create_invalid(STACK, {"Bucket": "x"}, "bad_segment", "Bucket-x"))
 CI.append(create_invalid(STACK, {"bad-ent": "x"}, "bad_segment", "bad-ent-x"))
 CI.append(create_invalid(STACK, {"": "x"}, "bad_segment", "-x"))
 CI.append(create_invalid(STACK, {"config": "a" * 256}, "too_long", "config-" + "a" * 256, note="raw 256 bytes"))
-CI.append(create_invalid(STACK, {"config": "ř" * 86}, "too_long", "config-" + "ř" * 86, note="258 raw bytes; segment carries the raw value"))
-CI.append(create_invalid("s", {**{e: "a" * 255 for e in "abcdefg"}, "z": "a" * (tail_len + 1)}, "too_long", None,
+CI.append(create_invalid(STACK, {"config": v86}, "too_long", "config-" + v86, note="258 raw bytes; segment carries the raw value"))
+CI.append(create_invalid("s", {**{e: "a" * 255 for e in boundary_entities}, "z": "a" * (tail_len + 1)}, "too_long", None,
                          note="canonical output would be 2049 bytes"))
 CI.append(create_invalid(STACK, {"p": 9876}, "bad_value", None, note="non-string value is rejected, not coerced; segment not applicable",
                          skip=["go"]))
