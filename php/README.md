@@ -152,10 +152,8 @@ From `php/` in a full repository checkout:
 ```bash
 composer install
 composer validate --strict
-composer lint
 composer test
 composer test -- --filter testInvalidEntryPoint
-composer test-package
 php examples/usage.php
 composer archive --format=tar --dir=/path/to/output
 ```
@@ -168,17 +166,14 @@ composer archive --format=tar --dir=/path/to/output
   failures identify the vector and, for errors, the public entry point.
 - `tests/KidTest.php` defines PHP-specific data providers and regression tests,
   including non-string inputs, invalid byte strings, all ASCII bytes and entity
-  order permutations.
+  order permutations. It deliberately uses PHP's default coercive mode to verify
+  that non-string input is rejected even without `strict_types`.
 
 The JSON is committed test data, not generated during a PHP test run. Python is
 only needed to regenerate or verify shared vectors after specification changes.
 PHPUnit is a development-only dependency; runtime dependencies are unchanged.
 The committed `composer.lock` makes development and CI installs reproducible.
 
-`test-package` builds an archive, verifies
-its contents and installs the extracted package into an isolated Composer consumer
-to exercise the public autoloaded API. Temporary files are removed afterwards.
-It requires Composer on PATH and PHP's Phar extension (development only).
 Development tests, PHPUnit configuration/cache, lockfile and vendor files are
 excluded from archives.
 

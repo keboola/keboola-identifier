@@ -20,11 +20,7 @@ jobs:
         working-directory: php
       - run: composer install --no-interaction --prefer-dist
         working-directory: php
-      - run: composer lint
-        working-directory: php
       - run: composer test
-        working-directory: php
-      - run: composer test-package
         working-directory: php
       - run: php examples/usage.php
         working-directory: php

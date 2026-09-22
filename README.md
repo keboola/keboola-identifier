@@ -67,9 +67,7 @@ From `php/`:
 ```bash
 composer install
 composer validate --strict
-composer lint
 composer test
-composer test-package
 php examples/usage.php
 ```
 

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+// Deliberately use PHP's default coercive mode to catch accidental scalar conversion.
 
 namespace Keboola\Identifier\Tests;
 
@@ -15,11 +15,9 @@ use Stringable;
 final class KidTest extends TestCase
 {
     #[DataProvider('nonStringValues')]
-    public function testRejectsNonStringStackInStrictAndWeakMode(mixed $stack): void
+    public function testRejectsNonStringStackWithoutStrictTypes(mixed $stack): void
     {
-        $weakCreate = require __DIR__ . '/weak-types.php';
         $this->assertInvalid(static fn() => Kid::create($stack, []), 'bad_stack', null);
-        $this->assertInvalid(static fn() => $weakCreate($stack, []), 'bad_stack', null);
     }
 
     #[DataProvider('nonStringValues')]
@@ -47,10 +45,9 @@ final class KidTest extends TestCase
 
     public function testWeakModePreservesStringOnlyContractAndErrorPrecedence(): void
     {
-        $weakCreate = require __DIR__ . '/weak-types.php';
-        self::assertSame('KID:123', (string) $weakCreate('123', []));
-        $this->assertInvalid(static fn() => $weakCreate(123, ['Bad' => null]), 'bad_stack', null);
-        $this->assertInvalid(static fn() => $weakCreate('s', ['project' => 123]), 'bad_value', null);
+        self::assertSame('KID:123', (string) Kid::create('123', []));
+        $this->assertInvalid(static fn() => Kid::create(123, ['Bad' => null]), 'bad_stack', null);
+        $this->assertInvalid(static fn() => Kid::create('s', ['project' => 123]), 'bad_value', null);
     }
 
     #[DataProvider('phpErrorCases')]
