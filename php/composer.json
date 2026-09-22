@@ -4,11 +4,12 @@
     "type": "library",
     "license": "proprietary",
     "require": {"php": "^8.2", "ext-pcre": "*"},
+    "require-dev": {"phpunit/phpunit": "^11.5"},
     "autoload": {"psr-4": {"Keboola\\Identifier\\": "src/"}},
     "scripts": {
-        "test": "@php tests/run.php",
+        "test": "phpunit",
         "lint": "@php tests/lint.php",
         "test-package": "@php tests/package.php"
     },
-    "archive": {"exclude": ["/tests", "/vendor", "/composer.lock"]}
+    "archive": {"exclude": ["/tests", "/vendor", "/composer.lock", "/phpunit.xml", "/.phpunit.cache"]}
 }

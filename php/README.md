@@ -154,16 +154,33 @@ composer install
 composer validate --strict
 composer lint
 composer test
+composer test -- --filter testInvalidEntryPoint
 composer test-package
 php examples/usage.php
 composer archive --format=tar --dir=/path/to/output
 ```
 
-Tests use `../spec/test-vectors.json`. `test-package` builds an archive, verifies
+`composer test` runs PHPUnit 11, configured by `phpunit.xml`. Standard
+`#[DataProvider(...)]` methods provide named datasets:
+
+- `tests/SharedVectorsTest.php` reads `../spec/test-vectors.json` for valid,
+  invalid and creation cases. Every dataset is a separate PHPUnit test result;
+  failures identify the vector and, for errors, the public entry point.
+- `tests/KidTest.php` defines PHP-specific data providers and regression tests,
+  including non-string inputs, invalid byte strings, all ASCII bytes and entity
+  order permutations.
+
+The JSON is committed test data, not generated during a PHP test run. Python is
+only needed to regenerate or verify shared vectors after specification changes.
+PHPUnit is a development-only dependency; runtime dependencies are unchanged.
+The committed `composer.lock` makes development and CI installs reproducible.
+
+`test-package` builds an archive, verifies
 its contents and installs the extracted package into an isolated Composer consumer
 to exercise the public autoloaded API. Temporary files are removed afterwards.
 It requires Composer on PATH and PHP's Phar extension (development only).
-Development tests, lockfile and vendor files are excluded from archives.
+Development tests, PHPUnit configuration/cache, lockfile and vendor files are
+excluded from archives.
 
 The [repository specification](https://github.com/keboola/keboola-identifier/blob/reimplementation/php-pr1/SPEC.md)
 defines the complete syntax. Validation is offline; object existence, parent

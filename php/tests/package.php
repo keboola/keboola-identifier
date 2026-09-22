@@ -32,8 +32,10 @@ try {
             throw new RuntimeException('Archive missing ' . $file);
         }
     }
-    if (isset($archive['vendor']) || isset($archive['tests'])) {
-        throw new RuntimeException('Archive includes development files');
+    foreach (['vendor', 'tests', 'composer.lock', 'phpunit.xml', '.phpunit.cache'] as $file) {
+        if (isset($archive[$file])) {
+            throw new RuntimeException('Archive includes development file: ' . $file);
+        }
     }
     mkdir($temp . '/package');
     $archive->extractTo($temp . '/package');

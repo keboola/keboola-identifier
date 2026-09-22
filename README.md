@@ -73,10 +73,14 @@ composer test-package
 php examples/usage.php
 ```
 
-No build step is necessary. The dependency-free test runner always executes its
-checks, independently of PHP's `zend.assertions` setting, and reads the shared
-root vectors directly. Additional tests cover PHP types, invalid byte strings,
-ASCII encoding, error precedence, immutability and literal-star equality.
+No build step is necessary. `composer test` runs PHPUnit 11 with standard named
+data providers. `SharedVectorsTest` loads the committed JSON vectors directly;
+`KidTest` contains PHP-specific providers and tests for types, invalid byte strings,
+ASCII encoding, error precedence, immutability, ordering and literal-star equality.
+The committed Composer lockfile pins development dependencies for CI.
+
+No generation or Python execution happens during PHP tests. The Python tools below
+only maintain shared fixtures when the specification changes and verify them in CI.
 
 From the repository root:
 

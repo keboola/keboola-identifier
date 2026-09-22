@@ -14,6 +14,7 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           tools: composer:v2
+          extensions: dom, mbstring, xml, xmlwriter
           coverage: none
       - run: composer validate --strict
         working-directory: php

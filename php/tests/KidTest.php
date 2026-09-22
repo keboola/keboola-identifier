@@ -1,0 +1,188 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Keboola\Identifier\Tests;
+
+use Keboola\Identifier\InvalidKidException;
+use Keboola\Identifier\Kid;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
+use ReflectionClass;
+use stdClass;
+use Stringable;
+
+final class KidTest extends TestCase
+{
+    #[DataProvider('nonStringValues')]
+    public function testRejectsNonStringStackInStrictAndWeakMode(mixed $stack): void
+    {
+        $weakCreate = require __DIR__ . '/weak-types.php';
+        $this->assertInvalid(static fn() => Kid::create($stack, []), 'bad_stack', null);
+        $this->assertInvalid(static fn() => $weakCreate($stack, []), 'bad_stack', null);
+    }
+
+    #[DataProvider('nonStringValues')]
+    public function testRejectsNonStringEntityValues(mixed $value): void
+    {
+        $this->assertInvalid(static fn() => Kid::create('s', ['config' => $value]), 'bad_value', null);
+    }
+
+    public static function nonStringValues(): iterable
+    {
+        yield 'integer' => [123];
+        yield 'true' => [true];
+        yield 'false' => [false];
+        yield 'float' => [1.5];
+        yield 'null' => [null];
+        yield 'array' => [[]];
+        yield 'object' => [new stdClass()];
+        yield 'stringable object' => [new class implements Stringable {
+            public function __toString(): string
+            {
+                return 's';
+            }
+        }];
+    }
+
+    public function testWeakModePreservesStringOnlyContractAndErrorPrecedence(): void
+    {
+        $weakCreate = require __DIR__ . '/weak-types.php';
+        self::assertSame('KID:123', (string) $weakCreate('123', []));
+        $this->assertInvalid(static fn() => $weakCreate(123, ['Bad' => null]), 'bad_stack', null);
+        $this->assertInvalid(static fn() => $weakCreate('s', ['project' => 123]), 'bad_value', null);
+    }
+
+    #[DataProvider('phpErrorCases')]
+    public function testPhpErrorsAndPrecedence(string $method, array $arguments, string $code, ?string $segment): void
+    {
+        $this->assertInvalid(static fn() => Kid::$method(...$arguments), $code, $segment);
+    }
+
+    public static function phpErrorCases(): iterable
+    {
+        yield 'numeric entity key' => ['create', ['s', [12 => 'x']], 'bad_segment', '12-x'];
+        foreach (['invalid byte' => "\xFF", 'overlong' => "\xC0\xAF", 'surrogate' => "\xED\xA0\x80", 'out of range' => "\xF4\x90\x80\x80"] as $label => $raw) {
+            yield $label => ['create', ['s', ['config' => $raw]], 'bad_utf8', 'config-' . $raw];
+        }
+        $raw = str_repeat("\xFF", 256);
+        yield 'create length before UTF-8' => ['create', ['s', ['config' => $raw]], 'too_long', 'config-' . $raw];
+        $segment = 'config-%FF' . str_repeat('x', 256);
+        yield 'parse UTF-8 before value length' => ['fromString', ['KID:s:' . $segment], 'bad_utf8', $segment];
+        yield 'prefix before total length' => ['fromString', ['kid:' . str_repeat('x', 2048)], 'bad_prefix', null];
+        yield 'encoding before UTF-8' => ['fromString', ['KID:s:config-%FF%2a'], 'non_canonical_encoding', 'config-%FF%2a'];
+        yield 'structure before encoding' => ['fromString', ['KID:s:config-%2a!'], 'bad_value', 'config-%2a!'];
+        yield 'duplicate before value' => ['fromString', ['KID:s:project-1:project-abc'], 'duplicate_entity', 'project-abc'];
+        yield 'stack before entity' => ['create', ['S', ['Bad' => null]], 'bad_stack', null];
+        yield 'entity before value type' => ['create', ['s', ['Bad' => null]], 'bad_segment', null];
+        yield 'first entity before next entity' => ['create', ['s', ['project' => 'abc', 'Bad' => 'x']], 'bad_value', 'project-abc'];
+    }
+
+    public function testBranchDevIsPatternButNotWildcard(): void
+    {
+        $kid = Kid::fromString('KID:s:branch-dev');
+        self::assertTrue($kid->isPattern());
+        self::assertFalse($kid->isWildcard('branch'));
+    }
+
+    public function testUnicodeIsNotNormalized(): void
+    {
+        self::assertFalse(Kid::create('s', ['config' => 'é'])->equals(Kid::create('s', ['config' => "e\u{0301}"])));
+    }
+
+    public function testDecodedLiteralStarRoundTripIsLossy(): void
+    {
+        $literal = Kid::fromString('KID:s:config-%2A');
+        $wildcard = Kid::create('s', $literal->entities());
+        self::assertFalse($literal->equals($wildcard));
+        self::assertFalse($literal == $wildcard);
+        self::assertTrue($wildcard->isWildcard('config'));
+    }
+
+    public function testDifferentStacksAreNotEqual(): void
+    {
+        self::assertFalse(Kid::fromString('KID:s')->equals(Kid::fromString('KID:t')));
+    }
+
+    public function testNumericValuesAreNotNormalized(): void
+    {
+        self::assertSame('001', Kid::create('s', ['project' => '001'])->project());
+    }
+
+    public function testInstanceStateIsImmutableAndCanonicalOnly(): void
+    {
+        $class = new ReflectionClass(Kid::class);
+        self::assertTrue($class->isReadOnly());
+        self::assertCount(1, $class->getProperties());
+    }
+
+    #[DataProvider('entityPermutations')]
+    public function testEntityOrderDoesNotAffectIdentity(array $entities): void
+    {
+        $canonical = 'KID:s:alpha-x:branch-4:maintainer-1:org-2:project-3:zeta-y';
+        $text = 'KID:s';
+        foreach ($entities as $name => $value) {
+            $text .= ':' . $name . '-' . $value;
+        }
+        self::assertSame($entities, Kid::parse($text)['entities'], 'Input order is retained by parse');
+        self::assertSame($canonical, Kid::fromString($text)->toString());
+        self::assertSame($canonical, Kid::create('s', $entities)->toString());
+        self::assertTrue(Kid::fromString($text)->equals(Kid::fromString($canonical)));
+    }
+
+    public static function entityPermutations(): iterable
+    {
+        $entities = ['maintainer' => '1', 'org' => '2', 'project' => '3', 'branch' => '4', 'alpha' => 'x', 'zeta' => 'y'];
+        foreach (self::permutations($entities) as $permutation) {
+            yield implode(', ', array_keys($permutation)) => [$permutation];
+        }
+    }
+
+    private static function permutations(array $entities): iterable
+    {
+        if ($entities === []) {
+            yield [];
+            return;
+        }
+        foreach ($entities as $name => $value) {
+            $rest = $entities;
+            unset($rest[$name]);
+            foreach (self::permutations($rest) as $tail) {
+                yield [$name => $value] + $tail;
+            }
+        }
+    }
+
+    #[DataProvider('asciiBytes')]
+    public function testAsciiEncoding(string $raw, string $encoded): void
+    {
+        $text = 'KID:s:config-x' . $encoded;
+        self::assertSame($text, (string) Kid::create('s', ['config' => 'x' . $raw]));
+        self::assertSame('x' . $raw, Kid::fromString($text)->get('config'));
+    }
+
+    public static function asciiBytes(): iterable
+    {
+        // Independent oracle for every ASCII byte, including NUL and controls.
+        for ($byte = 0; $byte < 128; $byte++) {
+            $raw = chr($byte);
+            $unencoded = ($byte >= 65 && $byte <= 90) || ($byte >= 97 && $byte <= 122)
+                || ($byte >= 48 && $byte <= 57) || in_array($byte, [45, 46, 95], true);
+            $hex = strtoupper(str_pad(dechex($byte), 2, '0', STR_PAD_LEFT));
+            yield '0x' . $hex => [$raw, $unencoded ? $raw : '%' . $hex];
+        }
+    }
+
+    private function assertInvalid(callable $operation, string $code, ?string $segment): void
+    {
+        try {
+            $operation();
+        } catch (InvalidKidException $error) {
+            self::assertSame($code, $error->code);
+            self::assertSame($code, $error->getCode());
+            self::assertSame($segment, $error->segment);
+            return;
+        }
+        self::fail('Expected InvalidKidException with code ' . $code);
+    }
+}
