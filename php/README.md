@@ -27,13 +27,13 @@ the repository does not supply an open-source license grant.
 ```php
 require 'vendor/autoload.php';
 
-use Keboola\Identifier\Entity;
+use Keboola\Identifier\KIdEntity;
 use Keboola\Identifier\Kid;
 
 $kid = Kid::create('kbc-eu-central-1', [
-    Entity::CONFIG => 'my config',
-    Entity::PROJECT => '9876',
-    Entity::BRANCH => 'default',
+    KIdEntity::CONFIG => 'my config',
+    KIdEntity::PROJECT => '9876',
+    KIdEntity::BRANCH => 'default',
 ]);
 echo $kid; // KID:kbc-eu-central-1:p-9876:config-my%20config
 $kid->stack();        // 'kbc-eu-central-1'
@@ -58,8 +58,10 @@ coercion; it does not broaden the accepted input types.
 ## Parse, validate and canonicalize
 
 ```php
+use Keboola\Identifier\KIdValidator;
+
 $text = 'KID:s:config-my%20config:b-default:p-1';
-Kid::validate($text);      // true
+KIdValidator::validate($text); // true
 Kid::isCanonical($text);   // false; also false for invalid text
 Kid::canonicalize($text);  // 'KID:s:p-1:config-my%20config'
 Kid::parse($text);         // ['stack' => 's', 'entities' => [
@@ -102,6 +104,8 @@ map iteration order is not an API guarantee except for `parse()`.
 
 ## Public API
 
+- `KIdValidator::validate(string): bool` performs full syntax validation using the
+  parser. `Kid::validate()` delegates to it for compatibility with the frozen API.
 - Static: `validate(string): bool`, `parse(string): array`, `fromString(string): Kid`,
   `create(mixed, array): Kid` (stack must be a string), `canonicalize(string): string`, `isCanonical(string): bool`.
 - Accessors: `stack(): string`, `maintainer(): ?string`, `organization(): ?string`,
@@ -109,9 +113,14 @@ map iteration order is not an API guarantee except for `parse()`.
   `has(string): bool`, `entities(): array`.
 - Inspection: `isWildcard(string): bool`, `isPattern(): bool`, `equals(Kid): bool`.
 - Serialization: `toString(): string`, `__toString(): string`.
-- `Entity` constants: `MAINTAINER`, `ORGANIZATION`, `PROJECT`, `BRANCH`, `BUCKET`,
+- `KIdEntity` constants: `MAINTAINER`, `ORGANIZATION`, `PROJECT`, `BRANCH`, `BUCKET`,
   `TABLE`, `COMPONENT`, `CONFIG`, `ROW`, `WORKSPACE`, `USER`, `APP`, `STREAM`.
   Any syntactically valid lowercase entity name is accepted, including `constructor`.
+
+The PHP naming refinement intentionally replaces the snapshot's generic `Entity`
+class with `KIdEntity` and adds `KIdValidator`. Use these exact class names in imports
+for PSR-4 autoloading on case-sensitive filesystems. `Kid` remains the immutable
+identifier value object; the format, entity values and validation rules are unchanged.
 
 ## Errors
 

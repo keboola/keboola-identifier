@@ -17,12 +17,7 @@ final readonly class Kid implements \Stringable
 
     public static function validate(string $text): bool
     {
-        try {
-            self::fromString($text);
-            return true;
-        } catch (InvalidKidException) {
-            return false;
-        }
+        return KIdValidator::validate($text);
     }
 
     /** @return array{stack: string, entities: array<string, string>} Encoded values, in input order. */
@@ -114,22 +109,22 @@ final readonly class Kid implements \Stringable
 
     public function maintainer(): ?string
     {
-        return $this->get(Entity::MAINTAINER);
+        return $this->get(KIdEntity::MAINTAINER);
     }
 
     public function organization(): ?string
     {
-        return $this->get(Entity::ORGANIZATION);
+        return $this->get(KIdEntity::ORGANIZATION);
     }
 
     public function project(): ?string
     {
-        return $this->get(Entity::PROJECT);
+        return $this->get(KIdEntity::PROJECT);
     }
 
     public function branch(): ?string
     {
-        return $this->get(Entity::BRANCH);
+        return $this->get(KIdEntity::BRANCH);
     }
 
     public function get(string $entity): ?string

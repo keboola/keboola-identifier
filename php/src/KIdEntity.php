@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Keboola\Identifier;
 
 /** Convenience constants for the open entity catalog. */
-final class Entity
+final class KIdEntity
 {
     public const MAINTAINER = 'm';
     public const ORGANIZATION = 'o';

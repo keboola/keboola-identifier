@@ -2,7 +2,8 @@
 
 declare(strict_types=1);
 
-use Keboola\Identifier\Entity;
+use Keboola\Identifier\KIdEntity;
+use Keboola\Identifier\KIdValidator;
 use Keboola\Identifier\InvalidKidException;
 use Keboola\Identifier\Kid;
 
@@ -36,6 +37,7 @@ $vectors = json_decode(file_get_contents(__DIR__ . '/../../spec/test-vectors.jso
 foreach ($vectors['valid'] as $index => $v) {
     $kid = Kid::fromString($v['input']);
     same(true, Kid::validate($v['input']), "valid[$index] validate");
+    same(true, KIdValidator::validate($v['input']), "valid[$index] KIdValidator");
     same($v['parse'], Kid::parse($v['input']), "valid[$index] parse including order");
     same($v['canonical'], $kid->toString(), 'canonical');
     same($v['canonical'], (string) $kid, 'string cast');
@@ -66,6 +68,7 @@ foreach ($vectors['valid'] as $index => $v) {
 }
 foreach ($vectors['invalid'] as $v) {
     same(false, Kid::validate($v['input']), 'invalid validate');
+    same(false, KIdValidator::validate($v['input']), 'invalid KIdValidator');
     same(false, Kid::isCanonical($v['input']), 'invalid isCanonical');
     foreach (['parse', 'fromString', 'canonicalize'] as $method) {
         fails(static fn() => Kid::$method($v['input']), $v['code'], $v['segment']);
@@ -137,7 +140,7 @@ for ($byte = 0; $byte < 128; $byte++) {
     same('x' . $raw, Kid::fromString($text)->get('config'), 'ASCII decode ' . $byte);
 }
 $catalog = json_decode(file_get_contents(__DIR__ . '/../../spec/entities.json'), true, 512, JSON_THROW_ON_ERROR);
-$constants = array_values((new ReflectionClass(Entity::class))->getConstants());
+$constants = array_values((new ReflectionClass(KIdEntity::class))->getConstants());
 $names = array_keys($catalog['entities']);
 sort($constants);
 sort($names);
