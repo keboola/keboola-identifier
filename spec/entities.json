@@ -1,19 +1,19 @@
 {
-  "$comment": "Catalog of known KID entities. Validation does not depend on this file (the catalog is open); implementations use it for typed accessors, value constraints of the short entities and the frozen canonical head order. Adding an entity is a pull request here. One object kind has exactly one entity name; aliases are forbidden.",
-  "canonicalHead": ["m", "o", "p", "b"],
+  "$comment": "Catalog of known KID entities. Validation does not depend on this file (the catalog is open); implementations use it for typed accessors, constrained entity values and canonical head order. Adding an entity is a pull request here. One object kind has exactly one entity name; there are no aliases.",
+  "canonicalHead": ["maintainer", "org", "project", "branch"],
   "entities": {
-    "m": {"name": "maintainer", "value": "^[0-9]+$|^\\*$", "accessor": "maintainer"},
-    "o": {"name": "organization", "value": "^[0-9]+$|^\\*$", "accessor": "organization", "usuallyWith": ["m"]},
-    "p": {"name": "project", "value": "^[0-9]+$|^\\*$", "accessor": "project", "usuallyWith": ["o"]},
-    "b": {"name": "branch", "value": "^[0-9]+$|^dev$|^default$|^\\*$", "accessor": "branch", "usuallyWith": ["p"], "note": "default is dropped by canonicalization; dev and * are pattern-only"},
-    "bucket": {"name": "bucket", "usuallyWith": ["p", "b"], "note": "bucket id such as in.c-main; c- prefix not guaranteed"},
+    "maintainer": {"name": "maintainer", "value": "^[0-9]+$|^\\*$", "accessor": "maintainer"},
+    "org": {"name": "organization", "value": "^[0-9]+$|^\\*$", "accessor": "organization", "usuallyWith": ["maintainer"]},
+    "project": {"name": "project", "value": "^[0-9]+$|^\\*$", "accessor": "project", "usuallyWith": ["org"]},
+    "branch": {"name": "branch", "value": "^[0-9]+$|^dev$|^default$|^\\*$", "accessor": "branch", "usuallyWith": ["project"], "note": "default is dropped by canonicalization; dev and * are pattern-only"},
+    "bucket": {"name": "bucket", "usuallyWith": ["project", "branch"], "note": "bucket id such as in.c-main; c- prefix not guaranteed"},
     "table": {"name": "table", "usuallyWith": ["bucket"], "note": "table name only; the bucket carries the rest of today's table id"},
-    "component": {"name": "component", "usuallyWith": ["p", "b"], "note": "component id such as keboola.ex-db-snowflake; classification, not ownership"},
+    "component": {"name": "component", "usuallyWith": ["project", "branch"], "note": "component id such as keboola.ex-db-snowflake; classification, not ownership"},
     "config": {"name": "configuration", "usuallyWith": ["component"], "note": "user-supplied string, <= 100 chars in Connection"},
     "row": {"name": "configuration row", "usuallyWith": ["config"], "note": "user-supplied string, <= 100 chars in Connection"},
-    "workspace": {"name": "workspace", "usuallyWith": ["p", "b"]},
+    "workspace": {"name": "workspace", "usuallyWith": ["project", "branch"]},
     "user": {"name": "user"},
-    "app": {"name": "data app", "usuallyWith": ["p", "b"], "note": "a data app is a configuration"},
-    "stream": {"name": "stream", "usuallyWith": ["p", "b"]}
+    "app": {"name": "data app", "usuallyWith": ["project", "branch"], "note": "a data app is a configuration"},
+    "stream": {"name": "stream", "usuallyWith": ["project", "branch"]}
   }
 }

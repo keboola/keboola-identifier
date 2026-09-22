@@ -1,7 +1,8 @@
 # keboola/identifier
 
-Immutable PHP 8.2+ implementation of Keboola Identifier 1.0, based on PR #1 commit
-`1f6eed74c198460f8160daa425b6e3e680a88a06`. Runtime requires PHP and its bundled PCRE
+Immutable PHP 8.2+ implementation of the Keboola Identifier 1.0 draft, using the
+full hierarchy entity names `maintainer`, `org`, `project`, `branch`. This explicitly
+revises the entity naming from PR #1. Runtime requires PHP and its bundled PCRE
 extension, with no third-party runtime dependencies or build step.
 
 ## Installation
@@ -31,10 +32,10 @@ use Keboola\Identifier\Kid;
 
 $kid = Kid::create('kbc-eu-central-1', [
     'config' => 'my config',
-    'p' => '9876',
-    'b' => 'default',
+    'project' => '9876',
+    'branch' => 'default',
 ]);
-echo $kid; // KID:kbc-eu-central-1:p-9876:config-my%20config
+echo $kid; // KID:kbc-eu-central-1:project-9876:config-my%20config
 $kid->stack();        // 'kbc-eu-central-1'
 $kid->project();      // '9876', always a string
 $kid->branch();       // null (default branch)
@@ -59,20 +60,20 @@ coercion; it does not broaden the accepted input types.
 ```php
 use Keboola\Identifier\Kid;
 
-$text = 'KID:s:config-my%20config:b-default:p-1';
+$text = 'KID:s:config-my%20config:branch-default:project-1';
 Kid::validate($text);      // true
 Kid::isCanonical($text);   // false; also false for invalid text
-Kid::canonicalize($text);  // 'KID:s:p-1:config-my%20config'
+Kid::canonicalize($text);  // 'KID:s:project-1:config-my%20config'
 Kid::parse($text);         // ['stack' => 's', 'entities' => [
-                          //   'config' => 'my%20config', 'b' => 'default', 'p' => '1']]
+                          //   'config' => 'my%20config', 'branch' => 'default', 'project' => '1']]
 $kid = Kid::fromString($text);
-$kid->entities();          // ['p' => '1', 'config' => 'my config']
-$kid->equals(Kid::fromString('KID:s:p-1:config-my%20config')); // true
+$kid->entities();          // ['project' => '1', 'config' => 'my config']
+$kid->equals(Kid::fromString('KID:s:project-1:config-my%20config')); // true
 ```
 
 `parse()` performs full validation but retains encoded values, input order and
-`b-default`. `fromString()` checks the 2048-byte **input** limit before parsing;
-`create()` checks the canonical **output** after removing `b-default`.
+`branch-default`. `fromString()` checks the 2048-byte **input** limit before parsing;
+`create()` checks the canonical **output** after removing `branch-default`.
 Both enforce the 255-byte decoded value limit. Lowercase hex, escapes for unencoded
 bytes, raw spaces, raw `+` and raw `~` are rejected, not repaired.
 
@@ -86,9 +87,9 @@ $literal->isPattern();         // false
 $pattern = Kid::create('s', ['config' => '*']);
 $pattern->isWildcard('config'); // true
 $pattern->isPattern();         // true
-$dev = Kid::fromString('KID:s:b-dev');
+$dev = Kid::fromString('KID:s:branch-dev');
 $dev->isPattern();             // true
-$dev->isWildcard('b');          // false
+$dev->isWildcard('branch');     // false
 ```
 
 `create()` cannot represent a whole literal `*`; read `%2A` using `fromString()`.
@@ -111,13 +112,16 @@ map iteration order is not an API guarantee except for `parse()`.
   `has(string): bool`, `entities(): array`.
 - Inspection: `isWildcard(string): bool`, `isPattern(): bool`, `equals(Kid): bool`.
 - Serialization: `toString(): string`, `__toString(): string`.
-- Entity names are strings such as `'p'`, `'b'`, `'bucket'` and `'config'`.
+- Entity names are strings such as `'project'`, `'branch'`, `'bucket'` and `'config'`.
   Any syntactically valid lowercase entity name is accepted, including `constructor`.
 
 The PHP API intentionally omits the snapshot's `Entity` constants class. `Kid`
 combines static service operations (validation, parsing and creation) with immutable
 identifier instances (accessors, comparison and serialization).
-The format, entity values and validation rules are unchanged.
+The four hierarchy entities sort first as `maintainer`, `org`, `project`, `branch`,
+followed by other entities in ASCII order. `organization()` reads `'org'`.
+Only these named entities receive the hierarchy constraints and branch semantics;
+there is no automatic aliasing of unknown entity names.
 
 ## Errors
 
@@ -125,10 +129,10 @@ The format, entity values and validation rules are unchanged.
 use Keboola\Identifier\InvalidKidException;
 
 try {
-    Kid::fromString('KID:s:p-abc');
+    Kid::fromString('KID:s:project-abc');
 } catch (InvalidKidException $error) {
     echo $error->code;    // bad_value (also returned by getCode())
-    echo $error->segment; // p-abc
+    echo $error->segment; // project-abc
 }
 ```
 
@@ -160,7 +164,7 @@ to exercise the public autoloaded API. Temporary files are removed afterwards.
 It requires Composer on PATH and PHP's Phar extension (development only).
 Development tests, lockfile and vendor files are excluded from archives.
 
-The [repository specification](https://github.com/keboola/keboola-identifier/blob/1f6eed74c198460f8160daa425b6e3e680a88a06/SPEC.md)
+The [repository specification](https://github.com/keboola/keboola-identifier/blob/reimplementation/php-pr1/SPEC.md)
 defines the complete syntax. Validation is offline; object existence, parent
 relationships and pattern matching are outside this library. Producers should omit
 the default branch rather than use its numeric ID, and prefer minimal project/object

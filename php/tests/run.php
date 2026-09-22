@@ -51,7 +51,7 @@ foreach ($vectors['valid'] as $index => $v) {
         same(array_key_exists($entity, $v['entities']), $kid->has($entity), 'has ' . $entity);
         same(in_array($entity, $v['wildcards'], true), $kid->isWildcard($entity), 'wildcard ' . $entity);
     }
-    foreach (['m' => 'maintainer', 'o' => 'organization', 'p' => 'project', 'b' => 'branch'] as $entity => $method) {
+    foreach (['maintainer' => 'maintainer', 'org' => 'organization', 'project' => 'project', 'branch' => 'branch'] as $entity => $method) {
         same($v['entities'][$entity] ?? null, $kid->$method(), $method);
     }
     same($v['branch'], $kid->branch(), 'branch vector');
@@ -92,7 +92,7 @@ foreach ([123, true, false, 1.5, null, [], new stdClass(), new class implements 
 }
 same('KID:123', (string) $weakCreate('123', []), 'string stack remains valid in weak mode');
 fails(static fn() => $weakCreate(123, ['Bad' => null]), 'bad_stack', null);
-fails(static fn() => $weakCreate('s', ['p' => 123]), 'bad_value', null);
+fails(static fn() => $weakCreate('s', ['project' => 123]), 'bad_value', null);
 foreach ([42, 1.5, false, null, [], new stdClass(), new class implements Stringable {
     public function __toString(): string
     {
@@ -110,12 +110,12 @@ fails(static fn() => Kid::fromString('KID:s:config-%FF' . str_repeat('x', 256)),
 fails(static fn() => Kid::fromString('kid:' . str_repeat('x', 2048)), 'bad_prefix', null);
 fails(static fn() => Kid::fromString('KID:s:config-%FF%2a'), 'non_canonical_encoding', 'config-%FF%2a');
 fails(static fn() => Kid::fromString('KID:s:config-%2a!'), 'bad_value', 'config-%2a!');
-fails(static fn() => Kid::fromString('KID:s:p-1:p-abc'), 'duplicate_entity', 'p-abc');
+fails(static fn() => Kid::fromString('KID:s:project-1:project-abc'), 'duplicate_entity', 'project-abc');
 fails(static fn() => Kid::create('S', ['Bad' => null]), 'bad_stack', null);
 fails(static fn() => Kid::create('s', ['Bad' => null]), 'bad_segment', null);
-fails(static fn() => Kid::create('s', ['p' => 'abc', 'Bad' => 'x']), 'bad_value', 'p-abc');
-same(true, Kid::fromString('KID:s:b-dev')->isPattern(), 'dev alone is a pattern');
-same(false, Kid::fromString('KID:s:b-dev')->isWildcard('b'), 'dev is not wildcard');
+fails(static fn() => Kid::create('s', ['project' => 'abc', 'Bad' => 'x']), 'bad_value', 'project-abc');
+same(true, Kid::fromString('KID:s:branch-dev')->isPattern(), 'dev alone is a pattern');
+same(false, Kid::fromString('KID:s:branch-dev')->isWildcard('branch'), 'dev is not wildcard');
 same(false, Kid::create('s', ['config' => 'é'])->equals(Kid::create('s', ['config' => "e\u{0301}"])), 'no normalization');
 $literal = Kid::fromString('KID:s:config-%2A');
 $wildcard = Kid::create('s', $literal->entities());
@@ -123,7 +123,7 @@ same(false, $literal->equals($wildcard), 'literal vs wildcard equality');
 same(false, $literal == $wildcard, 'literal vs wildcard PHP equality');
 same(true, $wildcard->isWildcard('config'), 'documented lossy entities round trip');
 same(false, Kid::fromString('KID:s')->equals(Kid::fromString('KID:t')), 'different stacks');
-same('001', Kid::create('s', ['p' => '001'])->project(), 'no numeric normalization');
+same('001', Kid::create('s', ['project' => '001'])->project(), 'no numeric normalization');
 
 // Exhaustive ASCII byte table, including NUL and controls, with an independent oracle.
 for ($byte = 0; $byte < 128; $byte++) {

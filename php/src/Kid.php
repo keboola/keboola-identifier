@@ -7,7 +7,7 @@ namespace Keboola\Identifier;
 /** Immutable, syntactically validated KID 1.0 identity or pattern. */
 final readonly class Kid implements \Stringable
 {
-    private const HEAD = ['m', 'o', 'p', 'b'];
+    private const CANONICAL_HEAD = ['maintainer', 'org', 'project', 'branch'];
     private const UNENCODED = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789._-';
 
     // Single instance state makes PHP == agree with canonical equality (§9.1).
@@ -114,22 +114,22 @@ final readonly class Kid implements \Stringable
 
     public function maintainer(): ?string
     {
-        return $this->get('m');
+        return $this->get('maintainer');
     }
 
     public function organization(): ?string
     {
-        return $this->get('o');
+        return $this->get('org');
     }
 
     public function project(): ?string
     {
-        return $this->get('p');
+        return $this->get('project');
     }
 
     public function branch(): ?string
     {
-        return $this->get('b');
+        return $this->get('branch');
     }
 
     public function get(string $entity): ?string
@@ -157,7 +157,7 @@ final readonly class Kid implements \Stringable
     public function isPattern(): bool
     {
         $entities = $this->encodedEntities();
-        return ($entities['b'] ?? null) === 'dev' || in_array('*', $entities, true);
+        return ($entities['branch'] ?? null) === 'dev' || in_array('*', $entities, true);
     }
 
     public function equals(self $other): bool
@@ -189,11 +189,11 @@ final readonly class Kid implements \Stringable
     /** @param array<string, string> $entities */
     private static function serialize(string $stack, array $entities): string
     {
-        if (($entities['b'] ?? null) === 'default') {
-            unset($entities['b']);
+        if (($entities['branch'] ?? null) === 'default') {
+            unset($entities['branch']);
         }
         $text = 'KID:' . $stack;
-        foreach (self::HEAD as $entity) {
+        foreach (self::CANONICAL_HEAD as $entity) {
             if (isset($entities[$entity])) {
                 $text .= ':' . $entity . '-' . $entities[$entity];
                 unset($entities[$entity]);
@@ -222,9 +222,9 @@ final readonly class Kid implements \Stringable
 
     private static function checkValue(string $entity, string $value, string $segment): void
     {
-        if ($value === '' || (in_array($entity, self::HEAD, true)
+        if ($value === '' || (in_array($entity, self::CANONICAL_HEAD, true)
             && $value !== '*' && preg_match('/\A[0-9]+\z/', $value) !== 1
-            && !($entity === 'b' && in_array($value, ['dev', 'default'], true)))) {
+            && !($entity === 'branch' && in_array($value, ['dev', 'default'], true)))) {
             throw new InvalidKidException('bad_value', $segment);
         }
     }

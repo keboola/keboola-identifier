@@ -52,8 +52,8 @@ try {
 require __DIR__ . '/vendor/autoload.php';
 use Keboola\Identifier\Kid;
 use Keboola\Identifier\InvalidKidException;
-if ((string) Kid::create('s', ['p' => '1']) !== 'KID:s:p-1') { exit(1); }
-if (!Kid::validate('KID:s:p-1') || Kid::validate('KID:s:p-abc')) { exit(1); }
+if ((string) Kid::create('s', ['project' => '1']) !== 'KID:s:project-1') { exit(1); }
+if (!Kid::validate('KID:s:project-1') || Kid::validate('KID:s:project-abc')) { exit(1); }
 try { Kid::fromString('invalid'); exit(1); }
 catch (InvalidKidException $e) { if ($e->code !== 'bad_prefix') { exit(1); } }
 echo "OK: archive contents, clean Composer install and public API import\n";

@@ -1,8 +1,13 @@
 # KID — Keboola Identifier. Format specification
 
-Version: 1.0-draft (2026-09-22). Normative for every implementation in this repository
+Version: 1.0-draft, full entity names (2026-09-22). Normative for every implementation in this repository
 (PHP, TypeScript, Python, Go). The shared test vectors in `spec/test-vectors.json` are
 part of this specification; an implementation that disagrees with a vector is wrong.
+
+This draft intentionally supersedes the entity naming in PR #1: the hierarchy
+entities are `maintainer`, `org`, `project`, `branch`. The original snapshot is
+preserved in `handoff/pr1-reimplementation/` for historical reference, not as the
+current naming contract. No automatic conversion or aliasing of old names occurs.
 
 ## 1. Purpose
 
@@ -30,8 +35,8 @@ segment := entity "-" value
 - A segment is split on its **first** hyphen: entity before it, value after it. The entity
   cannot contain a hyphen; the value can (`bucket-in.c-main`).
 - Each entity occurs at most once.
-- Input order of segments is **not** enforced. `KID:s:p-9876:o-42` and
-  `KID:s:o-42:p-9876` are both valid and denote the same object.
+- Input order of segments is **not** enforced. `KID:s:project-9876:org-42` and
+  `KID:s:org-42:project-9876` are both valid and denote the same object.
 - Empty segments (`::`), a trailing colon and a segment without a hyphen are invalid.
 
 ## 3. Stack
@@ -58,58 +63,58 @@ identifier. One canonical stack identifier for both, or a mapping table, is to b
   treated as an opaque string. Known entities are registered in this repository
   (`spec/entities.json`) and gain typed accessors and value constraints; adding an entity
   to the catalog is a pull request here, it is not required for validation to pass.
-- No aliases: one object kind has exactly one entity name. `branch` next to `b` is
-  forbidden by the catalog.
-- Combinations are not interpreted. `p-1:user-5` is syntactically valid; what it means is
+- No aliases: one object kind has exactly one registered entity name. Unknown names
+  remain opaque entities; they are never translated to known names or read by typed accessors.
+- Combinations are not interpreted. `project-1:user-5` is syntactically valid; what it means is
   the producer's business.
 
-### 4.1 Short entities with constrained values
+### 4.1 Hierarchy entities with constrained values
 
 | Entity | Meaning | Allowed values |
 |---|---|---|
-| `m` | maintainer | `^[0-9]+$` or `*` |
-| `o` | organization | `^[0-9]+$` or `*` |
-| `p` | project | `^[0-9]+$` or `*` |
-| `b` | branch | `^[0-9]+$`, `dev`, `default` or `*` |
+| `maintainer` | maintainer | `^[0-9]+$` or `*` |
+| `org` | organization | `^[0-9]+$` or `*` |
+| `project` | project | `^[0-9]+$` or `*` |
+| `branch` | branch | `^[0-9]+$`, `dev`, `default` or `*` |
 
 Any other value for these entities is `bad_value`.
 
-The set `{m, o, p, b}` and its canonical order are **frozen**. A future short entity does
+The set `{maintainer, org, project, branch}` and its canonical order are **frozen**. A future entity does
 not join this group; it sorts alphabetically with the rest.
 
 ### 4.2 Branch semantics
 
-| `b` in canonical form | Meaning | Kind |
+| `branch` in canonical form | Meaning | Kind |
 |---|---|---|
 | absent | default branch | identity |
-| `b-555` | the dev branch with id 555 | identity |
-| `b-dev` | any non-default branch | pattern |
-| `b-*` | any branch | pattern |
+| `branch-555` | the dev branch with id 555 | identity |
+| `branch-dev` | any non-default branch | pattern |
+| `branch-*` | any branch | pattern |
 
-- `b-default` is accepted on input and **removed by canonicalization**. It never appears in
+- `branch-default` is accepted on input and **removed by canonicalization**. It never appears in
   a canonical KID.
-- Producers must never write the default branch's numeric id (`b-4321` where 4321 is the
+- Producers must never write the default branch's numeric id (`branch-4321` where 4321 is the
   default branch). The library cannot detect this; it is a documented producer rule and
   the most likely source of silent identity mismatch.
-- `isWildcard("b")` is true only for `b-*`. `isPattern()` is true for any `*` value and
-  for `b-dev`.
+- `isWildcard("branch")` is true only for `branch-*`. `isPattern()` is true for any `*` value and
+  for `branch-dev`.
 
 ### 4.3 Known entities (launch catalog)
 
 | Entity | Value | Usually with | Note |
 |---|---|---|---|
-| `m` | number, `*` | | maintainer |
-| `o` | number, `*` | `m` | organization |
-| `p` | number, `*` | `o` | project |
-| `b` | number, `dev`, `default`, `*` | `p` | branch |
-| `bucket` | bucket id (`in.c-main`) | `p`, `b` | `c-` prefix not guaranteed |
+| `maintainer` | number, `*` | | maintainer |
+| `org` | number, `*` | `maintainer` | organization |
+| `project` | number, `*` | `org` | project |
+| `branch` | number, `dev`, `default`, `*` | `project` | branch |
+| `bucket` | bucket id (`in.c-main`) | `project`, `branch` | `c-` prefix not guaranteed |
 | `table` | table name only (`orders`) | `bucket` | the bucket carries the rest of today's table id |
-| `component` | component id (`keboola.ex-db-snowflake`) | `p`, `b` | classification, not ownership |
+| `component` | component id (`keboola.ex-db-snowflake`) | `project`, `branch` | classification, not ownership |
 | `config` | configuration id | `component` | user-supplied string, ≤ 100 chars in Connection |
 | `row` | configuration row id | `config` | user-supplied string, ≤ 100 chars in Connection (`rowId VARCHAR(100)`) |
-| `workspace` | number | `p`, `b` | a workspace always belongs to one branch |
+| `workspace` | number | `project`, `branch` | a workspace always belongs to one branch |
 | `user` | number | | no project |
-| `app`, `stream` | object id | `p`, `b` | a data app is a configuration (≤ 100); stream ids are not stored by Connection and are bounded only by the 255-byte value cap (§7) |
+| `app`, `stream` | object id | `project`, `branch` | a data app is a configuration (≤ 100); stream ids are not stored by Connection and are bounded only by the 255-byte value cap (§7) |
 
 Parent relationships (`table` under `bucket`, `row` under `config` under `component`) are
 **not enforced** by the library. They are conventions for reading and for the URN
@@ -118,17 +123,17 @@ conversion. The alphabetical canonical order preserves them for the known entiti
 
 ### 4.4 Identity form (recommendation, not enforced)
 
-Because `m` and `o` are optional and parents are not enforced, one object can be written
+Because `maintainer` and `org` are optional and parents are not enforced, one object can be written
 in several valid ways. The library validates all of them and canonicalizes each one
 individually; it cannot know which ancestors are "redundant". To make identities
 comparable across services, producers **should** write identities in the minimal form:
 
-- stack-level objects: `stack` + the object entity (`KID:s:o-42`, `KID:s:user-5`);
-- project-scoped objects: `p` + the object entity chain, **without** `m` and `o`
-  (`KID:s:p-9876:bucket-in.c-main:table-orders`);
-- `b` only for non-default branches.
+- stack-level objects: `stack` + the object entity (`KID:s:org-42`, `KID:s:user-5`);
+- project-scoped objects: `project` + the object entity chain, **without** `maintainer` and `org`
+  (`KID:s:project-9876:bucket-in.c-main:table-orders`);
+- `branch` only for non-default branches.
 
-`m` and `o` on project-scoped KIDs are for patterns (grants) and for human context, not for
+`maintainer` and `org` on project-scoped KIDs are for patterns (grants) and for human context, not for
 stored identities. This also avoids stale ancestors when a project moves between
 organizations.
 
@@ -150,7 +155,7 @@ Rules:
   the KID is rejected (`bad_utf8`). No Unicode normalization is performed anywhere: a value
   in NFC and the same text in NFD are two different values. Producers normalize if they
   need to.
-- A raw value must not be empty. `p-` is `bad_value`.
+- A raw value must not be empty. `project-` is `bad_value`.
 - The wildcard is a bare `*` as the **entire** value. A literal `*` inside a raw value is
   encoded as `%2A`. A bare `*` anywhere else in a value (`bucket-in.c-*`) is `bad_value`.
 - `+` is never a space. Decoders that map `+` to space (`urldecode`, `unquote_plus`,
@@ -168,7 +173,7 @@ Canonical form is the only serialization the library emits and the only form tha
 stored, logged or passed to another service.
 
 1. `KID:` + stack.
-2. Then `m`, `o`, `p`, `b`, in that order, each only if present. `b-default` is dropped.
+2. Then `maintainer`, `org`, `project`, `branch`, in that order, each only if present. `branch-default` is dropped.
 3. Then every other entity in **ascending byte order** of the entity name (plain ASCII
    comparison; no locale collation, no `localeCompare`, no `strcoll`, PHP `SORT_STRING`).
 4. Values as encoded per section 5.
@@ -183,7 +188,7 @@ All limits are in **bytes** of the encoded text (not characters, not UTF-16 code
   A longer value is `too_long` (in `create()` on the raw value, in `fromString()` on the
   decoded value).
 - A KID is at most **2048 bytes**. `fromString()` checks the input text; because
-  canonicalization only reorders segments and drops `b-default`, a canonical form is never
+  canonicalization only reorders segments and drops `branch-default`, a canonical form is never
   longer than its valid input, so the canonical form is within the limit whenever the
   input is. `create()` checks the canonical string it produces.
 - Sizing behind the numbers. Every identifier column Connection stores for the known
@@ -194,9 +199,10 @@ All limits are in **bytes** of the encoded text (not characters, not UTF-16 code
   for any future entity. The cap of 255 is therefore 2.5× above every value Connection can
   hold today, and it is **frozen**: raising it would let a newer producer emit a KID an
   older library rejects, which without a format version is a breaking change (§11).
-  A worst-case identity
-  `KID:` (4) + stack (64) + `:m-…`, `:o-…`, `:p-…`, `:b-…` (4 × ≤ 25 = 100) + `:component-` (11) +
-  765 + `:config-` (8) + 765 = 1717 bytes fits; three maximal values do not, and such a KID
+  An identity with up to 22 digits in each hierarchy ID uses
+  `KID:` (4) + stack (64) + `:maintainer-…`, `:org-…`, `:project-…`, `:branch-…`
+  (34 prefix bytes + 4 × 22 = 122) + `:component-` (11) + 765 + `:config-` (8) +
+  765 = 1739 bytes and fits; three maximal encoded values do not, and such a KID
   is rejected as `too_long` rather than truncated.
 
 ## 8. Validation and error codes
@@ -218,7 +224,7 @@ yield the same code everywhere:
 | 4a | segment is non-empty (also covers a trailing colon) | `empty_segment` |
 | 4b | segment contains a hyphen and the entity part matches `^[a-z][a-z0-9]*$` | `bad_segment` |
 | 4c | the entity has not occurred before | `duplicate_entity` (reachable only from text input; `create()` receives a map whose keys are unique by construction) |
-| 4d | value is non-empty; for `m`/`o`/`p`/`b` it is in the allowed set; otherwise it is exactly `*`, or every character is one of `A-Z a-z 0-9 . _ -` or `%` (structure only; a bare `*` anywhere in a longer value fails here) | `bad_value` |
+| 4d | value is non-empty; for `maintainer`/`org`/`project`/`branch` it is in the allowed set; otherwise it is exactly `*`, or every character is one of `A-Z a-z 0-9 . _ -` or `%` (structure only; a bare `*` anywhere in a longer value fails here) | `bad_value` |
 | 4e | every `%` is followed by exactly two **uppercase** hex digits, and no escape encodes a byte from the unencoded set (`%69`, `%2E`, `%2D` are non-canonical); a `%` at the end, `%F`, `%2a`, `%zz` all fail here | `non_canonical_encoding` |
 | 4f | the decoded value is valid UTF-8 | `bad_utf8` |
 | 4g | the decoded value is ≤ 255 bytes | `too_long` (with `segment` set; check 2 reports `too_long` without a segment, which is how a consumer tells "shorten this value" from "drop an entity") |
@@ -228,7 +234,7 @@ Only 4e judges percent-escapes; 4d never inspects what follows a `%`. This keeps
 
 `create()` accepts **strings only**; any other type is rejected (`bad_value`), never
 coerced. It applies, in order: 3 on the stack; per entity: the entity regex (`bad_segment`),
-uniqueness (`duplicate_entity`), raw value non-empty and short-entity sets (`bad_value`),
+uniqueness (`duplicate_entity`), raw value non-empty and constrained-entity sets (`bad_value`),
 raw value ≤ 255 bytes (`too_long`); then 2 on the canonical string it produced.
 
 ## 9. Library API (language-neutral contract)
@@ -236,18 +242,18 @@ raw value ≤ 255 bytes (`too_long`); then 2 on the canonical string it produced
 | Operation | Behaviour |
 |---|---|
 | `validate(text) -> bool` | true iff `fromString` would succeed |
-| `parse(text) -> {stack, entities}` | runs the **full** check sequence 1–4g of §8 and throws on the first failure, exactly like `fromString`; differs from it only in that it does not canonicalize: values **as written** (encoded), `*` as `*`, `b-default` kept, input order kept |
+| `parse(text) -> {stack, entities}` | runs the **full** check sequence 1–4g of §8 and throws on the first failure, exactly like `fromString`; differs from it only in that it does not canonicalize: values **as written** (encoded), `*` as `*`, `branch-default` kept, input order kept |
 | `fromString(text) -> Kid` | parses, validates, canonicalizes; throws |
 | `create(stack, entities) -> Kid` | raw (decoded) string values; `*` means wildcard; throws |
 | `canonicalize(text) -> text` | `fromString(text).toString()`; throws the same error as `fromString` |
 | `isCanonical(text) -> bool` | true iff the text is valid **and** equal to its canonical form; **false, never an error**, for invalid input |
 | `stack()` | stack |
-| `maintainer()`, `organization()`, `project()`, `branch()` | decoded value of `m`, `o`, `p`, `b`, or absent; `branch()` is absent for the default branch |
-| `get(entity)` | decoded value or absent; entity name as written (`get("p")`) |
+| `maintainer()`, `organization()`, `project()`, `branch()` | decoded value of `maintainer`, `org`, `project`, `branch`, or absent; `branch()` is absent for the default branch |
+| `get(entity)` | decoded value or absent; entity name as written (`get("project")`) |
 | `has(entity)` | presence |
 | `entities()` | map entity → decoded value, wildcard as `*`. **Iteration order is not part of the contract** (Go maps iterate randomly); the only ordered representation is `toString()`. **Lossy**: a decoded literal `*` (`%2A`) and the wildcard are indistinguishable here, and `create(stack, kid.entities())` turns such a literal into a wildcard. The lossless round trip is `parse(kid.toString())` (encoded values) or `fromString(kid.toString())`. |
 | `isWildcard(entity)` | value is the wildcard (distinguishes it from a decoded literal `*`) |
-| `isPattern()` | any wildcard or `b-dev` |
+| `isPattern()` | any wildcard or `branch-dev` |
 | `equals(other)` | canonical strings equal |
 | `toString()` | canonical form |
 
@@ -270,7 +276,7 @@ a KID can only be read via `fromString`. Documented edge.
 | `get(): ?string`, `has()`, `entities(): array` | `get(): string \| undefined`, `has()`, `entities(): Record` | `get()`, `has()`, `entities() -> dict` | `Get() (string, bool)`, `Has()`, `Entities() map[string]string` |
 | `isWildcard()`, `isPattern()`, `equals()`, `toString()`, `__toString()` | `isWildcard()`, `isPattern()`, `equals()`, `toString()` | `is_wildcard()`, `is_pattern()`, `__eq__`, `__hash__`, `__str__` | `IsWildcard()`, `IsPattern()`, `Equals()`, `String()` |
 | `InvalidKidException` (`code`, `segment: ?string`) | `InvalidKidError extends Error` (`code`, `segment?`) | `InvalidKidError(ValueError)` (`code`, `segment`) | `*InvalidKidError{Code, Segment string}` via `errors.As`; `Segment == ""` means not applicable |
-| `Entity::PROJECT = 'p'` … | `Entity.PROJECT` | `Entity.PROJECT` (`StrEnum`) | `kid.EntityProject` |
+| entity name strings, e.g. `'project'` | `Entity.PROJECT` | `Entity.PROJECT` (`StrEnum`) | `kid.EntityProject` |
 
 Language notes:
 
@@ -279,7 +285,7 @@ Language notes:
   canonical string, so a `Kid` works as a dict key.
 - PHP and TypeScript keep the canonical string as the single internal state so that
   accidental `==` / structural comparison behaves.
-- Go `Branch()` returns `("", false)` for the default branch, consistent with `Get("b")`.
+- Go `Branch()` returns `("", false)` for the default branch, consistent with `Get("branch")`.
 
 ## 10. Test vectors
 
@@ -288,13 +294,13 @@ minimum:
 
 - valid canonical KIDs with the expected `parse()` output and decoded `entities()`;
 - valid non-canonical inputs with the expected canonical form (shuffled order,
-  `b-default`, both together);
+  `branch-default`, both together);
 - invalid inputs with the expected error code, including: each error code at least once,
   `%2A` vs `*`, bare `*` inside a value, `%2a`, `%69`, trailing `%`, `%F`, empty value,
-  `p-abc`, `b-main`, duplicate entity, uppercase entity, missing hyphen, 2048 vs 2049
+  `project-abc`, `branch-main`, duplicate entity, uppercase entity, missing hyphen, 2048 vs 2049
   bytes, a 255- vs 256-byte raw value, invalid UTF-8 (`%FF`), `+` and `~` handling, a
   multibyte UTF-8 value, `isCanonical` on invalid input (false);
-- `create()` cases: raw value → canonical, entities given in non-canonical order → canonical, `b-default` dropped, non-string input rejected;
+- `create()` cases: raw value → canonical, entities given in non-canonical order → canonical, `branch-default` dropped, non-string input rejected;
 - `entities()` on a `%2A` literal versus a `*` wildcard (both read back as `*`, `isWildcard` differs).
 
 The vectors live in this monorepo next to the four packages, so every package at a given
@@ -308,6 +314,8 @@ commit tests against the same file.
 - Conversion to and from the authorization URN (`kbc://…`), pending agreement on the open
   differences listed in the review document.
 - Format versioning. The `KID:` prefix carries no version; a breaking change would need a
-  new prefix. Accepted risk, mitigated by freezing `{m, o, p, b}`, the canonical order, the
+  new prefix after this draft is finalized. This draft's explicit naming revision is
+  documented at the top of this specification. Accepted risk is mitigated by freezing
+  `{maintainer, org, project, branch}`, the canonical order, the
   encoding table and both length limits (255 per value, 2048 total). Changing any of
   those is a new prefix, not a new library release.
