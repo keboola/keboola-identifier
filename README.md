@@ -41,18 +41,17 @@ written from the specification and test vectors.
 ## PHP usage
 
 ```php
-use Keboola\Identifier\Kid;
 use Keboola\Identifier\KIdValidator;
 
-$kid = Kid::fromString('KID:kbc-eu-central-1:p-9876:config-my%20config');
+$kid = KIdValidator::fromString('KID:kbc-eu-central-1:p-9876:config-my%20config');
 echo $kid->project();     // 9876
 echo $kid->get('config'); // my config
 KIdValidator::validate('KID:s:p-1'); // true
 ```
 
-PHP uses `KIdEntity` for entity constants and `KIdValidator` for syntax validation.
-This is an intentional PHP naming refinement of the frozen API; `Kid::validate()`
-remains available and delegates to the validator.
+PHP uses `KIdEntity` for entity constants and `KIdValidator` for the complete
+identifier API: validation, parsing, creation and immutable identifier instances.
+These intentionally replace the frozen API's PHP class names `Entity` and `Kid`.
 
 See [PHP documentation](php/README.md) for installation, the complete public API,
 errors, wildcard edge cases and packaging.
