@@ -1,0 +1,14 @@
+{
+    "name": "keboola/identifier",
+    "description": "Immutable offline Keboola Identifier (KID 1.0) parser, validator and builder",
+    "type": "library",
+    "license": "proprietary",
+    "require": {"php": "^8.2", "ext-pcre": "*"},
+    "autoload": {"psr-4": {"Keboola\\Identifier\\": "src/"}},
+    "scripts": {
+        "test": "@php tests/run.php",
+        "lint": "@php tests/lint.php",
+        "test-package": "@php tests/package.php"
+    },
+    "archive": {"exclude": ["/tests", "/vendor", "/composer.lock"]}
+}
