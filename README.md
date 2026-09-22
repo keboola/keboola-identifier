@@ -41,17 +41,18 @@ written from the specification and test vectors.
 ## PHP usage
 
 ```php
-use Keboola\Identifier\KIdValidator;
+use Keboola\Identifier\Kid;
 
-$kid = KIdValidator::fromString('KID:kbc-eu-central-1:p-9876:config-my%20config');
+$kid = Kid::fromString('KID:kbc-eu-central-1:p-9876:config-my%20config');
 echo $kid->project();     // 9876
 echo $kid->get('config'); // my config
-KIdValidator::validate('KID:s:p-1'); // true
+Kid::validate('KID:s:p-1'); // true
 ```
 
-PHP uses `KIdEntity` for entity constants and `KIdValidator` for the complete
-identifier API: validation, parsing, creation and immutable identifier instances.
-These intentionally replace the frozen API's PHP class names `Entity` and `Kid`.
+PHP uses a single `Kid` class: static methods provide validation, parsing and
+creation; instances represent immutable identifiers. Entity names are passed as
+strings. The snapshot's convenience `Entity` constants class is omitted
+from this PHP API by design.
 
 See [PHP documentation](php/README.md) for installation, the complete public API,
 errors, wildcard edge cases and packaging.

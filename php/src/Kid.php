@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Keboola\Identifier;
 
 /** Immutable, syntactically validated KID 1.0 identity or pattern. */
-final readonly class KIdValidator implements \Stringable
+final readonly class Kid implements \Stringable
 {
     private const HEAD = ['m', 'o', 'p', 'b'];
     private const UNENCODED = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789._-';
@@ -114,22 +114,22 @@ final readonly class KIdValidator implements \Stringable
 
     public function maintainer(): ?string
     {
-        return $this->get(KIdEntity::MAINTAINER);
+        return $this->get('m');
     }
 
     public function organization(): ?string
     {
-        return $this->get(KIdEntity::ORGANIZATION);
+        return $this->get('o');
     }
 
     public function project(): ?string
     {
-        return $this->get(KIdEntity::PROJECT);
+        return $this->get('p');
     }
 
     public function branch(): ?string
     {
-        return $this->get(KIdEntity::BRANCH);
+        return $this->get('b');
     }
 
     public function get(string $entity): ?string

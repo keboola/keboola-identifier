@@ -27,13 +27,12 @@ the repository does not supply an open-source license grant.
 ```php
 require 'vendor/autoload.php';
 
-use Keboola\Identifier\KIdEntity;
-use Keboola\Identifier\KIdValidator;
+use Keboola\Identifier\Kid;
 
-$kid = KIdValidator::create('kbc-eu-central-1', [
-    KIdEntity::CONFIG => 'my config',
-    KIdEntity::PROJECT => '9876',
-    KIdEntity::BRANCH => 'default',
+$kid = Kid::create('kbc-eu-central-1', [
+    'config' => 'my config',
+    'p' => '9876',
+    'b' => 'default',
 ]);
 echo $kid; // KID:kbc-eu-central-1:p-9876:config-my%20config
 $kid->stack();        // 'kbc-eu-central-1'
@@ -58,17 +57,17 @@ coercion; it does not broaden the accepted input types.
 ## Parse, validate and canonicalize
 
 ```php
-use Keboola\Identifier\KIdValidator;
+use Keboola\Identifier\Kid;
 
 $text = 'KID:s:config-my%20config:b-default:p-1';
-KIdValidator::validate($text); // true
-KIdValidator::isCanonical($text);   // false; also false for invalid text
-KIdValidator::canonicalize($text);  // 'KID:s:p-1:config-my%20config'
-KIdValidator::parse($text);         // ['stack' => 's', 'entities' => [
+Kid::validate($text);      // true
+Kid::isCanonical($text);   // false; also false for invalid text
+Kid::canonicalize($text);  // 'KID:s:p-1:config-my%20config'
+Kid::parse($text);         // ['stack' => 's', 'entities' => [
                           //   'config' => 'my%20config', 'b' => 'default', 'p' => '1']]
-$kid = KIdValidator::fromString($text);
+$kid = Kid::fromString($text);
 $kid->entities();          // ['p' => '1', 'config' => 'my config']
-$kid->equals(KIdValidator::fromString('KID:s:p-1:config-my%20config')); // true
+$kid->equals(Kid::fromString('KID:s:p-1:config-my%20config')); // true
 ```
 
 `parse()` performs full validation but retains encoded values, input order and
@@ -80,14 +79,14 @@ bytes, raw spaces, raw `+` and raw `~` are rejected, not repaired.
 ## Wildcards and immutable objects
 
 ```php
-$literal = KIdValidator::fromString('KID:s:config-%2A');
+$literal = Kid::fromString('KID:s:config-%2A');
 $literal->get('config');        // '*'
 $literal->isWildcard('config'); // false
 $literal->isPattern();         // false
-$pattern = KIdValidator::create('s', ['config' => '*']);
+$pattern = Kid::create('s', ['config' => '*']);
 $pattern->isWildcard('config'); // true
 $pattern->isPattern();         // true
-$dev = KIdValidator::fromString('KID:s:b-dev');
+$dev = Kid::fromString('KID:s:b-dev');
 $dev->isPattern();             // true
 $dev->isWildcard('b');          // false
 ```
@@ -96,7 +95,7 @@ $dev->isWildcard('b');          // false
 A star within a longer raw string, such as `a*b`, is encoded normally.
 `entities()` is a decoded copy and therefore loses the whole-star distinction:
 recreating a literal-star identifier from that map turns it into a wildcard.
-Use `KIdValidator::fromString($kid->toString())` for a lossless round trip.
+Use `Kid::fromString($kid->toString())` for a lossless round trip.
 
 Objects are final and readonly, with only the canonical string as instance state.
 `equals()` and PHP `==` compare canonical representations. There are no mutators;
@@ -104,22 +103,20 @@ map iteration order is not an API guarantee except for `parse()`.
 
 ## Public API
 
-- Static methods on `KIdValidator`: `validate(string): bool`, `parse(string): array`,
-  `fromString(string): KIdValidator`, `create(mixed, array): KIdValidator` (stack must
+- Static methods on `Kid`: `validate(string): bool`, `parse(string): array`,
+  `fromString(string): Kid`, `create(mixed, array): Kid` (stack must
   be a string), `canonicalize(string): string`, `isCanonical(string): bool`.
 - Accessors: `stack(): string`, `maintainer(): ?string`, `organization(): ?string`,
   `project(): ?string`, `branch(): ?string`, `get(string): ?string`,
   `has(string): bool`, `entities(): array`.
-- Inspection: `isWildcard(string): bool`, `isPattern(): bool`, `equals(KIdValidator): bool`.
+- Inspection: `isWildcard(string): bool`, `isPattern(): bool`, `equals(Kid): bool`.
 - Serialization: `toString(): string`, `__toString(): string`.
-- `KIdEntity` constants: `MAINTAINER`, `ORGANIZATION`, `PROJECT`, `BRANCH`, `BUCKET`,
-  `TABLE`, `COMPONENT`, `CONFIG`, `ROW`, `WORKSPACE`, `USER`, `APP`, `STREAM`.
+- Entity names are strings such as `'p'`, `'b'`, `'bucket'` and `'config'`.
   Any syntactically valid lowercase entity name is accepted, including `constructor`.
 
-The PHP naming refinement intentionally replaces the snapshot's `Entity` class
-with `KIdEntity` and its `Kid` class with `KIdValidator`. The latter provides the
-complete API and remains an immutable identifier value object. Use these exact
-class names in imports for PSR-4 autoloading on case-sensitive filesystems.
+The PHP API intentionally omits the snapshot's `Entity` constants class. `Kid`
+combines static service operations (validation, parsing and creation) with immutable
+identifier instances (accessors, comparison and serialization).
 The format, entity values and validation rules are unchanged.
 
 ## Errors
@@ -128,7 +125,7 @@ The format, entity values and validation rules are unchanged.
 use Keboola\Identifier\InvalidKidException;
 
 try {
-    KIdValidator::fromString('KID:s:p-abc');
+    Kid::fromString('KID:s:p-abc');
 } catch (InvalidKidException $error) {
     echo $error->code;    // bad_value (also returned by getCode())
     echo $error->segment; // p-abc
