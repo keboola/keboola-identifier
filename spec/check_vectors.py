@@ -19,6 +19,6 @@ for key in ("valid", "invalid", "create", "createInvalid"):
     if current[key][:len(original[key])] != original[key]:
         raise SystemExit(f"Migrated snapshot cases changed: {key}")
 catalog = json.loads((root / "spec/entities.json").read_text(encoding="utf-8"))
-if current["canonicalOrderHead"] != catalog["canonicalHead"]:
-    raise SystemExit("Vector head order differs from the current entity catalog")
-print("OK: deterministic regeneration; all PR #1 cases preserved with full entity names")
+if current["canonicalOrder"] != catalog["canonicalOrder"]:
+    raise SystemExit("Vector serialization order differs from the current entity catalog")
+print("OK: deterministic regeneration; historical cases migrated to full names and uniform order")

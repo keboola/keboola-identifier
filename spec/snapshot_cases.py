@@ -1,4 +1,4 @@
-"""Migrate historical PR #1 fixtures to the current full-name draft.
+"""Migrate historical fixtures to full names and uniform ASCII serialization.
 
 This is test-data migration only, not an alias table for any implementation.
 Values, stack names and error expectations are deliberately left untouched.
@@ -27,15 +27,26 @@ def entities(values):
     return {RENAMES.get(entity, entity): value for entity, value in values.items()}
 
 
+def canonical_order(text):
+    """Sort already validated fixture segments, with no entity-specific priority."""
+    parts = text.split(":")
+    return ":".join(parts[:2] + sorted(parts[2:], key=lambda part: part.split("-", 1)[0]))
+
+
 def migrated_snapshot():
     vectors = json.loads(SNAPSHOT.read_text(encoding="utf-8"))
-    vectors["spec"] = "SPEC.md 1.0-draft full entity names"
-    vectors["canonicalOrderHead"] = list(RENAMES.values())
+    vectors["spec"] = "SPEC.md 1.0-draft full entity names, uniform ASCII order"
+    del vectors["canonicalOrderHead"]
+    vectors["canonicalOrder"] = "ascii"
     for group in ("valid", "invalid", "create", "createInvalid"):
         for case in vectors[group]:
             for field in ("input", "canonical"):
                 if field in case:
                     case[field] = kid_text(case[field])
+            if "canonical" in case:
+                case["canonical"] = canonical_order(case["canonical"])
+            if "isCanonical" in case:
+                case["isCanonical"] = case["input"] == case["canonical"]
             if "segment" in case:
                 case["segment"] = segment(case["segment"])
             if "entities" in case:
@@ -47,4 +58,6 @@ def migrated_snapshot():
             if "note" in case:
                 case["note"] = re.sub(r"\b[mopb]\b", lambda match: RENAMES[match[0]], case["note"])
                 case["note"] = case["note"].replace("short entities", "constrained entities")
+                if "head" in case["note"]:
+                    case["note"] = "all entity names sort by ASCII bytes without hierarchy priority"
     return vectors

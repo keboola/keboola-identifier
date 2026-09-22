@@ -3,7 +3,7 @@
 KID is an offline textual identifier for Keboola stacks and objects:
 
 ```text
-KID:kbc-eu-central-1:project-9876:bucket-in.c-main:table-orders
+KID:kbc-eu-central-1:bucket-in.c-main:project-9876:table-orders
 ```
 
 This reimplementation currently delivers the [PHP package](php/README.md)
@@ -11,7 +11,8 @@ This reimplementation currently delivers the [PHP package](php/README.md)
 
 ## Contract and repository layout
 
-The current contract uses `maintainer`, `org`, `project` and `branch`. This is an
+The current contract uses `maintainer`, `org`, `project` and `branch`, with no
+entity-specific ordering priority. This is an
 intentional draft revision of PR #1 commit `1f6eed74c198460f8160daa425b6e3e680a88a06`;
 the original handoff materials are preserved verbatim as historical reference.
 Implementation is independently written from the specification and test vectors.
@@ -23,7 +24,7 @@ Implementation is independently written from the specification and test vectors.
 | [spec/test-vectors.json](spec/test-vectors.json) | Shared normative cases plus regressions |
 | [spec/generate_vectors.py](spec/generate_vectors.py) | Deterministic vector generator |
 | [spec/check_vectors.py](spec/check_vectors.py) | Regeneration and migrated-case preservation check |
-| [spec/snapshot_cases.py](spec/snapshot_cases.py) | Migrate historical fixture entity names to the current draft |
+| [spec/snapshot_cases.py](spec/snapshot_cases.py) | Migrate historical fixture names and serialization to the current draft |
 | [php/](php/) | Composer package, examples and tests |
 | [handoff/pr1-reimplementation/](handoff/pr1-reimplementation/PROMPT.md) | Frozen task and source materials |
 | [.github/workflows/php.yml](.github/workflows/php.yml) | PHP 8.2–8.5 and shared-vector CI |
@@ -31,9 +32,9 @@ Implementation is independently written from the specification and test vectors.
 ## Format at a glance
 
 - Exact prefix `KID:` followed by a syntactically valid stack; a bare stack is valid.
-- Input segments may be unordered. Output orders `maintainer`, `org`, `project`, `branch` first, then
-  all other entities by ASCII bytes. Segments split on their first hyphen.
-- These four entities identify the maintainer, organization, project and branch.
+- Entity order has no effect on identity. Canonical output sorts all entities by
+  ASCII name, without exceptions. Segments split on their first hyphen.
+- `maintainer`, `org`, `project` and `branch` identify their respective platform objects.
 - `branch-default` is accepted but omitted from canonical output.
 - Bare `*` is a wildcard. `branch-dev` is also a pattern, but not a wildcard.
 - Values use the fixed encoding table in §5, without trimming or Unicode normalization.
@@ -86,7 +87,7 @@ python3 spec/check_vectors.py
 
 The check fails if committed vectors differ from regenerated output or migrated
 snapshot cases were changed. The generator retains every historical case with entity
-names updated in structural fields; raw values and stack names are not rewritten.
+names and expected canonical order updated; raw values and stack names are not rewritten.
 Added regressions preserve U+FEFF (including a value
 consisting only of U+FEFF), control characters and open entity `constructor`, and
 exercise trailing line terminators and the distinction between input/output limits.

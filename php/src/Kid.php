@@ -7,7 +7,6 @@ namespace Keboola\Identifier;
 /** Immutable, syntactically validated KID 1.0 identity or pattern. */
 final readonly class Kid implements \Stringable
 {
-    private const CANONICAL_HEAD = ['maintainer', 'org', 'project', 'branch'];
     private const UNENCODED = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789._-';
 
     // Single instance state makes PHP == agree with canonical equality (§9.1).
@@ -193,12 +192,6 @@ final readonly class Kid implements \Stringable
             unset($entities['branch']);
         }
         $text = 'KID:' . $stack;
-        foreach (self::CANONICAL_HEAD as $entity) {
-            if (isset($entities[$entity])) {
-                $text .= ':' . $entity . '-' . $entities[$entity];
-                unset($entities[$entity]);
-            }
-        }
         ksort($entities, SORT_STRING);
         foreach ($entities as $entity => $value) {
             $text .= ':' . $entity . '-' . $value;
@@ -222,9 +215,12 @@ final readonly class Kid implements \Stringable
 
     private static function checkValue(string $entity, string $value, string $segment): void
     {
-        if ($value === '' || (in_array($entity, self::CANONICAL_HEAD, true)
-            && $value !== '*' && preg_match('/\A[0-9]+\z/', $value) !== 1
-            && !($entity === 'branch' && in_array($value, ['dev', 'default'], true)))) {
+        $valid = match ($entity) {
+            'maintainer', 'org', 'project' => preg_match('/\A(?:[0-9]+|\*)\z/', $value) === 1,
+            'branch' => preg_match('/\A(?:[0-9]+|dev|default|\*)\z/', $value) === 1,
+            default => $value !== '',
+        };
+        if (!$valid) {
             throw new InvalidKidException('bad_value', $segment);
         }
     }

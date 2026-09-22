@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """Generate current full-name vectors, retaining migrated historical coverage.
 
-The immutable handoff JSON supplies the original cases. snapshot_cases.py changes
-only entity names in their structural fields. New cases are authored below using
-the current names. Run: python3 spec/generate_vectors.py
+The immutable handoff JSON supplies the original cases. snapshot_cases.py migrates
+entity names and expected serialization order. New cases are authored below using
+the current contract. Run: python3 spec/generate_vectors.py
 """
 import json
 from pathlib import Path
 
-from snapshot_cases import migrated_snapshot
+from snapshot_cases import canonical_order, migrated_snapshot
 
 UNENCODED = set(b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789._-")
 
@@ -63,12 +63,12 @@ assert len(text.encode("utf-8")) == 2048
 C.append(create({**boundary, "branch": "default"}, text))
 I.append(invalid(text + ":branch-default", "too_long"))
 
-# All four full names have precedence over alphabetically earlier open entities.
+# All entities follow the same serialization rule, regardless of their meaning.
 parsed = {"zeta": "9", "branch": "555", "project": "3", "org": "2", "maintainer": "1", "alpha": "x"}
 decoded = {"maintainer": "1", "org": "2", "project": "3", "branch": "555", "alpha": "x", "zeta": "9"}
-canonical = "KID:s:maintainer-1:org-2:project-3:branch-555:alpha-x:zeta-9"
+canonical = "KID:s:alpha-x:branch-555:maintainer-1:org-2:project-3:zeta-9"
 text = "KID:s:zeta-9:branch-555:project-3:org-2:maintainer-1:alpha-x"
-V.append(valid(text, canonical, parsed, decoded, branch="555", note="full-name canonical head before open entities"))
+V.append(valid(text, canonical, parsed, decoded, branch="555", note="uniform ASCII order for all entities"))
 C.append(create(parsed, canonical))
 
 # Apply every constraint to every named entity, not just project.
@@ -95,15 +95,15 @@ for entity in ("maintainer", "org", "project", "branch"):
 V.append(valid("KID:s:branch-dev", "KID:s:branch-dev", {"branch": "dev"}, {"branch": "dev"},
                branch="dev", pattern=True))
 
-# Byte boundaries with the longer head names, not just generic one-letter entities.
+# Byte boundaries with full entity names, not just generic one-letter entities.
 values = {"maintainer": "1", "org": "2", "project": "3", "branch": "4"}
 values.update({f"extra{i}": "x" * 255 for i in range(7)})
 prefix = "KID:s" + "".join(f":{entity}-{value}" for entity, value in values.items())
 values["tail"] = "x" * (2048 - len(prefix) - len(":tail-"))
 text = prefix + ":tail-" + values["tail"]
 assert len(text.encode("utf-8")) == 2048
-V.append(valid(text, text, values, values, branch="4", note="2048 bytes with full-name head"))
-C.append(create(values, text))
+V.append(valid(text, canonical_order(text), values, values, branch="4", note="2048 bytes with full entity names"))
+C.append(create(values, canonical_order(text)))
 I.append(invalid(text + "x", "too_long"))
 CI.append({"stack": "s", "entities": {**values, "tail": values["tail"] + "x"},
            "code": "too_long", "segment": None})

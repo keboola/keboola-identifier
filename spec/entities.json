@@ -1,6 +1,6 @@
 {
-  "$comment": "Catalog of known KID entities. Validation does not depend on this file (the catalog is open); implementations use it for typed accessors, constrained entity values and canonical head order. Adding an entity is a pull request here. One object kind has exactly one entity name; there are no aliases.",
-  "canonicalHead": ["maintainer", "org", "project", "branch"],
+  "$comment": "Catalog of known KID entities. Validation does not depend on this file (the catalog is open); implementations use it for typed accessors and constrained entity values. All entities have equal ordering semantics. Adding an entity is a pull request here. One object kind has exactly one entity name; there are no aliases.",
+  "canonicalOrder": "ascii",
   "entities": {
     "maintainer": {"name": "maintainer", "value": "^[0-9]+$|^\\*$", "accessor": "maintainer"},
     "org": {"name": "organization", "value": "^[0-9]+$|^\\*$", "accessor": "organization", "usuallyWith": ["maintainer"]},

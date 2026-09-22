@@ -1,16 +1,10 @@
 {
-  "spec": "SPEC.md 1.0-draft full entity names",
+  "spec": "SPEC.md 1.0-draft full entity names, uniform ASCII order",
   "limits": {
     "maxKidBytes": 2048,
     "maxValueBytes": 255,
     "maxStackChars": 64
   },
-  "canonicalOrderHead": [
-    "maintainer",
-    "org",
-    "project",
-    "branch"
-  ],
   "valid": [
     {
       "input": "KID:kbc-eu-central-1",
@@ -83,7 +77,7 @@
     },
     {
       "input": "KID:kbc-eu-central-1:project-9876:branch-555",
-      "canonical": "KID:kbc-eu-central-1:project-9876:branch-555",
+      "canonical": "KID:kbc-eu-central-1:branch-555:project-9876",
       "parse": {
         "stack": "kbc-eu-central-1",
         "entities": {
@@ -97,12 +91,12 @@
       },
       "wildcards": [],
       "isPattern": false,
-      "isCanonical": true,
+      "isCanonical": false,
       "branch": "555"
     },
     {
       "input": "KID:kbc-eu-central-1:project-9876:bucket-in.c-main:table-orders",
-      "canonical": "KID:kbc-eu-central-1:project-9876:bucket-in.c-main:table-orders",
+      "canonical": "KID:kbc-eu-central-1:bucket-in.c-main:project-9876:table-orders",
       "parse": {
         "stack": "kbc-eu-central-1",
         "entities": {
@@ -118,13 +112,13 @@
       },
       "wildcards": [],
       "isPattern": false,
-      "isCanonical": true,
+      "isCanonical": false,
       "branch": null,
       "note": "hyphen inside a value; split on the first hyphen only"
     },
     {
       "input": "KID:kbc-eu-central-1:project-9876:branch-555:bucket-in.c-main:table-orders",
-      "canonical": "KID:kbc-eu-central-1:project-9876:branch-555:bucket-in.c-main:table-orders",
+      "canonical": "KID:kbc-eu-central-1:branch-555:bucket-in.c-main:project-9876:table-orders",
       "parse": {
         "stack": "kbc-eu-central-1",
         "entities": {
@@ -142,12 +136,12 @@
       },
       "wildcards": [],
       "isPattern": false,
-      "isCanonical": true,
+      "isCanonical": false,
       "branch": "555"
     },
     {
       "input": "KID:kbc-eu-central-1:project-9876:component-keboola.ex-db-snowflake:config-1234:row-7",
-      "canonical": "KID:kbc-eu-central-1:project-9876:component-keboola.ex-db-snowflake:config-1234:row-7",
+      "canonical": "KID:kbc-eu-central-1:component-keboola.ex-db-snowflake:config-1234:project-9876:row-7",
       "parse": {
         "stack": "kbc-eu-central-1",
         "entities": {
@@ -165,12 +159,12 @@
       },
       "wildcards": [],
       "isPattern": false,
-      "isCanonical": true,
+      "isCanonical": false,
       "branch": null
     },
     {
       "input": "KID:kbc-eu-central-1:project-9876:component-keboola.ex-db-snowflake:config-my%20config",
-      "canonical": "KID:kbc-eu-central-1:project-9876:component-keboola.ex-db-snowflake:config-my%20config",
+      "canonical": "KID:kbc-eu-central-1:component-keboola.ex-db-snowflake:config-my%20config:project-9876",
       "parse": {
         "stack": "kbc-eu-central-1",
         "entities": {
@@ -186,7 +180,7 @@
       },
       "wildcards": [],
       "isPattern": false,
-      "isCanonical": true,
+      "isCanonical": false,
       "branch": null,
       "note": "parse() keeps the encoded value, entities()/get() decode"
     },
@@ -228,7 +222,7 @@
     },
     {
       "input": "KID:kbc-eu-central-1:project-9876:dashboard-abc-42",
-      "canonical": "KID:kbc-eu-central-1:project-9876:dashboard-abc-42",
+      "canonical": "KID:kbc-eu-central-1:dashboard-abc-42:project-9876",
       "parse": {
         "stack": "kbc-eu-central-1",
         "entities": {
@@ -242,7 +236,7 @@
       },
       "wildcards": [],
       "isPattern": false,
-      "isCanonical": true,
+      "isCanonical": false,
       "branch": null,
       "note": "unknown entity passes, value opaque"
     },
@@ -297,7 +291,7 @@
     },
     {
       "input": "KID:kbc-eu-central-1:org-42:project-*:bucket-*",
-      "canonical": "KID:kbc-eu-central-1:org-42:project-*:bucket-*",
+      "canonical": "KID:kbc-eu-central-1:bucket-*:org-42:project-*",
       "parse": {
         "stack": "kbc-eu-central-1",
         "entities": {
@@ -316,12 +310,12 @@
         "bucket"
       ],
       "isPattern": true,
-      "isCanonical": true,
+      "isCanonical": false,
       "branch": null
     },
     {
       "input": "KID:kbc-eu-central-1:project-9876:branch-dev:component-keboola.wr-db:config-*",
-      "canonical": "KID:kbc-eu-central-1:project-9876:branch-dev:component-keboola.wr-db:config-*",
+      "canonical": "KID:kbc-eu-central-1:branch-dev:component-keboola.wr-db:config-*:project-9876",
       "parse": {
         "stack": "kbc-eu-central-1",
         "entities": {
@@ -341,13 +335,13 @@
         "config"
       ],
       "isPattern": true,
-      "isCanonical": true,
+      "isCanonical": false,
       "branch": "dev",
       "note": "branch-dev makes it a pattern but is not a wildcard"
     },
     {
       "input": "KID:kbc-eu-central-1:project-9876:branch-*:bucket-in.c-main",
-      "canonical": "KID:kbc-eu-central-1:project-9876:branch-*:bucket-in.c-main",
+      "canonical": "KID:kbc-eu-central-1:branch-*:bucket-in.c-main:project-9876",
       "parse": {
         "stack": "kbc-eu-central-1",
         "entities": {
@@ -365,7 +359,7 @@
         "branch"
       ],
       "isPattern": true,
-      "isCanonical": true,
+      "isCanonical": false,
       "branch": "*"
     },
     {
@@ -389,7 +383,7 @@
     },
     {
       "input": "KID:kbc-eu-central-1:maintainer-*:org-*:project-*:branch-*",
-      "canonical": "KID:kbc-eu-central-1:maintainer-*:org-*:project-*:branch-*",
+      "canonical": "KID:kbc-eu-central-1:branch-*:maintainer-*:org-*:project-*",
       "parse": {
         "stack": "kbc-eu-central-1",
         "entities": {
@@ -412,12 +406,12 @@
         "branch"
       ],
       "isPattern": true,
-      "isCanonical": true,
+      "isCanonical": false,
       "branch": "*"
     },
     {
       "input": "KID:kbc-eu-central-1:project-9876:component-x:config-%2A",
-      "canonical": "KID:kbc-eu-central-1:project-9876:component-x:config-%2A",
+      "canonical": "KID:kbc-eu-central-1:component-x:config-%2A:project-9876",
       "parse": {
         "stack": "kbc-eu-central-1",
         "entities": {
@@ -433,13 +427,13 @@
       },
       "wildcards": [],
       "isPattern": false,
-      "isCanonical": true,
+      "isCanonical": false,
       "branch": null,
       "note": "decoded literal * looks like a wildcard in entities(); isWildcard(config) is false"
     },
     {
       "input": "KID:kbc-eu-central-1:project-9876:config-a%2Ab",
-      "canonical": "KID:kbc-eu-central-1:project-9876:config-a%2Ab",
+      "canonical": "KID:kbc-eu-central-1:config-a%2Ab:project-9876",
       "parse": {
         "stack": "kbc-eu-central-1",
         "entities": {
@@ -453,12 +447,12 @@
       },
       "wildcards": [],
       "isPattern": false,
-      "isCanonical": true,
+      "isCanonical": false,
       "branch": null
     },
     {
       "input": "KID:kbc-eu-central-1:project-9876:config-%C5%99e%C5%A1%C3%AD",
-      "canonical": "KID:kbc-eu-central-1:project-9876:config-%C5%99e%C5%A1%C3%AD",
+      "canonical": "KID:kbc-eu-central-1:config-%C5%99e%C5%A1%C3%AD:project-9876",
       "parse": {
         "stack": "kbc-eu-central-1",
         "entities": {
@@ -472,13 +466,13 @@
       },
       "wildcards": [],
       "isPattern": false,
-      "isCanonical": true,
+      "isCanonical": false,
       "branch": null,
       "note": "multibyte UTF-8"
     },
     {
       "input": "KID:kbc-eu-central-1:project-9876:config-a%7Eb%2Bc%21d%28e%29f%27g%2Fh%3Ai%25j",
-      "canonical": "KID:kbc-eu-central-1:project-9876:config-a%7Eb%2Bc%21d%28e%29f%27g%2Fh%3Ai%25j",
+      "canonical": "KID:kbc-eu-central-1:config-a%7Eb%2Bc%21d%28e%29f%27g%2Fh%3Ai%25j:project-9876",
       "parse": {
         "stack": "kbc-eu-central-1",
         "entities": {
@@ -492,13 +486,13 @@
       },
       "wildcards": [],
       "isPattern": false,
-      "isCanonical": true,
+      "isCanonical": false,
       "branch": null,
       "note": "~ + ! ( ) ' / : % are all encoded; stdlib helpers disagree on several of these"
     },
     {
       "input": "KID:kbc-eu-central-1:project-9876:config-A-Za_z0.9",
-      "canonical": "KID:kbc-eu-central-1:project-9876:config-A-Za_z0.9",
+      "canonical": "KID:kbc-eu-central-1:config-A-Za_z0.9:project-9876",
       "parse": {
         "stack": "kbc-eu-central-1",
         "entities": {
@@ -512,13 +506,13 @@
       },
       "wildcards": [],
       "isPattern": false,
-      "isCanonical": true,
+      "isCanonical": false,
       "branch": null,
       "note": "every unencoded byte class, case preserved"
     },
     {
       "input": "KID:kbc-eu-central-1:project-9876:config-%F0%9F%98%80",
-      "canonical": "KID:kbc-eu-central-1:project-9876:config-%F0%9F%98%80",
+      "canonical": "KID:kbc-eu-central-1:config-%F0%9F%98%80:project-9876",
       "parse": {
         "stack": "kbc-eu-central-1",
         "entities": {
@@ -532,13 +526,13 @@
       },
       "wildcards": [],
       "isPattern": false,
-      "isCanonical": true,
+      "isCanonical": false,
       "branch": null,
       "note": "4-byte UTF-8"
     },
     {
       "input": "KID:kbc-eu-central-1:project-9876:config-%CC%81",
-      "canonical": "KID:kbc-eu-central-1:project-9876:config-%CC%81",
+      "canonical": "KID:kbc-eu-central-1:config-%CC%81:project-9876",
       "parse": {
         "stack": "kbc-eu-central-1",
         "entities": {
@@ -552,13 +546,13 @@
       },
       "wildcards": [],
       "isPattern": false,
-      "isCanonical": true,
+      "isCanonical": false,
       "branch": null,
       "note": "combining mark alone; no normalization, byte-wise identity"
     },
     {
       "input": "KID:kbc-eu-central-1:project-9876:branch-default:bucket-in.c-main",
-      "canonical": "KID:kbc-eu-central-1:project-9876:bucket-in.c-main",
+      "canonical": "KID:kbc-eu-central-1:bucket-in.c-main:project-9876",
       "parse": {
         "stack": "kbc-eu-central-1",
         "entities": {
@@ -594,7 +588,7 @@
     },
     {
       "input": "KID:kbc-eu-central-1:table-orders:project-9876:bucket-in.c-main:org-42",
-      "canonical": "KID:kbc-eu-central-1:org-42:project-9876:bucket-in.c-main:table-orders",
+      "canonical": "KID:kbc-eu-central-1:bucket-in.c-main:org-42:project-9876:table-orders",
       "parse": {
         "stack": "kbc-eu-central-1",
         "entities": {
@@ -618,7 +612,7 @@
     },
     {
       "input": "KID:kbc-eu-central-1:zeta-1:branch-default:alpha-2:maintainer-5",
-      "canonical": "KID:kbc-eu-central-1:maintainer-5:alpha-2:zeta-1",
+      "canonical": "KID:kbc-eu-central-1:alpha-2:maintainer-5:zeta-1",
       "parse": {
         "stack": "kbc-eu-central-1",
         "entities": {
@@ -662,7 +656,7 @@
     },
     {
       "input": "KID:kbc-eu-central-1:branch-555:project-9876:org-42:maintainer-1",
-      "canonical": "KID:kbc-eu-central-1:maintainer-1:org-42:project-9876:branch-555",
+      "canonical": "KID:kbc-eu-central-1:branch-555:maintainer-1:org-42:project-9876",
       "parse": {
         "stack": "kbc-eu-central-1",
         "entities": {
@@ -682,11 +676,11 @@
       "isPattern": false,
       "isCanonical": false,
       "branch": "555",
-      "note": "frozen head order maintainer org project branch regardless of input"
+      "note": "all entity names sort by ASCII bytes without hierarchy priority"
     },
     {
       "input": "KID:kbc-eu-central-1:branch-*:project-9876:b2-x:a-1",
-      "canonical": "KID:kbc-eu-central-1:project-9876:branch-*:a-1:b2-x",
+      "canonical": "KID:kbc-eu-central-1:a-1:b2-x:branch-*:project-9876",
       "parse": {
         "stack": "kbc-eu-central-1",
         "entities": {
@@ -708,11 +702,11 @@
       "isPattern": true,
       "isCanonical": false,
       "branch": "*",
-      "note": "branch is in the frozen head; b2 is an ordinary entity sorted alphabetically"
+      "note": "all entity names sort by ASCII bytes without hierarchy priority"
     },
     {
       "input": "KID:kbc-eu-central-1:project-9876:config-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-      "canonical": "KID:kbc-eu-central-1:project-9876:config-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "canonical": "KID:kbc-eu-central-1:config-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:project-9876",
       "parse": {
         "stack": "kbc-eu-central-1",
         "entities": {
@@ -726,13 +720,13 @@
       },
       "wildcards": [],
       "isPattern": false,
-      "isCanonical": true,
+      "isCanonical": false,
       "branch": null,
       "note": "raw value at 255 bytes"
     },
     {
       "input": "KID:kbc-eu-central-1:project-9876:config-%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC",
-      "canonical": "KID:kbc-eu-central-1:project-9876:config-%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC",
+      "canonical": "KID:kbc-eu-central-1:config-%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC:project-9876",
       "parse": {
         "stack": "kbc-eu-central-1",
         "entities": {
@@ -746,7 +740,7 @@
       },
       "wildcards": [],
       "isPattern": false,
-      "isCanonical": true,
+      "isCanonical": false,
       "branch": null,
       "note": "255 raw bytes of multibyte text = 765 encoded bytes; the cap is on raw bytes"
     },
@@ -928,7 +922,7 @@
     },
     {
       "input": "KID:s:zeta-9:branch-555:project-3:org-2:maintainer-1:alpha-x",
-      "canonical": "KID:s:maintainer-1:org-2:project-3:branch-555:alpha-x:zeta-9",
+      "canonical": "KID:s:alpha-x:branch-555:maintainer-1:org-2:project-3:zeta-9",
       "parse": {
         "stack": "s",
         "entities": {
@@ -952,7 +946,7 @@
       "isPattern": false,
       "isCanonical": false,
       "branch": "555",
-      "note": "full-name canonical head before open entities"
+      "note": "uniform ASCII order for all entities"
     },
     {
       "input": "KID:s:maintainer-0",
@@ -1270,7 +1264,7 @@
     },
     {
       "input": "KID:s:maintainer-1:org-2:project-3:branch-4:extra0-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra1-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra2-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra3-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra4-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra5-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra6-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:tail-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-      "canonical": "KID:s:maintainer-1:org-2:project-3:branch-4:extra0-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra1-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra2-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra3-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra4-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra5-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra6-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:tail-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "canonical": "KID:s:branch-4:extra0-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra1-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra2-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra3-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra4-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra5-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra6-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:maintainer-1:org-2:project-3:tail-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
       "parse": {
         "stack": "s",
         "entities": {
@@ -1304,9 +1298,9 @@
       },
       "wildcards": [],
       "isPattern": false,
-      "isCanonical": true,
+      "isCanonical": false,
       "branch": "4",
-      "note": "2048 bytes with full-name head"
+      "note": "2048 bytes with full entity names"
     }
   ],
   "invalid": [
@@ -2016,7 +2010,7 @@
         "bucket": "in.c-main",
         "table": "orders"
       },
-      "canonical": "KID:kbc-eu-central-1:project-9876:bucket-in.c-main:table-orders"
+      "canonical": "KID:kbc-eu-central-1:bucket-in.c-main:project-9876:table-orders"
     },
     {
       "stack": "kbc-eu-central-1",
@@ -2026,7 +2020,7 @@
         "org": "42",
         "project": "9876"
       },
-      "canonical": "KID:kbc-eu-central-1:org-42:project-9876:bucket-in.c-main:table-orders",
+      "canonical": "KID:kbc-eu-central-1:bucket-in.c-main:org-42:project-9876:table-orders",
       "note": "non-canonical input order"
     },
     {
@@ -2044,7 +2038,7 @@
         "project": "9876",
         "branch": "555"
       },
-      "canonical": "KID:kbc-eu-central-1:project-9876:branch-555"
+      "canonical": "KID:kbc-eu-central-1:branch-555:project-9876"
     },
     {
       "stack": "kbc-eu-central-1",
@@ -2052,7 +2046,7 @@
         "project": "9876",
         "branch": "dev"
       },
-      "canonical": "KID:kbc-eu-central-1:project-9876:branch-dev"
+      "canonical": "KID:kbc-eu-central-1:branch-dev:project-9876"
     },
     {
       "stack": "kbc-eu-central-1",
@@ -2068,7 +2062,7 @@
         "project": "9876",
         "config": "*"
       },
-      "canonical": "KID:kbc-eu-central-1:project-9876:config-*"
+      "canonical": "KID:kbc-eu-central-1:config-*:project-9876"
     },
     {
       "stack": "kbc-eu-central-1",
@@ -2076,7 +2070,7 @@
         "project": "9876",
         "config": "my config"
       },
-      "canonical": "KID:kbc-eu-central-1:project-9876:config-my%20config"
+      "canonical": "KID:kbc-eu-central-1:config-my%20config:project-9876"
     },
     {
       "stack": "kbc-eu-central-1",
@@ -2084,7 +2078,7 @@
         "project": "9876",
         "config": "a*b"
       },
-      "canonical": "KID:kbc-eu-central-1:project-9876:config-a%2Ab",
+      "canonical": "KID:kbc-eu-central-1:config-a%2Ab:project-9876",
       "note": "star inside a value is a literal"
     },
     {
@@ -2093,7 +2087,7 @@
         "project": "9876",
         "config": "a~b+c:d/e%f!g(h)i'j"
       },
-      "canonical": "KID:kbc-eu-central-1:project-9876:config-a%7Eb%2Bc%3Ad%2Fe%25f%21g%28h%29i%27j"
+      "canonical": "KID:kbc-eu-central-1:config-a%7Eb%2Bc%3Ad%2Fe%25f%21g%28h%29i%27j:project-9876"
     },
     {
       "stack": "kbc-eu-central-1",
@@ -2101,7 +2095,7 @@
         "project": "9876",
         "config": "řeší"
       },
-      "canonical": "KID:kbc-eu-central-1:project-9876:config-%C5%99e%C5%A1%C3%AD"
+      "canonical": "KID:kbc-eu-central-1:config-%C5%99e%C5%A1%C3%AD:project-9876"
     },
     {
       "stack": "kbc-eu-central-1",
@@ -2109,7 +2103,7 @@
         "project": "9876",
         "config": "😀"
       },
-      "canonical": "KID:kbc-eu-central-1:project-9876:config-%F0%9F%98%80"
+      "canonical": "KID:kbc-eu-central-1:config-%F0%9F%98%80:project-9876"
     },
     {
       "stack": "kbc-eu-central-1",
@@ -2117,7 +2111,7 @@
         "project": "9876",
         "config": "A-Za_z0.9"
       },
-      "canonical": "KID:kbc-eu-central-1:project-9876:config-A-Za_z0.9"
+      "canonical": "KID:kbc-eu-central-1:config-A-Za_z0.9:project-9876"
     },
     {
       "stack": "kbc-eu-central-1",
@@ -2125,7 +2119,7 @@
         "project": "9876",
         "config": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
       },
-      "canonical": "KID:kbc-eu-central-1:project-9876:config-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "canonical": "KID:kbc-eu-central-1:config-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:project-9876",
       "note": "255 raw bytes"
     },
     {
@@ -2134,7 +2128,7 @@
         "project": "9876",
         "config": "€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€"
       },
-      "canonical": "KID:kbc-eu-central-1:project-9876:config-%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC",
+      "canonical": "KID:kbc-eu-central-1:config-%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC:project-9876",
       "note": "255 raw bytes multibyte"
     },
     {
@@ -2234,7 +2228,7 @@
         "maintainer": "1",
         "alpha": "x"
       },
-      "canonical": "KID:s:maintainer-1:org-2:project-3:branch-555:alpha-x:zeta-9"
+      "canonical": "KID:s:alpha-x:branch-555:maintainer-1:org-2:project-3:zeta-9"
     },
     {
       "stack": "s",
@@ -2364,7 +2358,7 @@
         "extra6": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
         "tail": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
       },
-      "canonical": "KID:s:maintainer-1:org-2:project-3:branch-4:extra0-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra1-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra2-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra3-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra4-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra5-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra6-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:tail-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      "canonical": "KID:s:branch-4:extra0-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra1-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra2-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra3-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra4-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra5-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra6-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:maintainer-1:org-2:project-3:tail-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
     }
   ],
   "createInvalid": [
@@ -2799,5 +2793,6 @@
       "code": "too_long",
       "segment": null
     }
-  ]
+  ],
+  "canonicalOrder": "ascii"
 }

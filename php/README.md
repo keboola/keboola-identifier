@@ -2,8 +2,8 @@
 
 Immutable PHP 8.2+ implementation of the Keboola Identifier 1.0 draft, using the
 full hierarchy entity names `maintainer`, `org`, `project`, `branch`. This explicitly
-revises the entity naming from PR #1. Runtime requires PHP and its bundled PCRE
-extension, with no third-party runtime dependencies or build step.
+revises the entity naming and special head ordering from PR #1. Runtime requires PHP
+and its bundled PCRE extension, with no third-party runtime dependencies or build step.
 
 ## Installation
 
@@ -35,7 +35,7 @@ $kid = Kid::create('kbc-eu-central-1', [
     'project' => '9876',
     'branch' => 'default',
 ]);
-echo $kid; // KID:kbc-eu-central-1:project-9876:config-my%20config
+echo $kid; // KID:kbc-eu-central-1:config-my%20config:project-9876
 $kid->stack();        // 'kbc-eu-central-1'
 $kid->project();      // '9876', always a string
 $kid->branch();       // null (default branch)
@@ -63,11 +63,11 @@ use Keboola\Identifier\Kid;
 $text = 'KID:s:config-my%20config:branch-default:project-1';
 Kid::validate($text);      // true
 Kid::isCanonical($text);   // false; also false for invalid text
-Kid::canonicalize($text);  // 'KID:s:project-1:config-my%20config'
+Kid::canonicalize($text);  // 'KID:s:config-my%20config:project-1'
 Kid::parse($text);         // ['stack' => 's', 'entities' => [
                           //   'config' => 'my%20config', 'branch' => 'default', 'project' => '1']]
 $kid = Kid::fromString($text);
-$kid->entities();          // ['project' => '1', 'config' => 'my config']
+$kid->entities();          // ['config' => 'my config', 'project' => '1']
 $kid->equals(Kid::fromString('KID:s:project-1:config-my%20config')); // true
 ```
 
@@ -118,10 +118,11 @@ map iteration order is not an API guarantee except for `parse()`.
 The PHP API intentionally omits the snapshot's `Entity` constants class. `Kid`
 combines static service operations (validation, parsing and creation) with immutable
 identifier instances (accessors, comparison and serialization).
-The four hierarchy entities sort first as `maintainer`, `org`, `project`, `branch`,
-followed by other entities in ASCII order. `organization()` reads `'org'`.
-Only these named entities receive the hierarchy constraints and branch semantics;
-there is no automatic aliasing of unknown entity names.
+Input order has no effect on identity, for any entity. Canonical output sorts all
+entity names in ASCII order with no special priority; this only provides a stable
+serialization for equality and storage. `organization()` reads `'org'`.
+Value constraints and branch semantics are independent of ordering. There is no
+automatic aliasing of unknown entity names.
 
 ## Errors
 

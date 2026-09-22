@@ -125,6 +125,34 @@ same(true, $wildcard->isWildcard('config'), 'documented lossy entities round tri
 same(false, Kid::fromString('KID:s')->equals(Kid::fromString('KID:t')), 'different stacks');
 same('001', Kid::create('s', ['project' => '001'])->project(), 'no numeric normalization');
 
+// Any permutation of known and open entities denotes the same identifier.
+function permutations(array $entities): iterable
+{
+    if ($entities === []) {
+        yield [];
+        return;
+    }
+    foreach ($entities as $name => $value) {
+        $rest = $entities;
+        unset($rest[$name]);
+        foreach (permutations($rest) as $tail) {
+            yield [$name => $value] + $tail;
+        }
+    }
+}
+$canonical = 'KID:s:alpha-x:branch-4:maintainer-1:org-2:project-3:zeta-y';
+$reference = Kid::fromString($canonical);
+foreach (permutations(['maintainer' => '1', 'org' => '2', 'project' => '3', 'branch' => '4', 'alpha' => 'x', 'zeta' => 'y']) as $entities) {
+    $text = 'KID:s';
+    foreach ($entities as $name => $value) {
+        $text .= ':' . $name . '-' . $value;
+    }
+    same($entities, Kid::parse($text)['entities'], 'parse preserves arbitrary input order');
+    same($canonical, Kid::fromString($text)->toString(), 'uniform serialization of every permutation');
+    same($canonical, Kid::create('s', $entities)->toString(), 'creation independent of map order');
+    same(true, Kid::fromString($text)->equals($reference), 'order-independent equality');
+}
+
 // Exhaustive ASCII byte table, including NUL and controls, with an independent oracle.
 for ($byte = 0; $byte < 128; $byte++) {
     $raw = chr($byte);

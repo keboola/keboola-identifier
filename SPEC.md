@@ -1,11 +1,12 @@
 # KID — Keboola Identifier. Format specification
 
-Version: 1.0-draft, full entity names (2026-09-22). Normative for every implementation in this repository
+Version: 1.0-draft, full entity names and uniform ordering (2026-09-22). Normative for every implementation in this repository
 (PHP, TypeScript, Python, Go). The shared test vectors in `spec/test-vectors.json` are
 part of this specification; an implementation that disagrees with a vector is wrong.
 
-This draft intentionally supersedes the entity naming in PR #1: the hierarchy
-entities are `maintainer`, `org`, `project`, `branch`. The original snapshot is
+This draft intentionally supersedes the entity naming and special head ordering
+in PR #1: the hierarchy entities are `maintainer`, `org`, `project`, `branch`, with
+no ordering priority over any other entity. The original snapshot is
 preserved in `handoff/pr1-reimplementation/` for historical reference, not as the
 current naming contract. No automatic conversion or aliasing of old names occurs.
 
@@ -79,8 +80,9 @@ identifier. One canonical stack identifier for both, or a mapping table, is to b
 
 Any other value for these entities is `bad_value`.
 
-The set `{maintainer, org, project, branch}` and its canonical order are **frozen**. A future entity does
-not join this group; it sorts alphabetically with the rest.
+These value constraints do not imply any ordering or parent relationship.
+All entities have equal ordering semantics: input order does not affect identity,
+and canonical serialization sorts every entity by its name using ASCII byte order.
 
 ### 4.2 Branch semantics
 
@@ -173,12 +175,14 @@ Canonical form is the only serialization the library emits and the only form tha
 stored, logged or passed to another service.
 
 1. `KID:` + stack.
-2. Then `maintainer`, `org`, `project`, `branch`, in that order, each only if present. `branch-default` is dropped.
-3. Then every other entity in **ascending byte order** of the entity name (plain ASCII
+2. Drop `branch-default` if present.
+3. Write **all** remaining entities in **ascending byte order** of the entity name (plain ASCII
    comparison; no locale collation, no `localeCompare`, no `strcoll`, PHP `SORT_STRING`).
 4. Values as encoded per section 5.
 
 Equality of two KIDs is byte-wise equality of their canonical forms.
+Sorting is only a deterministic serialization convention, not a semantic hierarchy:
+no entity has a privileged position, and all input permutations denote the same KID.
 
 ## 7. Limits
 
@@ -314,8 +318,8 @@ commit tests against the same file.
 - Conversion to and from the authorization URN (`kbc://…`), pending agreement on the open
   differences listed in the review document.
 - Format versioning. The `KID:` prefix carries no version; a breaking change would need a
-  new prefix after this draft is finalized. This draft's explicit naming revision is
+  new prefix after this draft is finalized. This draft's naming and ordering revisions are
   documented at the top of this specification. Accepted risk is mitigated by freezing
-  `{maintainer, org, project, branch}`, the canonical order, the
+  the constrained entity rules, uniform ASCII serialization order, the
   encoding table and both length limits (255 per value, 2048 total). Changing any of
   those is a new prefix, not a new library release.
