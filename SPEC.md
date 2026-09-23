@@ -235,10 +235,19 @@ yield the same code everywhere:
 Only 4e judges percent-escapes; 4d never inspects what follows a `%`. This keeps
 `non_canonical_encoding` reachable and identical across implementations.
 
-`create()` accepts **strings only**; any other type is rejected (`bad_value`), never
-coerced. It applies, in order: 3 on the stack; per entity: the entity regex (`bad_segment`),
-uniqueness (`duplicate_entity`), raw value non-empty and constrained-entity sets (`bad_value`),
-raw value ≤ 255 bytes (`too_long`); then 2 on the canonical string it produced.
+`create()` accepts **strings only**, never coercing other types. It applies, in order:
+
+1. The stack is a string and passes check 3 (`bad_stack`).
+2. For each entity, in map iteration order:
+   - the entity regex (`bad_segment`);
+   - uniqueness (`duplicate_entity`, not reachable with a map of unique keys);
+   - the raw value is a string, is non-empty and satisfies constrained-entity sets (`bad_value`);
+   - raw value ≤ 255 bytes (`too_long`);
+   - raw value is valid UTF-8 (`bad_utf8`).
+3. Encode the values and check 2 on the canonical string produced (`too_long`).
+
+In `create()`, a value that is both too long and invalid UTF-8 reports `too_long`.
+In text parsing, UTF-8 validity precedes the decoded-value length check as listed above.
 
 ## 9. Library API (language-neutral contract)
 
@@ -262,6 +271,10 @@ raw value ≤ 255 bytes (`too_long`); then 2 on the canonical string it produced
 
 Absent is `null` (PHP), `undefined` (TypeScript), `None` (Python), `("", false)` (Go).
 Objects are immutable; there is no `with()`/`without()`.
+
+`parse()` keeps the stack separate from its `entities` map because the catalog is
+open. For example, `KID:s:stack-x` parses as `{stack: "s", entities: {stack: "x"}}`.
+Flattening these maps would lose either the actual stack or the `stack` entity.
 
 A literal `*` cannot be produced through `create()` (its `*` always means wildcard); such
 a KID can only be read via `fromString`. Documented edge.
@@ -303,11 +316,24 @@ minimum:
   `project-abc`, `branch-main`, duplicate entity, uppercase entity, missing hyphen, 2048 vs 2049
   bytes, a 255- vs 256-byte raw value, invalid UTF-8 (`%FF`), `+` and `~` handling, a
   multibyte UTF-8 value, `isCanonical` on invalid input (false);
-- `create()` cases: raw value → canonical, entities given in non-canonical order → canonical, `branch-default` dropped, non-string input rejected;
+- `create()` cases: raw value → canonical, entities given in non-canonical order → canonical, `branch-default` dropped, non-string input rejected, invalid UTF-8 rejected;
 - `entities()` on a `%2A` literal versus a `*` wildcard (both read back as `*`, `isWildcard` differs).
 
 The vectors live in this monorepo next to the four packages, so every package at a given
 commit tests against the same file.
+
+### 10.1 Byte-string fixtures
+
+JSON strings cannot contain invalid UTF-8. Creation cases for byte-string inputs
+therefore use `entitiesHex` **instead of** `entities`: a map from entity name to an
+even-length hexadecimal string describing the raw bytes passed to `create()`.
+`segmentHex` **instead of** `segment` describes the expected offending segment as
+bytes. Test loaders decode these fields before invoking the API and comparing the
+exception. They are fixture notation only, not an accepted API input format.
+
+For example, `entitiesHex: {"config": "ff"}` means a raw one-byte string `0xFF`,
+not the two-character string `"ff"`; the expected code is `bad_utf8` and
+`segmentHex` is `"636f6e6669672dff"` (`config-` followed by `0xFF`).
 
 ## 11. Out of scope for 1.0, tracked
 

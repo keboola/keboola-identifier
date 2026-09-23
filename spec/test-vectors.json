@@ -7,6 +7,26 @@
   },
   "valid": [
     {
+      "input": "KID:s:stack-x:entities-y",
+      "canonical": "KID:s:entities-y:stack-x",
+      "parse": {
+        "stack": "s",
+        "entities": {
+          "stack": "x",
+          "entities": "y"
+        }
+      },
+      "entities": {
+        "entities": "y",
+        "stack": "x"
+      },
+      "wildcards": [],
+      "isPattern": false,
+      "isCanonical": false,
+      "branch": null,
+      "note": "open entity names must not collide with parse result fields"
+    },
+    {
       "input": "KID:kbc-eu-central-1",
       "canonical": "KID:kbc-eu-central-1",
       "parse": {
@@ -1999,6 +2019,15 @@
   ],
   "create": [
     {
+      "stack": "s",
+      "entities": {
+        "stack": "x",
+        "entities": "y"
+      },
+      "canonical": "KID:s:entities-y:stack-x",
+      "note": "stack and entities are valid open entity names"
+    },
+    {
       "stack": "kbc-eu-central-1",
       "entities": {},
       "canonical": "KID:kbc-eu-central-1"
@@ -2362,6 +2391,24 @@
     }
   ],
   "createInvalid": [
+    {
+      "stack": "s",
+      "entitiesHex": {
+        "config": "ff"
+      },
+      "code": "bad_utf8",
+      "segmentHex": "636f6e6669672dff",
+      "note": "create rejects an invalid raw UTF-8 byte"
+    },
+    {
+      "stack": "s",
+      "entitiesHex": {
+        "config": "eda080"
+      },
+      "code": "bad_utf8",
+      "segmentHex": "636f6e6669672deda080",
+      "note": "create rejects a UTF-8 encoded surrogate"
+    },
     {
       "stack": "AWS",
       "entities": {

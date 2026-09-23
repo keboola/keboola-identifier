@@ -7,7 +7,7 @@ KID:kbc-eu-central-1:bucket-in.c-main:project-9876:table-orders
 ```
 
 This reimplementation currently delivers the [PHP package](php/README.md)
-`keboola/identifier`, namespace `Keboola\Identifier`, for PHP 8.2 or newer.
+`keboola/identifier`, namespace `Keboola\Identifier`, for PHP 8.3 or newer.
 
 ## Contract and repository layout
 

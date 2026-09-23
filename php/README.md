@@ -1,6 +1,6 @@
 # keboola/identifier
 
-Immutable PHP 8.2+ implementation of the Keboola Identifier 1.0 draft, using the
+Immutable PHP 8.3+ implementation of the Keboola Identifier 1.0 draft, using the
 full hierarchy entity names `maintainer`, `org`, `project`, `branch`. This explicitly
 revises the entity naming and special head ordering from PR #1. Runtime requires PHP
 and its bundled PCRE extension, with no third-party runtime dependencies or build step.
@@ -76,6 +76,11 @@ $kid->equals(Kid::fromString('KID:s:project-1:config-my%20config')); // true
 `create()` checks the canonical **output** after removing `branch-default`.
 Both enforce the 255-byte decoded value limit. Lowercase hex, escapes for unencoded
 bytes, raw spaces, raw `+` and raw `~` are rejected, not repaired.
+
+The nested `entities` map prevents collisions with the stack field: for example,
+`Kid::parse('KID:s:stack-x')` returns
+`['stack' => 's', 'entities' => ['stack' => 'x']]`. The catalog is open, so `stack`
+is a valid entity name and cannot share a flat map with the actual stack.
 
 ## Wildcards and immutable objects
 
@@ -164,6 +169,8 @@ composer archive --format=tar --dir=/path/to/output
 - `tests/SharedVectorsTest.php` reads `../spec/test-vectors.json` for valid,
   invalid and creation cases. Every dataset is a separate PHPUnit test result;
   failures identify the vector and, for errors, the public entry point.
+  Invalid UTF-8 creation cases use `entitiesHex` and `segmentHex` fixture fields;
+  the provider decodes these to byte strings before calling the API (see SPEC §10).
 - `tests/KidTest.php` defines PHP-specific data providers and regression tests,
   including non-string inputs, invalid byte strings, all ASCII bytes and entity
   order permutations. It deliberately uses PHP's default coercive mode to verify

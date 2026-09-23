@@ -115,7 +115,23 @@ final class SharedVectorsTest extends TestCase
 
     public static function invalidCreateCases(): iterable
     {
-        yield from self::vectors('createInvalid');
+        foreach (self::vectors('createInvalid') as $label => [$case]) {
+            if (isset($case['entitiesHex'])) {
+                $case['entities'] = array_map(self::fixtureBytes(...), $case['entitiesHex']);
+            }
+            if (isset($case['segmentHex'])) {
+                $case['segment'] = self::fixtureBytes($case['segmentHex']);
+            }
+            yield $label => [$case];
+        }
+    }
+
+    private static function fixtureBytes(string $hex): string
+    {
+        if (strlen($hex) % 2 !== 0 || preg_match('/\A[0-9a-fA-F]*\z/', $hex) !== 1) {
+            throw new \UnexpectedValueException('Invalid hexadecimal byte fixture');
+        }
+        return hex2bin($hex);
     }
 
     private static function vectors(string $group): iterable
