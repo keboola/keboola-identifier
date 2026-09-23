@@ -1,0 +1,14 @@
+{
+  "name": "@keboola/identifier",
+  "version": "0.1.0",
+  "description": "Immutable Keboola identifiers and patterns",
+  "type": "module",
+  "exports": {".": {"types": "./src/index.d.ts", "import": "./src/index.js"}},
+  "files": ["src", "README.md"],
+  "engines": {"node": ">=22"},
+  "scripts": {
+    "test": "node --test",
+    "test:types": "npx --yes --package typescript@5.9.3 tsc --noEmit --strict --module nodenext --target es2022 types/usage.ts",
+    "example": "node examples/usage.js"
+  }
+}

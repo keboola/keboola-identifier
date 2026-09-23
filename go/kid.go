@@ -1,0 +1,272 @@
+// Package kid implements immutable KID 1.0 identifiers and patterns.
+package kid
+
+import (
+	"fmt"
+	"regexp"
+	"sort"
+	"strconv"
+	"strings"
+	"unicode/utf8"
+)
+
+const (
+	EntityMaintainer = "maintainer"
+	EntityOrg        = "org"
+	EntityProject    = "project"
+	EntityBranch     = "branch"
+	EntityBucket     = "bucket"
+	EntityTable      = "table"
+	EntityComponent  = "component"
+	EntityConfig     = "config"
+	EntityRow        = "row"
+	EntityWorkspace  = "workspace"
+	EntityUser       = "user"
+	EntityApp        = "app"
+	EntityStream     = "stream"
+	unencoded        = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789._-"
+)
+
+var (
+	stackPattern  = regexp.MustCompile(`^[a-z0-9]+(-[a-z0-9]+)*$`)
+	entityPattern = regexp.MustCompile(`^[a-z][a-z0-9]*$`)
+	numberPattern = regexp.MustCompile(`^[0-9]+$`)
+	valuePattern  = regexp.MustCompile(`^[A-Za-z0-9._%\-]+$`)
+	hexPattern    = regexp.MustCompile(`^[0-9A-F]{2}$`)
+)
+
+// InvalidKidError describes the first failed validation check.
+// Segment is empty when not applicable (or for an empty input segment).
+type InvalidKidError struct{ Code, Segment string }
+
+func (e *InvalidKidError) Error() string { return e.Code }
+func invalid(code, segment string) error { return &InvalidKidError{code, segment} }
+
+// Parsed is a flat map of the stack and encoded entities, including branch-default.
+// Like all Go maps, its iteration order is unspecified.
+type Parsed map[string]string
+
+// Kid stores only its canonical representation. Obtain one with New or FromString.
+// The zero value is not a valid identifier.
+type Kid struct{ canonical string }
+
+func checkStack(stack string) error {
+	if len(stack) > 64 || !stackPattern.MatchString(stack) {
+		return invalid("bad_stack", "")
+	}
+	return nil
+}
+func checkEntity(entity, segment string) error {
+	if entity == "stack" || !entityPattern.MatchString(entity) {
+		return invalid("bad_segment", segment)
+	}
+	return nil
+}
+func checkValue(entity, value, segment string) error {
+	valid := value != ""
+	switch entity {
+	case EntityMaintainer, EntityOrg, EntityProject, EntityBranch:
+		valid = value == "*" || numberPattern.MatchString(value) || (entity == EntityBranch && (value == "dev" || value == "default"))
+	}
+	if !valid {
+		return invalid("bad_value", segment)
+	}
+	return nil
+}
+func decode(value, segment string) (string, error) {
+	raw := make([]byte, 0, len(value))
+	for i := 0; i < len(value); i++ {
+		if value[i] != '%' {
+			raw = append(raw, value[i])
+			continue
+		}
+		if i+2 >= len(value) || !hexPattern.MatchString(value[i+1:i+3]) {
+			return "", invalid("non_canonical_encoding", segment)
+		}
+		n, _ := strconv.ParseUint(value[i+1:i+3], 16, 8)
+		if strings.IndexByte(unencoded, byte(n)) >= 0 {
+			return "", invalid("non_canonical_encoding", segment)
+		}
+		raw = append(raw, byte(n))
+		i += 2
+	}
+	if !utf8.Valid(raw) {
+		return "", invalid("bad_utf8", segment)
+	}
+	if len(raw) > 255 {
+		return "", invalid("too_long", segment)
+	}
+	return string(raw), nil
+}
+func serialize(stack string, entities map[string]string) string {
+	names := make([]string, 0, len(entities))
+	for name, value := range entities {
+		if name != EntityBranch || value != "default" {
+			names = append(names, name)
+		}
+	}
+	sort.Strings(names)
+	var text strings.Builder
+	text.WriteString("KID:" + stack)
+	for _, name := range names {
+		text.WriteString(":" + name + "-" + entities[name])
+	}
+	return text.String()
+}
+
+// Parse validates text and returns its encoded fields without canonicalizing.
+func Parse(text string) (Parsed, error) {
+	if !strings.HasPrefix(text, "KID:") {
+		return nil, invalid("bad_prefix", "")
+	}
+	if len(text) > 2048 {
+		return nil, invalid("too_long", "")
+	}
+	parts := strings.Split(text[4:], ":")
+	if err := checkStack(parts[0]); err != nil {
+		return nil, err
+	}
+	parsed := Parsed{"stack": parts[0]}
+	for _, segment := range parts[1:] {
+		if segment == "" {
+			return nil, invalid("empty_segment", segment)
+		}
+		entity, value, ok := strings.Cut(segment, "-")
+		if !ok {
+			return nil, invalid("bad_segment", segment)
+		}
+		if err := checkEntity(entity, segment); err != nil {
+			return nil, err
+		}
+		if _, exists := parsed[entity]; exists {
+			return nil, invalid("duplicate_entity", segment)
+		}
+		if err := checkValue(entity, value, segment); err != nil {
+			return nil, err
+		}
+		if value != "*" && !valuePattern.MatchString(value) {
+			return nil, invalid("bad_value", segment)
+		}
+		if _, err := decode(value, segment); err != nil {
+			return nil, err
+		}
+		parsed[entity] = value
+	}
+	return parsed, nil
+}
+
+func FromString(text string) (*Kid, error) {
+	parsed, err := Parse(text)
+	if err != nil {
+		return nil, err
+	}
+	stack := parsed["stack"]
+	delete(parsed, "stack")
+	return &Kid{serialize(stack, parsed)}, nil
+}
+
+// New accepts raw UTF-8 values. A whole "*" denotes a wildcard.
+// Entity checks run in Go map iteration order; use text for ordered error precedence.
+func New(stack string, entities map[string]string) (*Kid, error) {
+	if err := checkStack(stack); err != nil {
+		return nil, err
+	}
+	encoded := make(map[string]string, len(entities))
+	for entity, value := range entities {
+		segment := entity + "-" + value
+		if err := checkEntity(entity, segment); err != nil {
+			return nil, err
+		}
+		if err := checkValue(entity, value, segment); err != nil {
+			return nil, err
+		}
+		if len(value) > 255 {
+			return nil, invalid("too_long", segment)
+		}
+		if !utf8.ValidString(value) {
+			return nil, invalid("bad_utf8", segment)
+		}
+		if value == "*" {
+			encoded[entity] = value
+			continue
+		}
+		var out strings.Builder
+		for i := 0; i < len(value); i++ {
+			if strings.IndexByte(unencoded, value[i]) >= 0 {
+				out.WriteByte(value[i])
+			} else {
+				fmt.Fprintf(&out, "%%%02X", value[i])
+			}
+		}
+		encoded[entity] = out.String()
+	}
+	canonical := serialize(stack, encoded)
+	if len(canonical) > 2048 {
+		return nil, invalid("too_long", "")
+	}
+	return &Kid{canonical}, nil
+}
+
+func Validate(text string) bool { _, err := Parse(text); return err == nil }
+func Canonicalize(text string) (string, error) {
+	k, err := FromString(text)
+	if err != nil {
+		return "", err
+	}
+	return k.String(), nil
+}
+func IsCanonical(text string) bool {
+	canonical, err := Canonicalize(text)
+	return err == nil && canonical == text
+}
+func (k *Kid) String() string { return k.canonical }
+func (k *Kid) Stack() string {
+	if k.canonical == "" {
+		return ""
+	}
+	return strings.SplitN(k.canonical, ":", 3)[1]
+}
+func (k *Kid) encoded() map[string]string {
+	entities := map[string]string{}
+	parts := strings.Split(k.canonical, ":")
+	if len(parts) < 3 {
+		return entities
+	}
+	for _, segment := range parts[2:] {
+		name, value, _ := strings.Cut(segment, "-")
+		entities[name] = value
+	}
+	return entities
+}
+func (k *Kid) Get(entity string) (string, bool) {
+	value, ok := k.encoded()[entity]
+	if !ok {
+		return "", false
+	}
+	raw, _ := decode(value, "")
+	return raw, true
+}
+func (k *Kid) Has(entity string) bool { _, ok := k.encoded()[entity]; return ok }
+func (k *Kid) Entities() map[string]string {
+	values := k.encoded()
+	for name, value := range values {
+		values[name], _ = decode(value, "")
+	}
+	return values
+}
+func (k *Kid) Maintainer() (string, bool)    { return k.Get(EntityMaintainer) }
+func (k *Kid) Organization() (string, bool)  { return k.Get(EntityOrg) }
+func (k *Kid) Project() (string, bool)       { return k.Get(EntityProject) }
+func (k *Kid) Branch() (string, bool)        { return k.Get(EntityBranch) }
+func (k *Kid) IsWildcard(entity string) bool { return k.encoded()[entity] == "*" }
+func (k *Kid) IsPattern() bool {
+	for name, value := range k.encoded() {
+		if value == "*" || (name == EntityBranch && value == "dev") {
+			return true
+		}
+	}
+	return false
+}
+func (k *Kid) Equals(other *Kid) bool {
+	return k != nil && other != nil && k.canonical == other.canonical
+}

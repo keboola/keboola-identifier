@@ -6,20 +6,32 @@ KID is an offline textual identifier for Keboola stacks and objects:
 KID:kbc-eu-central-1:bucket-in.c-main:project-9876:table-orders
 ```
 
-The repository provides the [PHP package](php/README.md)
-`keboola/identifier`, namespace `Keboola\Identifier`, for PHP 8.3 or newer.
+Implementations share the same specification and committed test vectors:
+
+| Language | Package | Runtime |
+|---|---|---|
+| [PHP](php/README.md) | `keboola/identifier` | PHP 8.3+ |
+| [Go](go/README.md) | `github.com/keboola/keboola-identifier/go` (package `kid`) | Go 1.23+ |
+| [Python](python/README.md) | `keboola-identifier` (import `keboola_identifier`) | Python 3.11+ |
+| [JavaScript](javascript/README.md) | `@keboola/identifier` (ESM, TypeScript declarations included) | Node.js 22+ |
+
+Package installation from this checkout is documented below; registry publication
+is separate from implementation.
 
 ## Contract and repository layout
 
-The [format specification](SPEC.md) defines the KID contract. The PHP package
-implements this contract and is tested against the shared test vectors.
+The [format specification](SPEC.md) defines the KID contract. All packages
+implement this contract and are tested against the shared test vectors.
 
 | Path | Contents |
 |---|---|
 | [SPEC.md](SPEC.md) | Normative KID 1.0-draft grammar, API and entity catalog (§4.3) |
 | [spec/test-vectors.json](spec/test-vectors.json) | Committed shared test data, including regressions |
 | [php/](php/) | Composer package, examples and tests |
-| [.github/workflows/php.yml](.github/workflows/php.yml) | PHP 8.3–8.5 CI |
+| [go/](go/) | Go module, example and tests |
+| [python/](python/) | Python package, example and tests |
+| [javascript/](javascript/) | JavaScript package, TypeScript declarations, example and tests |
+| [.github/workflows/](.github/workflows/) | Per-language CI matrices |
 
 ## Format at a glance
 
@@ -74,6 +86,31 @@ The committed Composer lockfile pins development dependencies for CI.
 
 The JSON vectors are committed test data and are read directly by PHPUnit.
 PHP-specific regression cases live in the `KidTest` data providers.
+
+For the other packages, run from their respective directories:
+
+```bash
+# go/
+go test -race -cover ./...
+go vet ./...
+go run ./examples/usage
+
+# python/ (activate a virtual environment first)
+python -m pip install .
+python -m unittest discover -s tests -v
+python examples/usage.py
+
+# javascript/ (no dependencies or build step)
+npm test
+npm run example
+npm pack --dry-run
+```
+
+All suites read `spec/test-vectors.json` directly and test error codes and offending
+segments as well as canonicalization and accessors. Language-specific tests cover
+all 720 permutations of six entities, the ASCII encoding table, immutable state,
+and literal-star versus wildcard equality. Go additionally supplies a round-trip
+fuzz target. See package READMEs for Unicode fixture handling and Go map ordering.
 
 ## Producer conventions and scope
 
