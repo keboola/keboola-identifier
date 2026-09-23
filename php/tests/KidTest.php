@@ -121,7 +121,7 @@ final class KidTest extends TestCase
         foreach ($entities as $name => $value) {
             $text .= ':' . $name . '-' . $value;
         }
-        self::assertSame($entities, Kid::parse($text)['entities'], 'Input order is retained by parse');
+        self::assertSame(['stack' => 's'] + $entities, Kid::parse($text), 'Stack first, then original entity order');
         self::assertSame($canonical, Kid::fromString($text)->toString());
         self::assertSame($canonical, Kid::create('s', $entities)->toString());
         self::assertTrue(Kid::fromString($text)->equals(Kid::fromString($canonical)));

@@ -7,31 +7,26 @@
   },
   "valid": [
     {
-      "input": "KID:s:stack-x:entities-y",
-      "canonical": "KID:s:entities-y:stack-x",
+      "input": "KID:s:entities-y",
+      "canonical": "KID:s:entities-y",
       "parse": {
         "stack": "s",
-        "entities": {
-          "stack": "x",
-          "entities": "y"
-        }
+        "entities": "y"
       },
       "entities": {
-        "entities": "y",
-        "stack": "x"
+        "entities": "y"
       },
       "wildcards": [],
       "isPattern": false,
-      "isCanonical": false,
+      "isCanonical": true,
       "branch": null,
-      "note": "open entity names must not collide with parse result fields"
+      "note": "entities is an ordinary open entity in the flat parse map"
     },
     {
       "input": "KID:kbc-eu-central-1",
       "canonical": "KID:kbc-eu-central-1",
       "parse": {
-        "stack": "kbc-eu-central-1",
-        "entities": {}
+        "stack": "kbc-eu-central-1"
       },
       "entities": {},
       "wildcards": [],
@@ -45,9 +40,7 @@
       "canonical": "KID:kbc-eu-central-1:maintainer-123",
       "parse": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "maintainer": "123"
-        }
+        "maintainer": "123"
       },
       "entities": {
         "maintainer": "123"
@@ -62,9 +55,7 @@
       "canonical": "KID:kbc-eu-central-1:org-42",
       "parse": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "org": "42"
-        }
+        "org": "42"
       },
       "entities": {
         "org": "42"
@@ -79,11 +70,9 @@
       "canonical": "KID:kbc-eu-central-1:maintainer-123:org-42:project-9876",
       "parse": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "maintainer": "123",
-          "org": "42",
-          "project": "9876"
-        }
+        "maintainer": "123",
+        "org": "42",
+        "project": "9876"
       },
       "entities": {
         "maintainer": "123",
@@ -100,10 +89,8 @@
       "canonical": "KID:kbc-eu-central-1:branch-555:project-9876",
       "parse": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "project": "9876",
-          "branch": "555"
-        }
+        "project": "9876",
+        "branch": "555"
       },
       "entities": {
         "project": "9876",
@@ -119,11 +106,9 @@
       "canonical": "KID:kbc-eu-central-1:bucket-in.c-main:project-9876:table-orders",
       "parse": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "project": "9876",
-          "bucket": "in.c-main",
-          "table": "orders"
-        }
+        "project": "9876",
+        "bucket": "in.c-main",
+        "table": "orders"
       },
       "entities": {
         "project": "9876",
@@ -141,12 +126,10 @@
       "canonical": "KID:kbc-eu-central-1:branch-555:bucket-in.c-main:project-9876:table-orders",
       "parse": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "project": "9876",
-          "branch": "555",
-          "bucket": "in.c-main",
-          "table": "orders"
-        }
+        "project": "9876",
+        "branch": "555",
+        "bucket": "in.c-main",
+        "table": "orders"
       },
       "entities": {
         "project": "9876",
@@ -164,12 +147,10 @@
       "canonical": "KID:kbc-eu-central-1:component-keboola.ex-db-snowflake:config-1234:project-9876:row-7",
       "parse": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "project": "9876",
-          "component": "keboola.ex-db-snowflake",
-          "config": "1234",
-          "row": "7"
-        }
+        "project": "9876",
+        "component": "keboola.ex-db-snowflake",
+        "config": "1234",
+        "row": "7"
       },
       "entities": {
         "project": "9876",
@@ -187,11 +168,9 @@
       "canonical": "KID:kbc-eu-central-1:component-keboola.ex-db-snowflake:config-my%20config:project-9876",
       "parse": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "project": "9876",
-          "component": "keboola.ex-db-snowflake",
-          "config": "my%20config"
-        }
+        "project": "9876",
+        "component": "keboola.ex-db-snowflake",
+        "config": "my%20config"
       },
       "entities": {
         "project": "9876",
@@ -209,9 +188,7 @@
       "canonical": "KID:kbc-eu-central-1:user-555",
       "parse": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "user": "555"
-        }
+        "user": "555"
       },
       "entities": {
         "user": "555"
@@ -226,10 +203,8 @@
       "canonical": "KID:kbc-eu-central-1:project-9876:workspace-8812",
       "parse": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "project": "9876",
-          "workspace": "8812"
-        }
+        "project": "9876",
+        "workspace": "8812"
       },
       "entities": {
         "project": "9876",
@@ -245,10 +220,8 @@
       "canonical": "KID:kbc-eu-central-1:dashboard-abc-42:project-9876",
       "parse": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "project": "9876",
-          "dashboard": "abc-42"
-        }
+        "project": "9876",
+        "dashboard": "abc-42"
       },
       "entities": {
         "project": "9876",
@@ -265,9 +238,7 @@
       "canonical": "KID:kbc-us-east-1:project-1",
       "parse": {
         "stack": "kbc-us-east-1",
-        "entities": {
-          "project": "1"
-        }
+        "project": "1"
       },
       "entities": {
         "project": "1"
@@ -282,9 +253,7 @@
       "canonical": "KID:a:project-1",
       "parse": {
         "stack": "a",
-        "entities": {
-          "project": "1"
-        }
+        "project": "1"
       },
       "entities": {
         "project": "1"
@@ -299,8 +268,7 @@
       "input": "KID:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
       "canonical": "KID:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
       "parse": {
-        "stack": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-        "entities": {}
+        "stack": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
       },
       "entities": {},
       "wildcards": [],
@@ -314,11 +282,9 @@
       "canonical": "KID:kbc-eu-central-1:bucket-*:org-42:project-*",
       "parse": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "org": "42",
-          "project": "*",
-          "bucket": "*"
-        }
+        "org": "42",
+        "project": "*",
+        "bucket": "*"
       },
       "entities": {
         "org": "42",
@@ -338,12 +304,10 @@
       "canonical": "KID:kbc-eu-central-1:branch-dev:component-keboola.wr-db:config-*:project-9876",
       "parse": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "project": "9876",
-          "branch": "dev",
-          "component": "keboola.wr-db",
-          "config": "*"
-        }
+        "project": "9876",
+        "branch": "dev",
+        "component": "keboola.wr-db",
+        "config": "*"
       },
       "entities": {
         "project": "9876",
@@ -364,11 +328,9 @@
       "canonical": "KID:kbc-eu-central-1:branch-*:bucket-in.c-main:project-9876",
       "parse": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "project": "9876",
-          "branch": "*",
-          "bucket": "in.c-main"
-        }
+        "project": "9876",
+        "branch": "*",
+        "bucket": "in.c-main"
       },
       "entities": {
         "project": "9876",
@@ -387,9 +349,7 @@
       "canonical": "KID:kbc-eu-central-1:project-*",
       "parse": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "project": "*"
-        }
+        "project": "*"
       },
       "entities": {
         "project": "*"
@@ -406,12 +366,10 @@
       "canonical": "KID:kbc-eu-central-1:branch-*:maintainer-*:org-*:project-*",
       "parse": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "maintainer": "*",
-          "org": "*",
-          "project": "*",
-          "branch": "*"
-        }
+        "maintainer": "*",
+        "org": "*",
+        "project": "*",
+        "branch": "*"
       },
       "entities": {
         "maintainer": "*",
@@ -434,11 +392,9 @@
       "canonical": "KID:kbc-eu-central-1:component-x:config-%2A:project-9876",
       "parse": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "project": "9876",
-          "component": "x",
-          "config": "%2A"
-        }
+        "project": "9876",
+        "component": "x",
+        "config": "%2A"
       },
       "entities": {
         "project": "9876",
@@ -456,10 +412,8 @@
       "canonical": "KID:kbc-eu-central-1:config-a%2Ab:project-9876",
       "parse": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "project": "9876",
-          "config": "a%2Ab"
-        }
+        "project": "9876",
+        "config": "a%2Ab"
       },
       "entities": {
         "project": "9876",
@@ -475,10 +429,8 @@
       "canonical": "KID:kbc-eu-central-1:config-%C5%99e%C5%A1%C3%AD:project-9876",
       "parse": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "project": "9876",
-          "config": "%C5%99e%C5%A1%C3%AD"
-        }
+        "project": "9876",
+        "config": "%C5%99e%C5%A1%C3%AD"
       },
       "entities": {
         "project": "9876",
@@ -495,10 +447,8 @@
       "canonical": "KID:kbc-eu-central-1:config-a%7Eb%2Bc%21d%28e%29f%27g%2Fh%3Ai%25j:project-9876",
       "parse": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "project": "9876",
-          "config": "a%7Eb%2Bc%21d%28e%29f%27g%2Fh%3Ai%25j"
-        }
+        "project": "9876",
+        "config": "a%7Eb%2Bc%21d%28e%29f%27g%2Fh%3Ai%25j"
       },
       "entities": {
         "project": "9876",
@@ -515,10 +465,8 @@
       "canonical": "KID:kbc-eu-central-1:config-A-Za_z0.9:project-9876",
       "parse": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "project": "9876",
-          "config": "A-Za_z0.9"
-        }
+        "project": "9876",
+        "config": "A-Za_z0.9"
       },
       "entities": {
         "project": "9876",
@@ -535,10 +483,8 @@
       "canonical": "KID:kbc-eu-central-1:config-%F0%9F%98%80:project-9876",
       "parse": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "project": "9876",
-          "config": "%F0%9F%98%80"
-        }
+        "project": "9876",
+        "config": "%F0%9F%98%80"
       },
       "entities": {
         "project": "9876",
@@ -555,10 +501,8 @@
       "canonical": "KID:kbc-eu-central-1:config-%CC%81:project-9876",
       "parse": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "project": "9876",
-          "config": "%CC%81"
-        }
+        "project": "9876",
+        "config": "%CC%81"
       },
       "entities": {
         "project": "9876",
@@ -575,11 +519,9 @@
       "canonical": "KID:kbc-eu-central-1:bucket-in.c-main:project-9876",
       "parse": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "project": "9876",
-          "branch": "default",
-          "bucket": "in.c-main"
-        }
+        "project": "9876",
+        "branch": "default",
+        "bucket": "in.c-main"
       },
       "entities": {
         "project": "9876",
@@ -596,9 +538,7 @@
       "canonical": "KID:kbc-eu-central-1",
       "parse": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "branch": "default"
-        }
+        "branch": "default"
       },
       "entities": {},
       "wildcards": [],
@@ -611,12 +551,10 @@
       "canonical": "KID:kbc-eu-central-1:bucket-in.c-main:org-42:project-9876:table-orders",
       "parse": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "table": "orders",
-          "project": "9876",
-          "bucket": "in.c-main",
-          "org": "42"
-        }
+        "table": "orders",
+        "project": "9876",
+        "bucket": "in.c-main",
+        "org": "42"
       },
       "entities": {
         "org": "42",
@@ -635,12 +573,10 @@
       "canonical": "KID:kbc-eu-central-1:alpha-2:maintainer-5:zeta-1",
       "parse": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "zeta": "1",
-          "branch": "default",
-          "alpha": "2",
-          "maintainer": "5"
-        }
+        "zeta": "1",
+        "branch": "default",
+        "alpha": "2",
+        "maintainer": "5"
       },
       "entities": {
         "maintainer": "5",
@@ -657,11 +593,9 @@
       "canonical": "KID:kbc-eu-central-1:a-y:a1-x:ab-z",
       "parse": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "ab": "z",
-          "a1": "x",
-          "a": "y"
-        }
+        "ab": "z",
+        "a1": "x",
+        "a": "y"
       },
       "entities": {
         "a": "y",
@@ -679,12 +613,10 @@
       "canonical": "KID:kbc-eu-central-1:branch-555:maintainer-1:org-42:project-9876",
       "parse": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "branch": "555",
-          "project": "9876",
-          "org": "42",
-          "maintainer": "1"
-        }
+        "branch": "555",
+        "project": "9876",
+        "org": "42",
+        "maintainer": "1"
       },
       "entities": {
         "maintainer": "1",
@@ -703,12 +635,10 @@
       "canonical": "KID:kbc-eu-central-1:a-1:b2-x:branch-*:project-9876",
       "parse": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "branch": "*",
-          "project": "9876",
-          "b2": "x",
-          "a": "1"
-        }
+        "branch": "*",
+        "project": "9876",
+        "b2": "x",
+        "a": "1"
       },
       "entities": {
         "project": "9876",
@@ -729,10 +659,8 @@
       "canonical": "KID:kbc-eu-central-1:config-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:project-9876",
       "parse": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "project": "9876",
-          "config": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-        }
+        "project": "9876",
+        "config": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
       },
       "entities": {
         "project": "9876",
@@ -749,10 +677,8 @@
       "canonical": "KID:kbc-eu-central-1:config-%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC:project-9876",
       "parse": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "project": "9876",
-          "config": "%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC"
-        }
+        "project": "9876",
+        "config": "%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC"
       },
       "entities": {
         "project": "9876",
@@ -769,16 +695,14 @@
       "canonical": "KID:s:a-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:c-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:d-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:e-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:f-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:g-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:h-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:z-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
       "parse": {
         "stack": "s",
-        "entities": {
-          "a": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-          "c": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-          "d": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-          "e": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-          "f": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-          "g": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-          "h": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-          "z": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-        }
+        "a": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "c": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "d": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "e": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "f": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "g": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "h": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "z": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
       },
       "entities": {
         "a": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
@@ -801,9 +725,7 @@
       "canonical": "KID:s:config-%EF%BB%BFx",
       "parse": {
         "stack": "s",
-        "entities": {
-          "config": "%EF%BB%BFx"
-        }
+        "config": "%EF%BB%BFx"
       },
       "entities": {
         "config": "﻿x"
@@ -819,9 +741,7 @@
       "canonical": "KID:s:config-%EF%BB%BF",
       "parse": {
         "stack": "s",
-        "entities": {
-          "config": "%EF%BB%BF"
-        }
+        "config": "%EF%BB%BF"
       },
       "entities": {
         "config": "﻿"
@@ -837,9 +757,7 @@
       "canonical": "KID:s:config-%00",
       "parse": {
         "stack": "s",
-        "entities": {
-          "config": "%00"
-        }
+        "config": "%00"
       },
       "entities": {
         "config": "\u0000"
@@ -855,9 +773,7 @@
       "canonical": "KID:s:config-%0D%0A",
       "parse": {
         "stack": "s",
-        "entities": {
-          "config": "%0D%0A"
-        }
+        "config": "%0D%0A"
       },
       "entities": {
         "config": "\r\n"
@@ -873,9 +789,7 @@
       "canonical": "KID:s:config-%C3%A9",
       "parse": {
         "stack": "s",
-        "entities": {
-          "config": "%C3%A9"
-        }
+        "config": "%C3%A9"
       },
       "entities": {
         "config": "é"
@@ -891,9 +805,7 @@
       "canonical": "KID:s:config-e%CC%81",
       "parse": {
         "stack": "s",
-        "entities": {
-          "config": "e%CC%81"
-        }
+        "config": "e%CC%81"
       },
       "entities": {
         "config": "é"
@@ -909,9 +821,7 @@
       "canonical": "KID:s:config-%EF%BF%BD",
       "parse": {
         "stack": "s",
-        "entities": {
-          "config": "%EF%BF%BD"
-        }
+        "config": "%EF%BF%BD"
       },
       "entities": {
         "config": "�"
@@ -927,9 +837,7 @@
       "canonical": "KID:s:constructor-x",
       "parse": {
         "stack": "s",
-        "entities": {
-          "constructor": "x"
-        }
+        "constructor": "x"
       },
       "entities": {
         "constructor": "x"
@@ -945,14 +853,12 @@
       "canonical": "KID:s:alpha-x:branch-555:maintainer-1:org-2:project-3:zeta-9",
       "parse": {
         "stack": "s",
-        "entities": {
-          "zeta": "9",
-          "branch": "555",
-          "project": "3",
-          "org": "2",
-          "maintainer": "1",
-          "alpha": "x"
-        }
+        "zeta": "9",
+        "branch": "555",
+        "project": "3",
+        "org": "2",
+        "maintainer": "1",
+        "alpha": "x"
       },
       "entities": {
         "maintainer": "1",
@@ -973,9 +879,7 @@
       "canonical": "KID:s:maintainer-0",
       "parse": {
         "stack": "s",
-        "entities": {
-          "maintainer": "0"
-        }
+        "maintainer": "0"
       },
       "entities": {
         "maintainer": "0"
@@ -991,9 +895,7 @@
       "canonical": "KID:s:maintainer-001",
       "parse": {
         "stack": "s",
-        "entities": {
-          "maintainer": "001"
-        }
+        "maintainer": "001"
       },
       "entities": {
         "maintainer": "001"
@@ -1009,9 +911,7 @@
       "canonical": "KID:s:maintainer-999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999",
       "parse": {
         "stack": "s",
-        "entities": {
-          "maintainer": "999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
-        }
+        "maintainer": "999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
       },
       "entities": {
         "maintainer": "999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
@@ -1027,9 +927,7 @@
       "canonical": "KID:s:maintainer-*",
       "parse": {
         "stack": "s",
-        "entities": {
-          "maintainer": "*"
-        }
+        "maintainer": "*"
       },
       "entities": {
         "maintainer": "*"
@@ -1047,9 +945,7 @@
       "canonical": "KID:s:org-0",
       "parse": {
         "stack": "s",
-        "entities": {
-          "org": "0"
-        }
+        "org": "0"
       },
       "entities": {
         "org": "0"
@@ -1065,9 +961,7 @@
       "canonical": "KID:s:org-001",
       "parse": {
         "stack": "s",
-        "entities": {
-          "org": "001"
-        }
+        "org": "001"
       },
       "entities": {
         "org": "001"
@@ -1083,9 +977,7 @@
       "canonical": "KID:s:org-999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999",
       "parse": {
         "stack": "s",
-        "entities": {
-          "org": "999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
-        }
+        "org": "999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
       },
       "entities": {
         "org": "999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
@@ -1101,9 +993,7 @@
       "canonical": "KID:s:org-*",
       "parse": {
         "stack": "s",
-        "entities": {
-          "org": "*"
-        }
+        "org": "*"
       },
       "entities": {
         "org": "*"
@@ -1121,9 +1011,7 @@
       "canonical": "KID:s:project-0",
       "parse": {
         "stack": "s",
-        "entities": {
-          "project": "0"
-        }
+        "project": "0"
       },
       "entities": {
         "project": "0"
@@ -1139,9 +1027,7 @@
       "canonical": "KID:s:project-001",
       "parse": {
         "stack": "s",
-        "entities": {
-          "project": "001"
-        }
+        "project": "001"
       },
       "entities": {
         "project": "001"
@@ -1157,9 +1043,7 @@
       "canonical": "KID:s:project-999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999",
       "parse": {
         "stack": "s",
-        "entities": {
-          "project": "999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
-        }
+        "project": "999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
       },
       "entities": {
         "project": "999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
@@ -1175,9 +1059,7 @@
       "canonical": "KID:s:project-*",
       "parse": {
         "stack": "s",
-        "entities": {
-          "project": "*"
-        }
+        "project": "*"
       },
       "entities": {
         "project": "*"
@@ -1195,9 +1077,7 @@
       "canonical": "KID:s:branch-0",
       "parse": {
         "stack": "s",
-        "entities": {
-          "branch": "0"
-        }
+        "branch": "0"
       },
       "entities": {
         "branch": "0"
@@ -1213,9 +1093,7 @@
       "canonical": "KID:s:branch-001",
       "parse": {
         "stack": "s",
-        "entities": {
-          "branch": "001"
-        }
+        "branch": "001"
       },
       "entities": {
         "branch": "001"
@@ -1231,9 +1109,7 @@
       "canonical": "KID:s:branch-999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999",
       "parse": {
         "stack": "s",
-        "entities": {
-          "branch": "999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
-        }
+        "branch": "999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
       },
       "entities": {
         "branch": "999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
@@ -1249,9 +1125,7 @@
       "canonical": "KID:s:branch-*",
       "parse": {
         "stack": "s",
-        "entities": {
-          "branch": "*"
-        }
+        "branch": "*"
       },
       "entities": {
         "branch": "*"
@@ -1269,9 +1143,7 @@
       "canonical": "KID:s:branch-dev",
       "parse": {
         "stack": "s",
-        "entities": {
-          "branch": "dev"
-        }
+        "branch": "dev"
       },
       "entities": {
         "branch": "dev"
@@ -1287,20 +1159,18 @@
       "canonical": "KID:s:branch-4:extra0-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra1-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra2-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra3-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra4-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra5-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra6-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:maintainer-1:org-2:project-3:tail-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
       "parse": {
         "stack": "s",
-        "entities": {
-          "maintainer": "1",
-          "org": "2",
-          "project": "3",
-          "branch": "4",
-          "extra0": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-          "extra1": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-          "extra2": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-          "extra3": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-          "extra4": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-          "extra5": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-          "extra6": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-          "tail": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-        }
+        "maintainer": "1",
+        "org": "2",
+        "project": "3",
+        "branch": "4",
+        "extra0": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "extra1": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "extra2": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "extra3": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "extra4": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "extra5": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "extra6": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "tail": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
       },
       "entities": {
         "maintainer": "1",
@@ -1321,6 +1191,22 @@
       "isCanonical": false,
       "branch": "4",
       "note": "2048 bytes with full entity names"
+    },
+    {
+      "input": "KID:eu-central:project-1",
+      "canonical": "KID:eu-central:project-1",
+      "parse": {
+        "stack": "eu-central",
+        "project": "1"
+      },
+      "entities": {
+        "project": "1"
+      },
+      "wildcards": [],
+      "isPattern": false,
+      "isCanonical": true,
+      "branch": null,
+      "note": "flat parse result with string-valued numeric project ID"
     }
   ],
   "invalid": [
@@ -1777,24 +1663,24 @@
       "segment": "config\r-x"
     },
     {
-      "input": "KID:s ",
+      "input": "KID:s\u2028",
       "code": "bad_stack",
       "segment": null
     },
     {
-      "input": "KID:s:project-1 ",
+      "input": "KID:s:project-1\u2028",
       "code": "bad_value",
-      "segment": "project-1 "
+      "segment": "project-1\u2028"
     },
     {
-      "input": "KID:s:config-x ",
+      "input": "KID:s:config-x\u2028",
       "code": "bad_value",
-      "segment": "config-x "
+      "segment": "config-x\u2028"
     },
     {
-      "input": "KID:s:config -x",
+      "input": "KID:s:config\u2028-x",
       "code": "bad_segment",
-      "segment": "config -x"
+      "segment": "config\u2028-x"
     },
     {
       "input": "KID:s:a-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:c-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:d-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:e-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:f-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:g-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:h-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:z-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:branch-default",
@@ -2015,17 +1901,34 @@
       "input": "KID:s:maintainer-1:org-2:project-3:branch-4:extra0-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra1-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra2-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra3-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra4-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra5-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra6-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:tail-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
       "code": "too_long",
       "segment": null
+    },
+    {
+      "input": "KID:s:stack-x",
+      "code": "bad_segment",
+      "segment": "stack-x",
+      "note": "stack is reserved; name validation precedes value validation"
+    },
+    {
+      "input": "KID:s:stack-",
+      "code": "bad_segment",
+      "segment": "stack-",
+      "note": "stack is reserved; name validation precedes value validation"
+    },
+    {
+      "input": "KID:s:stack-%FF",
+      "code": "bad_segment",
+      "segment": "stack-%FF",
+      "note": "stack is reserved; name validation precedes value validation"
     }
   ],
   "create": [
     {
       "stack": "s",
       "entities": {
-        "stack": "x",
         "entities": "y"
       },
-      "canonical": "KID:s:entities-y:stack-x",
-      "note": "stack and entities are valid open entity names"
+      "canonical": "KID:s:entities-y",
+      "note": "entities is a valid open entity name"
     },
     {
       "stack": "kbc-eu-central-1",
@@ -2839,6 +2742,33 @@
       },
       "code": "too_long",
       "segment": null
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "stack": "x"
+      },
+      "code": "bad_segment",
+      "segment": "stack-x",
+      "note": "create rejects the reserved stack entity before validating its value"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "stack": ""
+      },
+      "code": "bad_segment",
+      "segment": "stack-",
+      "note": "create rejects the reserved stack entity before validating its value"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "stack": null
+      },
+      "code": "bad_segment",
+      "segment": null,
+      "note": "create rejects the reserved stack entity before validating its value"
     }
   ],
   "canonicalOrder": "ascii"

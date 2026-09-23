@@ -24,7 +24,7 @@ final readonly class Kid implements \Stringable
         }
     }
 
-    /** @return array{stack: string, entities: array<string, string>} Encoded values, in input order. */
+    /** @return array<string, string> Stack first, then encoded entity values in input order. */
     public static function parse(string $text): array
     {
         if (!str_starts_with($text, 'KID:')) {
@@ -58,13 +58,15 @@ final readonly class Kid implements \Stringable
             self::checkValueLength($raw, $segment);
             $entities[$entity] = $value;
         }
-        return ['stack' => $stack, 'entities' => $entities];
+        return ['stack' => $stack] + $entities;
     }
 
     public static function fromString(string $text): self
     {
         $parsed = self::parse($text);
-        return new self(self::serialize($parsed['stack'], $parsed['entities']));
+        $stack = $parsed['stack'];
+        unset($parsed['stack']);
+        return new self(self::serialize($stack, $parsed));
     }
 
     /** @param array<string, string> $entities Decoded values; a whole '*' means wildcard. */
@@ -208,7 +210,7 @@ final readonly class Kid implements \Stringable
 
     private static function checkEntity(string|int $entity, ?string $segment): void
     {
-        if (!is_string($entity) || preg_match('/\A[a-z][a-z0-9]*\z/', $entity) !== 1) {
+        if (!is_string($entity) || $entity === 'stack' || preg_match('/\A[a-z][a-z0-9]*\z/', $entity) !== 1) {
             throw new InvalidKidException('bad_segment', $segment);
         }
     }

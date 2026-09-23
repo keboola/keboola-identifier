@@ -59,6 +59,8 @@ identifier. One canonical stack identifier for both, or a mapping table, is to b
 ## 4. Entities
 
 - Entity regex: `^[a-z][a-z0-9]*$`. Lowercase, no hyphen, no underscore.
+- `stack` is reserved for the mandatory stack field and is not an entity name.
+  A segment using it, such as `stack-x`, is `bad_segment`.
 - The catalog of entities is **open**: an unknown entity passes validation and its value is
   treated as an opaque string. Known entities are listed in §4.3 below and gain
   typed accessors and value constraints; adding an entity to the catalog is a
@@ -225,7 +227,7 @@ yield the same code everywhere:
 | 3 | stack non-empty and matches its regex | `bad_stack` |
 | 4 | for each remaining segment, left to right: | |
 | 4a | segment is non-empty (also covers a trailing colon) | `empty_segment` |
-| 4b | segment contains a hyphen and the entity part matches `^[a-z][a-z0-9]*$` | `bad_segment` |
+| 4b | segment contains a hyphen and the entity part matches `^[a-z][a-z0-9]*$` and is not the reserved name `stack` | `bad_segment` |
 | 4c | the entity has not occurred before | `duplicate_entity` (reachable only from text input; `create()` receives a map whose keys are unique by construction) |
 | 4d | value is non-empty; for `maintainer`/`org`/`project`/`branch` it is in the allowed set; otherwise it is exactly `*`, or every character is one of `A-Z a-z 0-9 . _ -` or `%` (structure only; a bare `*` anywhere in a longer value fails here) | `bad_value` |
 | 4e | every `%` is followed by exactly two **uppercase** hex digits, and no escape encodes a byte from the unencoded set (`%69`, `%2E`, `%2D` are non-canonical); a `%` at the end, `%F`, `%2a`, `%zz` all fail here | `non_canonical_encoding` |
@@ -239,7 +241,7 @@ Only 4e judges percent-escapes; 4d never inspects what follows a `%`. This keeps
 
 1. The stack is a string and passes check 3 (`bad_stack`).
 2. For each entity, in map iteration order:
-   - the entity regex (`bad_segment`);
+   - the entity regex and reserved-name check (`bad_segment`);
    - uniqueness (`duplicate_entity`, not reachable with a map of unique keys);
    - the raw value is a string, is non-empty and satisfies constrained-entity sets (`bad_value`);
    - raw value ≤ 255 bytes (`too_long`);
@@ -254,7 +256,7 @@ In text parsing, UTF-8 validity precedes the decoded-value length check as liste
 | Operation | Behaviour |
 |---|---|
 | `validate(text) -> bool` | true iff `fromString` would succeed |
-| `parse(text) -> {stack, entities}` | runs the **full** check sequence 1–4g of §8 and throws on the first failure, exactly like `fromString`; differs from it only in that it does not canonicalize: values **as written** (encoded), `*` as `*`, `branch-default` kept, input order kept |
+| `parse(text) -> {stack, ...entities}` | runs the **full** check sequence 1–4g of §8 and throws on the first failure, exactly like `fromString`; returns a flat map with `stack` first and entities at the same level, all values strings **as written** (encoded), `*` as `*`, `branch-default` kept, entity input order kept |
 | `fromString(text) -> Kid` | parses, validates, canonicalizes; throws |
 | `create(stack, entities) -> Kid` | raw (decoded) string values; `*` means wildcard; throws |
 | `canonicalize(text) -> text` | `fromString(text).toString()`; throws the same error as `fromString` |
@@ -272,9 +274,10 @@ In text parsing, UTF-8 validity precedes the decoded-value length check as liste
 Absent is `null` (PHP), `undefined` (TypeScript), `None` (Python), `("", false)` (Go).
 Objects are immutable; there is no `with()`/`without()`.
 
-`parse()` keeps the stack separate from its `entities` map because the catalog is
-open. For example, `KID:s:stack-x` parses as `{stack: "s", entities: {stack: "x"}}`.
-Flattening these maps would lose either the actual stack or the `stack` entity.
+`parse()` returns a flat map. For example, `KID:eu-central:project-1` parses as
+`{stack: "eu-central", project: "1"}`. Numeric values remain strings; no aliases
+or numeric conversions are performed. The name `stack` is reserved so an entity
+cannot overwrite it. The name `entities` remains an ordinary open entity name.
 
 A literal `*` cannot be produced through `create()` (its `*` always means wildcard); such
 a KID can only be read via `fromString`. Documented edge.

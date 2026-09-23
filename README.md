@@ -33,7 +33,8 @@ Implementation is independently written from the specification and test vectors.
 - Bare `*` is a wildcard. `branch-dev` is also a pattern, but not a wildcard.
 - Values use the fixed encoding table in §5, without trimming or Unicode normalization.
 - Limits: 255 decoded bytes per value, 2048 bytes per KID, 64 characters per stack.
-- The catalog is open. Unknown syntactically valid entities are accepted.
+- The catalog is open. Unknown syntactically valid entities are accepted, except
+  `stack`, which is reserved for the mandatory stack field.
 
 ## PHP usage
 
@@ -44,6 +45,7 @@ $kid = Kid::fromString('KID:kbc-eu-central-1:project-9876:config-my%20config');
 echo $kid->project();     // 9876
 echo $kid->get('config'); // my config
 Kid::validate('KID:s:project-1'); // true
+Kid::parse('KID:eu-central:project-1'); // ['stack' => 'eu-central', 'project' => '1']
 ```
 
 PHP uses a single `Kid` class: static methods provide validation, parsing and

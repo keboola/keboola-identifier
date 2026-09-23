@@ -28,7 +28,7 @@ final class SharedVectorsTest extends TestCase
         ksort($actual);
         ksort($expected);
         self::assertSame($expected, $actual, 'Decoded entities');
-        foreach (array_unique([...array_keys($case['parse']['entities']), 'missing', 'constructor']) as $entity) {
+        foreach (array_unique([...array_keys($case['parse']), 'missing', 'constructor']) as $entity) {
             self::assertSame($case['entities'][$entity] ?? null, $kid->get($entity), 'get ' . $entity);
             self::assertSame(array_key_exists($entity, $case['entities']), $kid->has($entity), 'has ' . $entity);
             self::assertSame(in_array($entity, $case['wildcards'], true), $kid->isWildcard($entity), 'wildcard ' . $entity);

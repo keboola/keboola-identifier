@@ -64,8 +64,8 @@ $text = 'KID:s:config-my%20config:branch-default:project-1';
 Kid::validate($text);      // true
 Kid::isCanonical($text);   // false; also false for invalid text
 Kid::canonicalize($text);  // 'KID:s:config-my%20config:project-1'
-Kid::parse($text);         // ['stack' => 's', 'entities' => [
-                          //   'config' => 'my%20config', 'branch' => 'default', 'project' => '1']]
+Kid::parse($text);         // ['stack' => 's', 'config' => 'my%20config',
+                          //   'branch' => 'default', 'project' => '1']
 $kid = Kid::fromString($text);
 $kid->entities();          // ['config' => 'my config', 'project' => '1']
 $kid->equals(Kid::fromString('KID:s:project-1:config-my%20config')); // true
@@ -77,10 +77,11 @@ $kid->equals(Kid::fromString('KID:s:project-1:config-my%20config')); // true
 Both enforce the 255-byte decoded value limit. Lowercase hex, escapes for unencoded
 bytes, raw spaces, raw `+` and raw `~` are rejected, not repaired.
 
-The nested `entities` map prevents collisions with the stack field: for example,
-`Kid::parse('KID:s:stack-x')` returns
-`['stack' => 's', 'entities' => ['stack' => 'x']]`. The catalog is open, so `stack`
-is a valid entity name and cannot share a flat map with the actual stack.
+`parse()` returns a flat map, with `stack` first and entity names at the same level:
+`Kid::parse('KID:eu-central:project-1')` returns
+`['stack' => 'eu-central', 'project' => '1']`. Values remain strings, including
+numeric IDs. `stack` is reserved and cannot be used as an entity name (`bad_segment`),
+so an input such as `KID:s:stack-x` cannot overwrite the actual stack.
 
 ## Wildcards and immutable objects
 
