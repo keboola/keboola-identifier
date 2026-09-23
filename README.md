@@ -6,19 +6,17 @@ KID is an offline textual identifier for Keboola stacks and objects:
 KID:kbc-eu-central-1:bucket-in.c-main:project-9876:table-orders
 ```
 
-This reimplementation currently delivers the [PHP package](php/README.md)
+The repository provides the [PHP package](php/README.md)
 `keboola/identifier`, namespace `Keboola\Identifier`, for PHP 8.3 or newer.
 
 ## Contract and repository layout
 
-The current contract uses `maintainer`, `org`, `project` and `branch`, with no
-entity-specific ordering priority. This is an
-intentional draft revision of PR #1 commit `1f6eed74c198460f8160daa425b6e3e680a88a06`.
-Implementation is independently written from the specification and test vectors.
+The [format specification](SPEC.md) defines the KID contract. The PHP package
+implements this contract and is tested against the shared test vectors.
 
 | Path | Contents |
 |---|---|
-| [SPEC.md](SPEC.md) | Normative KID 1.0 grammar, API and entity catalog (§4.3) |
+| [SPEC.md](SPEC.md) | Normative KID 1.0-draft grammar, API and entity catalog (§4.3) |
 | [spec/test-vectors.json](spec/test-vectors.json) | Committed shared test data, including regressions |
 | [php/](php/) | Composer package, examples and tests |
 | [.github/workflows/php.yml](.github/workflows/php.yml) | PHP 8.3–8.5 CI |
@@ -50,8 +48,7 @@ Kid::parse('KID:eu-central:project-1'); // ['stack' => 'eu-central', 'project' =
 
 PHP uses a single `Kid` class: static methods provide validation, parsing and
 creation; instances represent immutable identifiers. Entity names are passed as
-strings. The snapshot's convenience `Entity` constants class is omitted
-from this PHP API by design.
+strings.
 
 See [PHP documentation](php/README.md) for installation, the complete public API,
 errors, wildcard edge cases and packaging.
@@ -73,12 +70,8 @@ data providers. `SharedVectorsTest` loads the committed JSON vectors directly;
 ASCII encoding, error precedence, immutability, ordering and literal-star equality.
 The committed Composer lockfile pins development dependencies for CI.
 
-No generation or Python execution happens anywhere in this workflow. PHP tests read
-the committed JSON vectors directly; PHP-specific regressions live in `KidTest`
-providers. There are no fixture generator scripts to run.
-Added regressions preserve U+FEFF (including a value
-consisting only of U+FEFF), control characters and open entity `constructor`, and
-exercise trailing line terminators and the distinction between input/output limits.
+The JSON vectors are committed test data and are read directly by PHPUnit.
+PHP-specific regression cases live in the `KidTest` data providers.
 
 ## Producer conventions and scope
 

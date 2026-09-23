@@ -1,8 +1,7 @@
 # keboola/identifier
 
 Immutable PHP 8.3+ implementation of the Keboola Identifier 1.0 draft, using the
-full hierarchy entity names `maintainer`, `org`, `project`, `branch`. This explicitly
-revises the entity naming and special head ordering from PR #1. Runtime requires PHP
+hierarchy entity names `maintainer`, `org`, `project`, `branch`. Runtime requires PHP
 and its bundled PCRE extension, with no third-party runtime dependencies or build step.
 
 ## Installation
@@ -18,10 +17,9 @@ add a path repository in your application's `composer.json`:
 ```
 
 Run `composer update keboola/identifier`, then load `vendor/autoload.php`.
-Once the package subdirectory is published to a Composer registry, consumers can
-use `composer require keboola/identifier`. Publication is a separate release step;
-the monorepo root is not a Composer package. Metadata declares `proprietary` because
-the repository does not supply an open-source license grant.
+The repository root is not a Composer package; use the `php/` subdirectory.
+Package metadata declares `proprietary`; the repository does not include an
+open-source license.
 
 ## Create and read
 
@@ -121,8 +119,7 @@ map iteration order is not an API guarantee except for `parse()`.
 - Entity names are strings such as `'project'`, `'branch'`, `'bucket'` and `'config'`.
   Any syntactically valid lowercase entity name is accepted, including `constructor`.
 
-The PHP API intentionally omits the snapshot's `Entity` constants class. `Kid`
-combines static service operations (validation, parsing and creation) with immutable
+`Kid` combines static service operations (validation, parsing and creation) with immutable
 identifier instances (accessors, comparison and serialization).
 Input order has no effect on identity, for any entity. Canonical output sorts all
 entity names in ASCII order with no special priority; this only provides a stable
@@ -177,16 +174,14 @@ composer archive --format=tar --dir=/path/to/output
   order permutations. It deliberately uses PHP's default coercive mode to verify
   that non-string input is rejected even without `strict_types`.
 
-The JSON is committed static test data. There are no generator scripts and no
-Python involvement: PHPUnit reads the file directly, and new PHP-specific cases
-belong in `KidTest` data providers.
-PHPUnit is a development-only dependency; runtime dependencies are unchanged.
+The JSON is committed static test data that PHPUnit reads directly. PHP-specific
+cases live in `KidTest` data providers. PHPUnit is a development-only dependency.
 The committed `composer.lock` makes development and CI installs reproducible.
 
 Development tests, PHPUnit configuration/cache, lockfile and vendor files are
 excluded from archives.
 
-The [repository specification](https://github.com/keboola/keboola-identifier/blob/reimplementation/php-pr1/SPEC.md)
+The [repository specification](../SPEC.md)
 defines the complete syntax. Validation is offline; object existence, parent
 relationships and pattern matching are outside this library. Producers should omit
 the default branch rather than use its numeric ID, and prefer minimal project/object

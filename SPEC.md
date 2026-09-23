@@ -1,22 +1,22 @@
 # KID — Keboola Identifier. Format specification
 
-Version: 1.0-draft, full entity names and uniform ordering (2026-09-22). Normative for every implementation in this repository
-(PHP, TypeScript, Python, Go). The shared test vectors in `spec/test-vectors.json` are
-part of this specification; an implementation that disagrees with a vector is wrong.
+Version: 1.0-draft.
 
-This draft intentionally supersedes the entity naming and special head ordering
-in PR #1: the hierarchy entities are `maintainer`, `org`, `project`, `branch`, with
-no ordering priority over any other entity. No automatic conversion or aliasing
-of old names occurs.
+This document defines the KID format: syntax, entity names, encoding,
+canonicalization, validation and library operations. The
+[shared test vectors](spec/test-vectors.json) are part of the specification and
+provide expected results for valid and invalid inputs.
+
+The repository provides a [PHP implementation](php/README.md).
 
 ## 1. Purpose
 
 KID is a textual identifier for any object in the Keboola platform: stack, maintainer,
 organization, project, branch, bucket, table, component configuration and row, workspace,
-user, and future objects. It can be built and validated offline, without calling any API.
+user, and other objects. It can be built and validated offline, without calling any API.
 
-A KID without wildcards is an **identity**. A KID with a wildcard is a **pattern**. This
-library builds, parses, validates, canonicalizes and compares KIDs. It does **not**
+A KID with a wildcard or `branch-dev` is a **pattern**. Any other valid KID is an
+**identity**. The library builds, parses, validates, canonicalizes and compares KIDs. It does **not**
 evaluate whether a pattern matches an identity, does not generate object IDs, and does not
 verify that a stack, project or object exists.
 
@@ -52,9 +52,8 @@ Examples: `kbc-eu-central-1`, `kbc-us-east-1`, `com-keboola-gcp-europe-west3`,
 - The list of stacks is not validated; validation is syntactic only.
 - A bare `KID:<stack>` is valid and is the identity of the stack itself.
 
-Open (tracked outside this spec): the object-level authorization RFC (keboola/connection
-PR 7082) uses the API hostname (`connection.eu-central-1.keboola.com`) as its stack
-identifier. One canonical stack identifier for both, or a mapping table, is to be agreed.
+The stack is a deployment identifier, not an API hostname. The library does not
+convert hostnames to stack identifiers.
 
 ## 4. Entities
 
@@ -62,13 +61,13 @@ identifier. One canonical stack identifier for both, or a mapping table, is to b
 - `stack` is reserved for the mandatory stack field and is not an entity name.
   A segment using it, such as `stack-x`, is `bad_segment`.
 - The catalog of entities is **open**: an unknown entity passes validation and its value is
-  treated as an opaque string. Known entities are listed in §4.3 below and gain
-  typed accessors and value constraints; adding an entity to the catalog is a
-  pull request amending that table, it is not required for validation to pass.
+  treated as an opaque string. Known entities are listed in §4.3. The hierarchy
+  entities have dedicated accessors and the value constraints in §4.1; other
+  entities use the general value rules in §5.
 - No aliases: one object kind has exactly one registered entity name. Unknown names
   remain opaque entities; they are never translated to known names or read by typed accessors.
 - Combinations are not interpreted. `project-1:user-5` is syntactically valid; what it means is
-  the producer's business.
+  defined by the producer.
 
 ### 4.1 Hierarchy entities with constrained values
 
@@ -97,12 +96,12 @@ and canonical serialization sorts every entity by its name using ASCII byte orde
 - `branch-default` is accepted on input and **removed by canonicalization**. It never appears in
   a canonical KID.
 - Producers must never write the default branch's numeric id (`branch-4321` where 4321 is the
-  default branch). The library cannot detect this; it is a documented producer rule and
-  the most likely source of silent identity mismatch.
+  default branch). The library cannot recognize a numeric ID as the default branch,
+  so it treats that KID as a different identity.
 - `isWildcard("branch")` is true only for `branch-*`. `isPattern()` is true for any `*` value and
   for `branch-dev`.
 
-### 4.3 Known entities (launch catalog)
+### 4.3 Known entities
 
 | Entity | Value | Usually with | Note |
 |---|---|---|---|
@@ -111,7 +110,7 @@ and canonical serialization sorts every entity by its name using ASCII byte orde
 | `project` | number, `*` | `org` | project |
 | `branch` | number, `dev`, `default`, `*` | `project` | branch |
 | `bucket` | bucket id (`in.c-main`) | `project`, `branch` | `c-` prefix not guaranteed |
-| `table` | table name only (`orders`) | `bucket` | the bucket carries the rest of today's table id |
+| `table` | table name only (`orders`) | `bucket` | the bucket carries the rest of the table id |
 | `component` | component id (`keboola.ex-db-snowflake`) | `project`, `branch` | classification, not ownership |
 | `config` | configuration id | `component` | user-supplied string, ≤ 100 chars in Connection |
 | `row` | configuration row id | `config` | user-supplied string, ≤ 100 chars in Connection (`rowId VARCHAR(100)`) |
@@ -120,8 +119,8 @@ and canonical serialization sorts every entity by its name using ASCII byte orde
 | `app`, `stream` | object id | `project`, `branch` | a data app is a configuration (≤ 100); stream ids are not stored by Connection and are bounded only by the 255-byte value cap (§7) |
 
 Parent relationships (`table` under `bucket`, `row` under `config` under `component`) are
-**not enforced** by the library. They are conventions for reading and for the URN
-conversion. The alphabetical canonical order preserves them for the known entities:
+**not enforced** by the library. They describe the object relationships represented
+by producers. The alphabetical canonical order preserves them for the known entities:
 `bucket` < `table`, `component` < `config` < `row`.
 
 ### 4.4 Identity form (recommendation, not enforced)
@@ -133,7 +132,7 @@ comparable across services, producers **should** write identities in the minimal
 
 - stack-level objects: `stack` + the object entity (`KID:s:org-42`, `KID:s:user-5`);
 - project-scoped objects: `project` + the object entity chain, **without** `maintainer` and `org`
-  (`KID:s:project-9876:bucket-in.c-main:table-orders`);
+  (`KID:s:bucket-in.c-main:project-9876:table-orders`);
 - `branch` only for non-default branches.
 
 `maintainer` and `org` on project-scoped KIDs are for patterns (grants) and for human context, not for
@@ -167,8 +166,8 @@ Rules:
   library helper (`encodeURIComponent`, `rawurlencode`, `quote`, `url.PathEscape`), because
   every one of those differs from this table for at least one byte.
 
-Why encoding at all: Keboola configuration ids are restricted only by type and length, so
-existing ids may contain spaces, colons or anything else.
+Percent-encoding allows values such as configuration IDs to contain spaces, colons
+and other characters without conflicting with KID delimiters.
 
 ## 6. Canonical form
 
@@ -187,7 +186,8 @@ no entity has a privileged position, and all input permutations denote the same 
 
 ## 7. Limits
 
-All limits are in **bytes** of the encoded text (not characters, not UTF-16 code units).
+Lengths are measured in **bytes**, not characters or UTF-16 code units. The value
+limit applies before encoding; the total KID limit applies to encoded text.
 
 - A raw value is at most **255 bytes** before encoding, hence at most 765 bytes encoded.
   A longer value is `too_long` (in `create()` on the raw value, in `fromString()` on the
@@ -196,25 +196,19 @@ All limits are in **bytes** of the encoded text (not characters, not UTF-16 code
   canonicalization only reorders segments and drops `branch-default`, a canonical form is never
   longer than its valid input, so the canonical form is within the limit whenever the
   input is. `create()` checks the canonical string it produces.
-- Sizing behind the numbers. Every identifier column Connection stores for the known
-  entities is `VARCHAR(100)`: `configurationId` and `rowId` (`migrations/init2025.sql`),
-  bucket `name` (`StorageBucket` entity); `CreateConfigurationRequest` enforces 100 for
-  configuration ids at the API. A data app is a configuration, so its id has the same
-  bound. Stream ids are not stored by Connection; 255 is the assumed bound for them and
-  for any future entity. The cap of 255 is therefore 2.5× above every value Connection can
-  hold today, and it is **frozen**: raising it would let a newer producer emit a KID an
-  older library rejects, which without a format version is a breaking change (§11).
-  An identity with up to 22 digits in each hierarchy ID uses
-  `KID:` (4) + stack (64) + `:maintainer-…`, `:org-…`, `:project-…`, `:branch-…`
-  (34 prefix bytes + 4 × 22 = 122) + `:component-` (11) + 765 + `:config-` (8) +
-  765 = 1739 bytes and fits; three maximal encoded values do not, and such a KID
-  is rejected as `too_long` rather than truncated.
+- A stack is at most **64 ASCII characters** (§3).
+
+The limits apply to the complete identifier even when each individual value is
+within its own limit. A KID with three maximally encoded 255-byte values exceeds
+2048 bytes and is rejected as `too_long`, never truncated.
+
+These limits are part of the format's compatibility contract (§11).
 
 ## 8. Validation and error codes
 
-Validation is syntactic and identical in every language. `validate()` returns a boolean;
-every other entry point raises one error type carrying a machine-readable `code` and,
-where applicable, the offending `segment`. The message text is informational and not part
+Validation is syntactic. `validate()` and `isCanonical()` return booleans. Parsing,
+creation and canonicalization raise one error type for invalid input, carrying a
+machine-readable `code` and, where applicable, the offending `segment`. The message text is informational and not part
 of the contract.
 
 Checks run in this order and stop at the first failure, so that inputs with several defects
@@ -265,13 +259,13 @@ In text parsing, UTF-8 validity precedes the decoded-value length check as liste
 | `maintainer()`, `organization()`, `project()`, `branch()` | decoded value of `maintainer`, `org`, `project`, `branch`, or absent; `branch()` is absent for the default branch |
 | `get(entity)` | decoded value or absent; entity name as written (`get("project")`) |
 | `has(entity)` | presence |
-| `entities()` | map entity → decoded value, wildcard as `*`. **Iteration order is not part of the contract** (Go maps iterate randomly); the only ordered representation is `toString()`. **Lossy**: a decoded literal `*` (`%2A`) and the wildcard are indistinguishable here, and `create(stack, kid.entities())` turns such a literal into a wildcard. The lossless round trip is `parse(kid.toString())` (encoded values) or `fromString(kid.toString())`. |
+| `entities()` | map entity → decoded value, wildcard as `*`. **Iteration order is not part of the contract**; the only ordered representation is `toString()`. **Lossy**: a decoded literal `*` (`%2A`) and the wildcard are indistinguishable here, and `create(stack, kid.entities())` turns such a literal into a wildcard. The lossless round trip is `parse(kid.toString())` (encoded values) or `fromString(kid.toString())`. |
 | `isWildcard(entity)` | value is the wildcard (distinguishes it from a decoded literal `*`) |
 | `isPattern()` | any wildcard or `branch-dev` |
 | `equals(other)` | canonical strings equal |
 | `toString()` | canonical form |
 
-Absent is `null` (PHP), `undefined` (TypeScript), `None` (Python), `("", false)` (Go).
+In the PHP API, absent values are returned as `null`.
 Objects are immutable; there is no `with()`/`without()`.
 
 `parse()` returns a flat map. For example, `KID:eu-central:project-1` parses as
@@ -280,36 +274,25 @@ or numeric conversions are performed. The name `stack` is reserved so an entity
 cannot overwrite it. The name `entities` remains an ordinary open entity name.
 
 A literal `*` cannot be produced through `create()` (its `*` always means wildcard); such
-a KID can only be read via `fromString`. Documented edge.
+a KID can be read via `fromString()`.
 
-### 9.1 Language mapping
+### 9.1 PHP API
 
-| PHP | TypeScript | Python | Go |
-|---|---|---|---|
-| `Kid::validate()` | `Kid.validate()` | `kid.validate()` | `kid.Validate()` |
-| `Kid::parse(): array` | `Kid.parse(): ParsedKid` | `kid.parse() -> ParsedKid` | `kid.Parse() (Parsed, error)` |
-| `Kid::fromString()` | `Kid.fromString()` | `Kid.from_string()` | `kid.FromString() (*Kid, error)` |
-| `Kid::create($stack, array $entities)` | `Kid.create(stack, entities)` | `Kid.create(stack, entities: dict)` | `kid.New(stack, map[string]string) (*Kid, error)` |
-| `Kid::canonicalize()`, `Kid::isCanonical()` | same | `kid.canonicalize()`, `kid.is_canonical()` | `kid.Canonicalize() (string, error)`, `kid.IsCanonical() bool` |
-| `stack()`, `maintainer()`, `organization()`, `project()`, `branch(): ?string` | same, `string \| undefined` | properties, `str \| None` | `Stack() string`, `Maintainer() (string, bool)`, … `Branch() (string, bool)` |
-| `get(): ?string`, `has()`, `entities(): array` | `get(): string \| undefined`, `has()`, `entities(): Record` | `get()`, `has()`, `entities() -> dict` | `Get() (string, bool)`, `Has()`, `Entities() map[string]string` |
-| `isWildcard()`, `isPattern()`, `equals()`, `toString()`, `__toString()` | `isWildcard()`, `isPattern()`, `equals()`, `toString()` | `is_wildcard()`, `is_pattern()`, `__eq__`, `__hash__`, `__str__` | `IsWildcard()`, `IsPattern()`, `Equals()`, `String()` |
-| `InvalidKidException` (`code`, `segment: ?string`) | `InvalidKidError extends Error` (`code`, `segment?`) | `InvalidKidError(ValueError)` (`code`, `segment`) | `*InvalidKidError{Code, Segment string}` via `errors.As`; `Segment == ""` means not applicable |
-| entity name strings, e.g. `'project'` | `Entity.PROJECT` | `Entity.PROJECT` (`StrEnum`) | `kid.EntityProject` |
+The PHP package exposes these operations through `Keboola\Identifier\Kid`.
+Validation, parsing, creation and canonicalization are static methods; accessors,
+comparison and serialization operate on immutable instances. Entity names are
+strings such as `'project'` or `'config'`.
 
-Language notes:
+Invalid input raises `InvalidKidException`, with a machine-readable `code` and an
+optional `segment`. `validate()` and `isCanonical()` return `false` for invalid
+text instead of raising this exception.
 
-- Go has no exceptions; constructors return `error`. `Validate` stays a boolean.
-- Python `__eq__` returns `NotImplemented` for foreign types; `__hash__` hashes the
-  canonical string, so a `Kid` works as a dict key.
-- PHP and TypeScript keep the canonical string as the single internal state so that
-  accidental `==` / structural comparison behaves.
-- Go `Branch()` returns `("", false)` for the default branch, consistent with `Get("branch")`.
+See the [PHP API documentation](php/README.md#public-api) for signatures,
+installation and usage examples.
 
 ## 10. Test vectors
 
-`spec/test-vectors.json` is loaded by every implementation's test suite and contains, at
-minimum:
+[`spec/test-vectors.json`](spec/test-vectors.json) contains shared cases for:
 
 - valid canonical KIDs with the expected `parse()` output and decoded `entities()`;
 - valid non-canonical inputs with the expected canonical form (shuffled order,
@@ -322,8 +305,8 @@ minimum:
 - `create()` cases: raw value → canonical, entities given in non-canonical order → canonical, `branch-default` dropped, non-string input rejected, invalid UTF-8 rejected;
 - `entities()` on a `%2A` literal versus a `*` wildcard (both read back as `*`, `isWildcard` differs).
 
-The vectors live in this monorepo next to the four packages, so every package at a given
-commit tests against the same file.
+The PHP test suite loads this file directly. PHP-specific cases are documented in
+the [testing instructions](php/README.md#development-and-distribution).
 
 ### 10.1 Byte-string fixtures
 
@@ -338,16 +321,17 @@ For example, `entitiesHex: {"config": "ff"}` means a raw one-byte string `0xFF`,
 not the two-character string `"ff"`; the expected code is `bad_utf8` and
 `segmentHex` is `"636f6e6669672dff"` (`config-` followed by `0xFF`).
 
-## 11. Out of scope for 1.0, tracked
+## 11. Scope and compatibility
 
-- Pattern matching (`matches(pattern, identity)`). Semantics will be specified with shared
-  vectors before any service implements its own matcher.
-- Strict mode (reject entities outside the catalog).
-- Conversion to and from the authorization URN (`kbc://…`), pending agreement on the open
-  differences listed in the review document.
-- Format versioning. The `KID:` prefix carries no version; a breaking change would need a
-  new prefix after this draft is finalized. This draft's naming and ordering revisions are
-  documented at the top of this specification. Accepted risk is mitigated by freezing
-  the constrained entity rules, uniform ASCII serialization order, the
-  encoding table and both length limits (255 per value, 2048 total). Changing any of
-  those is a new prefix, not a new library release.
+The library builds, parses, validates, canonicalizes and compares KIDs offline.
+It does not provide:
+
+- pattern matching between a pattern and an identity;
+- strict catalog validation that rejects unknown entity names;
+- conversion to or from authorization URNs (`kbc://…`);
+- object ID generation, object existence checks or parent relationship validation.
+
+The `KID:` prefix carries no version. Constrained entity rules, ASCII serialization
+order, the encoding table and length limits are part of the format contract.
+Incompatible changes require a new prefix; a library version alone cannot
+distinguish incompatible identifiers.
