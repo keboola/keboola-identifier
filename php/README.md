@@ -42,8 +42,10 @@ $kid->has('config');  // true
 $kid->get('missing'); // null
 ```
 
-`create()` accepts decoded **string values only**; integers, booleans, null,
-arrays and stringable objects raise `bad_value`. It validates in map iteration order.
+`create()` accepts decoded **string values** and **integers**, which it converts to
+their decimal string form (`['project' => 9876]` equals `['project' => '9876']`;
+a negative integer becomes `"-1"` and fails the numeric entity sets). Booleans, floats,
+null, arrays and stringable objects raise `bad_value`. It validates in map iteration order.
 Raw strings must be valid UTF-8; bytes, including leading U+FEFF, NUL and control
 characters, are preserved without trimming or Unicode normalization.
 Numeric IDs retain their leading zeros.

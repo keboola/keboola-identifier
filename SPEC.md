@@ -231,13 +231,15 @@ yield the same code everywhere:
 Only 4e judges percent-escapes; 4d never inspects what follows a `%`. This keeps
 `non_canonical_encoding` reachable and identical across implementations.
 
-`create()` accepts **strings only**, never coercing other types. It applies, in order:
+`create()` accepts **string values**, and **integer values**, which it converts to their
+decimal string form (`9876` → `"9876"`, `-1` → `"-1"`) before any check. No other type is
+coerced. It applies, in order:
 
 1. The stack is a string and passes check 3 (`bad_stack`).
 2. For each entity, in map iteration order:
    - the entity regex and reserved-name check (`bad_segment`);
    - uniqueness (`duplicate_entity`, not reachable with a map of unique keys);
-   - the raw value is a string, is non-empty and satisfies constrained-entity sets (`bad_value`);
+   - the raw value is a string or an integer, is non-empty and satisfies constrained-entity sets (`bad_value`);
    - raw value ≤ 255 bytes (`too_long`);
    - raw value is valid UTF-8 (`bad_utf8`).
 3. Encode the values and check 2 on the canonical string produced (`too_long`).
@@ -252,7 +254,7 @@ In text parsing, UTF-8 validity precedes the decoded-value length check as liste
 | `validate(text) -> bool` | true iff `fromString` would succeed |
 | `parse(text) -> {stack, ...entities}` | runs the **full** check sequence 1–4g of §8 and throws on the first failure, exactly like `fromString`; returns a flat map with `stack` first and entities at the same level, all values strings **as written** (encoded), `*` as `*`, `branch-default` kept, entity input order kept |
 | `fromString(text) -> Kid` | parses, validates, canonicalizes; throws |
-| `create(stack, entities) -> Kid` | raw (decoded) string values; `*` means wildcard; throws |
+| `create(stack, entities) -> Kid` | raw (decoded) string values, or integers converted to decimal strings; `*` means wildcard; throws |
 | `canonicalize(text) -> text` | `fromString(text).toString()`; throws the same error as `fromString` |
 | `isCanonical(text) -> bool` | true iff the text is valid **and** equal to its canonical form; **false, never an error**, for invalid input |
 | `stack()` | stack |
@@ -302,7 +304,7 @@ installation and usage examples.
   `project-abc`, `branch-main`, duplicate entity, uppercase entity, missing hyphen, 2048 vs 2049
   bytes, a 255- vs 256-byte raw value, invalid UTF-8 (`%FF`), `+` and `~` handling, a
   multibyte UTF-8 value, `isCanonical` on invalid input (false);
-- `create()` cases: raw value → canonical, entities given in non-canonical order → canonical, `branch-default` dropped, non-string input rejected, invalid UTF-8 rejected;
+- `create()` cases: raw value → canonical, entities given in non-canonical order → canonical, `branch-default` dropped, integer values converted, other non-string input rejected, invalid UTF-8 rejected;
 - `entities()` on a `%2A` literal versus a `*` wildcard (both read back as `*`, `isWildcard` differs).
 
 The PHP test suite loads this file directly. PHP-specific cases are documented in

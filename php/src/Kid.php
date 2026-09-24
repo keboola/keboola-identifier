@@ -69,7 +69,7 @@ final readonly class Kid implements \Stringable
         return new self(self::serialize($stack, $parsed));
     }
 
-    /** @param array<string, string> $entities Decoded values; a whole '*' means wildcard. */
+    /** @param array<string, string|int> $entities Decoded values; a whole '*' means wildcard. */
     public static function create(mixed $stack, array $entities): self
     {
         // A string parameter would coerce scalars in callers without strict_types.
@@ -79,6 +79,10 @@ final readonly class Kid implements \Stringable
         self::checkStack($stack);
         $encoded = [];
         foreach ($entities as $entity => $value) {
+            // Integers become their decimal string form; other non-string types are rejected.
+            if (is_int($value)) {
+                $value = (string) $value;
+            }
             $segment = is_string($value) ? $entity . '-' . $value : null;
             self::checkEntity($entity, $segment);
             if (!is_string($value)) {

@@ -1931,6 +1931,15 @@
       "note": "entities is a valid open entity name"
     },
     {
+      "stack": "s",
+      "entities": {
+        "project": 9876,
+        "org": 0
+      },
+      "canonical": "KID:s:org-0:project-9876",
+      "note": "integer values are converted to their decimal string form before validation"
+    },
+    {
       "stack": "kbc-eu-central-1",
       "entities": {},
       "canonical": "KID:kbc-eu-central-1"
@@ -2296,6 +2305,15 @@
   "createInvalid": [
     {
       "stack": "s",
+      "entities": {
+        "project": -1
+      },
+      "code": "bad_value",
+      "segment": "project--1",
+      "note": "a negative integer converts to a string with a minus sign, which the numeric entity set rejects"
+    },
+    {
+      "stack": "s",
       "entitiesHex": {
         "config": "ff"
       },
@@ -2431,18 +2449,6 @@
       "code": "too_long",
       "segment": null,
       "note": "canonical output would be 2049 bytes"
-    },
-    {
-      "stack": "kbc-eu-central-1",
-      "entities": {
-        "project": 9876
-      },
-      "code": "bad_value",
-      "segment": null,
-      "note": "non-string value is rejected, not coerced; segment not applicable",
-      "skip": [
-        "go"
-      ]
     },
     {
       "stack": "kbc-eu-central-1",

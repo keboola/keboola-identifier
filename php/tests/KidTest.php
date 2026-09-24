@@ -28,7 +28,6 @@ final class KidTest extends TestCase
 
     public static function nonStringValues(): iterable
     {
-        yield 'integer' => [123];
         yield 'true' => [true];
         yield 'false' => [false];
         yield 'float' => [1.5];
@@ -43,11 +42,22 @@ final class KidTest extends TestCase
         }];
     }
 
-    public function testWeakModePreservesStringOnlyContractAndErrorPrecedence(): void
+    public function testIntegerValuesAreConvertedToDecimalStrings(): void
+    {
+        $kid = Kid::create('s', ['project' => 9876, 'org' => 0, 'config' => 42]);
+        self::assertSame('KID:s:config-42:org-0:project-9876', $kid->toString());
+        self::assertSame('9876', $kid->project());
+        self::assertTrue($kid->equals(Kid::create('s', ['project' => '9876', 'org' => '0', 'config' => '42'])));
+        // A negative integer becomes a string with a minus sign and is validated as such.
+        $this->assertInvalid(static fn() => Kid::create('s', ['project' => -1]), 'bad_value', 'project--1');
+        self::assertSame('KID:s:config--1', Kid::create('s', ['config' => -1])->toString());
+    }
+
+    public function testWeakModeRejectsNonStringStackAndKeepsErrorPrecedence(): void
     {
         self::assertSame('KID:123', (string) Kid::create('123', []));
         $this->assertInvalid(static fn() => Kid::create(123, ['Bad' => null]), 'bad_stack', null);
-        $this->assertInvalid(static fn() => Kid::create('s', ['project' => 123]), 'bad_value', null);
+        $this->assertInvalid(static fn() => Kid::create('s', ['project' => 1.5]), 'bad_value', null);
     }
 
     #[DataProvider('phpErrorCases')]
