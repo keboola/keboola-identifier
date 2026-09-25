@@ -111,6 +111,11 @@ export class Kid {
 
   static create(stack, entities) {
     checkStack(stack);
+    // Only a plain object is an entity map; a Map, array or class instance would otherwise be silently read as empty.
+    const prototype = entities === null || typeof entities !== 'object' ? undefined : Object.getPrototypeOf(entities);
+    if (prototype !== Object.prototype && prototype !== null) {
+      throw new TypeError('Kid.create() entities must be a plain object');
+    }
     const encoded = {};
     for (let [entity, value] of Object.entries(entities)) {
       // Integers (safe integers and bigints) become their decimal string form; other non-strings are rejected.

@@ -136,6 +136,11 @@ test('strict inputs, precedence and immutable state', () => {
     assert.throws(() => Kid.create('s', { config: value }), errorIs('bad_value'));
   }
   assert.throws(() => Kid.create('s', { z: '', Bad: 'x' }), errorIs('bad_value', 'z-'));
+  for (const entities of [new Map([['project', '1']]), [['project', '1']], null, undefined, 'project-1', new (class {})(), new Set()]) {
+    assert.throws(() => Kid.create('s', entities), TypeError);
+  }
+  assert.equal(Kid.create('s', Object.assign(Object.create(null), { project: '1' })).toString(), 'KID:s:project-1');
+  assert.equal(Kid.create('s', {}).toString(), 'KID:s');
   assert.throws(() => Kid.parse('KID:s:project-1\n'), errorIs('bad_value', 'project-1\n'));
   assert.throws(() => new Kid('KID:s'), TypeError);
   const entities = { [Entity.PROJECT]: '1' }, kid = Kid.create('s', entities);

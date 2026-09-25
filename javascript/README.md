@@ -55,8 +55,9 @@ by ASCII name. When the KID carries no branch, every reader falls back to the
 default branch: `branch()`, `get('branch')`, `entities()` and `toObject()` report
 `'default'` and `has('branch')` is `true`; the canonical string is unaffected.
 `stack` is reserved as an entity name; `constructor` and `entities` work as
-ordinary entities. Only own enumerable string keys of the creation object are
-considered.
+ordinary entities. The creation argument must be a plain object (or a
+null-prototype object); a `Map`, an array or a class instance throws `TypeError`
+instead of being read as empty. Only own enumerable string keys are considered.
 
 `create()` accepts decoded string values and integers, which it converts to their
 decimal string form: safe integers (`{ project: 9876 }` equals `{ project: '9876' }`)
