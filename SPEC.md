@@ -287,8 +287,8 @@ Validation, parsing, creation and canonicalization are static methods; accessors
 comparison and serialization operate on immutable instances. Entity names are
 strings such as `'project'` or `'config'`.
 
-Invalid input raises `InvalidKidException`, with a machine-readable `code` and an
-optional `segment`. `validate()` and `isCanonical()` return `false` for invalid
+Invalid input raises `InvalidKidException`, with the machine-readable code in the
+`errorCode` property and an optional `segment`; the integer `getCode()` is `0`. `validate()` and `isCanonical()` return `false` for invalid
 text instead of raising this exception.
 
 See the [PHP API documentation](php/README.md#public-api) for signatures,

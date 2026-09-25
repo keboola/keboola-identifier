@@ -139,10 +139,14 @@ use Keboola\Identifier\InvalidKidException;
 try {
     Kid::parse('KID:s:project-abc');
 } catch (InvalidKidException $error) {
-    echo $error->code;    // bad_value (also returned by getCode())
-    echo $error->segment; // project-abc
+    echo $error->errorCode; // bad_value
+    echo $error->segment;   // project-abc
 }
 ```
+
+`errorCode` carries the stable string code; `getCode()` stays `0`, so the exception can
+be re-wrapped with `new RuntimeException($e->getMessage(), $e->getCode(), $e)` under
+`strict_types`.
 
 Codes, in text validation order: `bad_prefix`, `too_long` (whole input),
 `bad_stack`, then per segment `empty_segment`, `bad_segment`, `duplicate_entity`,

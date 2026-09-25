@@ -64,8 +64,8 @@ final class SharedVectorsTest extends TestCase
         try {
             Kid::$method($case['input']);
         } catch (InvalidKidException $error) {
-            self::assertSame($case['code'], $error->code);
-            self::assertSame($case['code'], $error->getCode());
+            self::assertSame($case['code'], $error->errorCode);
+            self::assertSame(0, $error->getCode());
             self::assertSame($case['segment'], $error->segment);
             return;
         }
@@ -86,8 +86,8 @@ final class SharedVectorsTest extends TestCase
         try {
             Kid::create($case['stack'], $case['entities']);
         } catch (InvalidKidException $error) {
-            self::assertSame($case['code'], $error->code);
-            self::assertSame($case['code'], $error->getCode());
+            self::assertSame($case['code'], $error->errorCode);
+            self::assertSame(0, $error->getCode());
             self::assertSame($case['segment'], $error->segment);
             return;
         }

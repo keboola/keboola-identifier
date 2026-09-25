@@ -139,6 +139,20 @@ final class KidTest extends TestCase
         unserialize('O:22:"Keboola\\Identifier\\Kid":1:{s:9:"canonical";s:9:"KID:A::::";}');
     }
 
+    public function testExceptionCanBeRewrappedUnderStrictTypes(): void
+    {
+        try {
+            Kid::parse('KID:s:project-abc');
+            self::fail('Expected InvalidKidException');
+        } catch (InvalidKidException $error) {
+            $wrapped = new \RuntimeException($error->getMessage(), $error->getCode(), $error);
+            self::assertSame($error, $wrapped->getPrevious());
+            self::assertSame('bad_value', $error->errorCode);
+            self::assertSame('project-abc', $error->segment);
+            self::assertSame('Invalid KID: bad_value', $error->getMessage());
+        }
+    }
+
     public function testUnicodeIsNotNormalized(): void
     {
         self::assertFalse(Kid::create('s', ['config' => 'é'])->equals(Kid::create('s', ['config' => "e\u{0301}"])));
@@ -234,8 +248,8 @@ final class KidTest extends TestCase
         try {
             $operation();
         } catch (InvalidKidException $error) {
-            self::assertSame($code, $error->code);
-            self::assertSame($code, $error->getCode());
+            self::assertSame($code, $error->errorCode);
+            self::assertSame(0, $error->getCode());
             self::assertSame($segment, $error->segment);
             return;
         }
