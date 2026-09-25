@@ -308,7 +308,7 @@ installation and usage examples.
 
 | §9 operation | Go | Python | JavaScript |
 |---|---|---|---|
-| `parse(text)` | `Parse(text) (*Kid, error)` | `parse(text)`, `Kid.parse(text)`, `Kid(text)` | `Kid.parse(text)` |
+| `parse(text)` | `Parse(text) (Kid, error)` | `parse(text)`, `Kid.parse(text)`, `Kid(text)` | `Kid.parse(text)` |
 | `create(stack, entities)` | `New(stack, map[string]string)` | `Kid.create(stack, dict)` | `Kid.create(stack, object)` |
 | `toArray()` | `ToMap() map[string]string` | `to_dict()` | `toObject()` |
 | `branch()` | `Branch() string` | `branch` property | `branch()` |
