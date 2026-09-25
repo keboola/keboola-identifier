@@ -333,6 +333,38 @@ func TestValueSemantics(t *testing.T) {
 	}
 }
 
+func TestJSONRoundTripsThroughCanonicalForm(t *testing.T) {
+	value, _ := kid.Parse("KID:s:project-1:branch-default:config-my%20config")
+	type payload struct {
+		Kid  kid.Kid
+		Kids []kid.Kid
+		Key  map[kid.Kid]int
+	}
+	encoded, err := json.Marshal(payload{value, []kid.Kid{value}, map[kid.Kid]int{value: 1}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	canonical := `"KID:s:config-my%20config:project-1"`
+	if string(encoded) != `{"Kid":`+canonical+`,"Kids":[`+canonical+`],"Key":{"KID:s:config-my%20config:project-1":1}}` {
+		t.Fatal(string(encoded))
+	}
+	var decoded payload
+	if err := json.Unmarshal(encoded, &decoded); err != nil || decoded.Kid != value || decoded.Kids[0] != value || decoded.Key[value] != 1 {
+		t.Fatal("decode", err, decoded)
+	}
+	var forged kid.Kid
+	err = json.Unmarshal([]byte(`"KID:A::::"`), &forged)
+	checkError(t, err, "bad_stack", "")
+	err = json.Unmarshal([]byte(`"KID:s:project-007"`), &forged)
+	checkError(t, err, "bad_value", "project-007")
+	if forged != (kid.Kid{}) {
+		t.Fatal("failed decode must not assign")
+	}
+	if _, err := json.Marshal(kid.Kid{}); err == nil {
+		t.Fatal("zero value must not marshal silently")
+	}
+}
+
 func TestCopiesAndLiteralStar(t *testing.T) {
 	entities := map[string]string{kid.EntityProject: "1"}
 	value, err := kid.New("s", entities)

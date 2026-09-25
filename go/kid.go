@@ -282,3 +282,23 @@ func (k Kid) IsPattern() bool {
 	return false
 }
 func (k Kid) Equals(other Kid) bool { return k == other }
+
+// MarshalText emits the canonical string, so encoding/json and other text-based
+// encoders serialize a Kid as that string (SPEC §9). The zero value is not
+// serializable and yields an error rather than silently producing "".
+func (k Kid) MarshalText() ([]byte, error) {
+	if k.canonical == "" {
+		return nil, invalid("bad_prefix", "")
+	}
+	return []byte(k.canonical), nil
+}
+
+// UnmarshalText runs Parse, so a decoded Kid is always validated and canonical.
+func (k *Kid) UnmarshalText(text []byte) error {
+	parsed, err := Parse(string(text))
+	if err != nil {
+		return err
+	}
+	*k = parsed
+	return nil
+}

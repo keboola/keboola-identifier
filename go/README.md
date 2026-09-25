@@ -76,6 +76,12 @@ invalid entries is deterministic; PHP, Python and JavaScript check in map insert
 order instead. Canonical output always sorts all entity names by ASCII bytes and
 omits `branch-default`.
 
+`Kid` implements `encoding.TextMarshaler` and `encoding.TextUnmarshaler`, so
+`encoding/json` (and any text-based encoder) writes a `Kid` as its canonical string,
+also as a map key, and reads one back through `Parse`, rejecting invalid or
+non-canonical payloads with the usual error. Marshalling the zero value is an error
+rather than a silent `""`.
+
 Errors are `*InvalidKidError{Code, Segment}` and support `errors.As`:
 
 ```go
