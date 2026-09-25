@@ -1,6 +1,7 @@
 """KID 1.0 identifiers; see the repository SPEC.md for the normative contract."""
 
 import re
+from collections.abc import Mapping
 from dataclasses import dataclass
 from enum import StrEnum
 
@@ -21,6 +22,11 @@ class Entity(StrEnum):
     STREAM = "stream"
 
 
+#: What ``branch``, ``get("branch")``, ``entities()`` and ``to_dict()`` report when a KID
+#: carries no branch (SPEC §4.2).
+DEFAULT_BRANCH = "default"
+
+
 class InvalidKidError(ValueError):
     def __init__(self, code: str, segment: str | None = None):
         super().__init__(code)
@@ -28,7 +34,6 @@ class InvalidKidError(ValueError):
         self.segment = segment
 
 
-ParsedKid = dict[str, str]
 _UNENCODED = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789._-"
 
 
@@ -50,8 +55,9 @@ def _entity(entity: str, segment: str | None) -> None:
 def _value(entity: str, value: str, segment: str) -> None:
     valid = bool(value)
     if entity in ("maintainer", "org", "project", "branch"):
-        valid = value == "*" or re.fullmatch(r"[0-9]+", value) is not None
-        if entity == "branch" and value in ("dev", "default"):
+        # No leading zeros: project-007 would be a second identity for project 7 (SPEC §4.1).
+        valid = value == "*" or re.fullmatch(r"0|[1-9][0-9]*", value) is not None
+        if entity == "branch" and value in ("dev", DEFAULT_BRANCH):
             valid = True
     if not valid:
         raise InvalidKidError("bad_value", segment)
@@ -85,18 +91,18 @@ def _decode(value: str, segment: str | None = None) -> str:
 def _serialize(stack: str, entities: dict[str, str]) -> str:
     return "KID:" + stack + "".join(
         f":{name}-{entities[name]}" for name in sorted(entities)
-        if not (name == "branch" and entities[name] == "default")
+        if not (name == "branch" and entities[name] == DEFAULT_BRANCH)
     )
 
 
-def parse(text: str) -> ParsedKid:
+def _canonicalize(text: str) -> str:
     if not text.startswith("KID:"):
         raise InvalidKidError("bad_prefix")
     if len(_bytes(text)) > 2048:
         raise InvalidKidError("too_long")
     stack, *segments = text[4:].split(":")
     _stack(stack)
-    parsed = {"stack": stack}
+    entities: dict[str, str] = {}
     for segment in segments:
         if not segment:
             raise InvalidKidError("empty_segment", segment)
@@ -104,26 +110,31 @@ def parse(text: str) -> ParsedKid:
         if not sep:
             raise InvalidKidError("bad_segment", segment)
         _entity(entity, segment)
-        if entity in parsed:
+        if entity in entities:
             raise InvalidKidError("duplicate_entity", segment)
         _value(entity, value, segment)
         if value != "*" and not re.fullmatch(r"[A-Za-z0-9._%\-]+", value):
             raise InvalidKidError("bad_value", segment)
         _decode(value, segment)
-        parsed[entity] = value
-    return parsed
+        entities[entity] = value
+    return _serialize(stack, entities)
 
 
 def validate(text: str) -> bool:
     try:
-        parse(text)
+        Kid(text)
         return True
     except InvalidKidError:
         return False
 
 
+def parse(text: str) -> "Kid":
+    """Run the full validation sequence on text and return its canonical identity."""
+    return Kid(text)
+
+
 def canonicalize(text: str) -> str:
-    return str(Kid.from_string(text))
+    return str(Kid(text))
 
 
 def is_canonical(text: str) -> bool:
@@ -138,19 +149,21 @@ class Kid:
     _canonical: str
 
     def __init__(self, text: str):
-        parsed = parse(text)
-        stack = parsed.pop("stack")
-        object.__setattr__(self, "_canonical", _serialize(stack, parsed))
+        object.__setattr__(self, "_canonical", _canonicalize(text))
 
     @classmethod
-    def from_string(cls, text: str) -> "Kid":
+    def parse(cls, text: str) -> "Kid":
+        """The only way from text to a Kid: validates fully and canonicalizes."""
         return cls(text)
 
     @classmethod
-    def create(cls, stack: str, entities: dict[str, str]) -> "Kid":
+    def create(cls, stack: str, entities: Mapping[str, str | int]) -> "Kid":
         _stack(stack)
         encoded = {}
         for entity, value in entities.items():
+            # Integers become their decimal string form; bool is an int subclass but not accepted.
+            if isinstance(value, int) and not isinstance(value, bool):
+                value = str(int(value))
             segment = f"{entity}-{value}" if isinstance(value, str) else None
             _entity(entity, segment)
             if not isinstance(value, str):
@@ -185,11 +198,17 @@ class Kid:
         return self.get("project")
 
     @property
-    def branch(self) -> str | None:
-        return self.get("branch")
+    def branch(self) -> str:
+        """Never None: a KID without a branch is on the default branch (SPEC §4.2)."""
+        return _decode(self._encoded()["branch"])
 
     def _encoded(self) -> dict[str, str]:
-        return dict(segment.split("-", 1) for segment in self._canonical.split(":")[2:])
+        """Canonical order; an absent branch reads as the default branch (SPEC §4.2)."""
+        entities = dict(segment.split("-", 1) for segment in self._canonical.split(":")[2:])
+        if "branch" not in entities:
+            entities["branch"] = DEFAULT_BRANCH
+            entities = dict(sorted(entities.items()))
+        return entities
 
     def get(self, entity: str) -> str | None:
         value = self._encoded().get(entity)
@@ -199,7 +218,12 @@ class Kid:
         return entity in self._encoded()
 
     def entities(self) -> dict[str, str]:
+        """Decoded copy in canonical order, with branch reported as default when absent."""
         return {entity: _decode(value) for entity, value in self._encoded().items()}
+
+    def to_dict(self) -> dict[str, str]:
+        """stack first, then entities(); the counterpart of toArray() in SPEC §9."""
+        return {"stack": self.stack, **self.entities()}
 
     def is_wildcard(self, entity: str) -> bool:
         return self._encoded().get(entity) == "*"
