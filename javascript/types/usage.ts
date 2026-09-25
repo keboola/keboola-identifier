@@ -10,7 +10,8 @@ const entities: Record<string, string> = kid.entities();
 const equal: boolean = kid.equals(Kid.parse(kid.toString()));
 const error = new InvalidKidError('bad_value', 'config-');
 const code: ErrorCode = error.code;
-void [stack, branch, project, entities, equal, code];
+const json: string = kid.toJSON();
+void [stack, branch, project, entities, equal, code, json];
 
 // @ts-expect-error Factories require string or integer values.
 Kid.create('s', { project: true });

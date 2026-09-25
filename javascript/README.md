@@ -43,6 +43,8 @@ console.log(Kid.parse('KID:s:project-1').toObject()); // { stack: 's', branch: '
   a KID without a branch is on the default branch and reports `'default'`.
 - Inspection: `isWildcard(entity)`, `isPattern()`, `equals(other)`, `toString()`.
   Use `equals()` for canonical equality rather than JavaScript reference equality.
+- Serialization: `toJSON()` returns the canonical string, so `JSON.stringify(kid)`
+  yields `"KID:…"` rather than `{}`; read it back with `Kid.parse()`.
 - `Entity` is a frozen constants object: `MAINTAINER`, `ORG`, `PROJECT`, `BRANCH`,
   `BUCKET`, `TABLE`, `COMPONENT`, `CONFIG`, `ROW`, `WORKSPACE`, `USER`, `APP`, `STREAM`.
   Unknown entity names are accepted as plain strings. `DEFAULT_BRANCH` is `'default'`.

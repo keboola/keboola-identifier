@@ -93,6 +93,13 @@ test('integer values are converted to decimal strings', () => {
   }
 });
 
+test('JSON.stringify emits the canonical string', () => {
+  const kid = Kid.parse('KID:s:project-1:branch-default:config-my%20config');
+  assert.equal(JSON.stringify(kid), '"KID:s:config-my%20config:project-1"');
+  assert.equal(JSON.stringify({ kid, list: [kid] }), '{"kid":"KID:s:config-my%20config:project-1","list":["KID:s:config-my%20config:project-1"]}');
+  assert.ok(kid.equals(Kid.parse(JSON.parse(JSON.stringify(kid)))));
+});
+
 test('default branch falls back in every reader', () => {
   const kid = Kid.parse('KID:s:project-1:branch-default:config-my%20config');
   assert.equal(kid.toString(), 'KID:s:config-my%20config:project-1');

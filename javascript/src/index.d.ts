@@ -34,4 +34,5 @@ export declare class Kid {
   isPattern(): boolean;
   equals(other: unknown): boolean;
   toString(): string;
+  toJSON(): string;
 }

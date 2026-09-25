@@ -171,4 +171,6 @@ export class Kid {
   isPattern() { return this.branch() === 'dev' || Object.values(this.#encoded()).includes('*'); }
   equals(other) { return other instanceof Kid && this.#canonical === other.#canonical; }
   toString() { return this.#canonical; }
+  /** JSON.stringify emits the canonical string (SPEC §9); the private field would otherwise serialize as {}. */
+  toJSON() { return this.#canonical; }
 }
