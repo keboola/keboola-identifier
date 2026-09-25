@@ -117,6 +117,28 @@ final class KidTest extends TestCase
         self::assertSame('*', Kid::parse('KID:s:branch-*')->get('branch'));
     }
 
+    public function testSerializationRoundTripsThroughCanonicalForm(): void
+    {
+        $kid = Kid::parse('KID:s:project-1:branch-default:config-my%20config');
+        $copy = unserialize(serialize($kid));
+        self::assertInstanceOf(Kid::class, $copy);
+        self::assertTrue($kid->equals($copy));
+        self::assertSame('KID:s:config-my%20config:project-1', $copy->toString());
+    }
+
+    public function testUnserializeRejectsForgedPayload(): void
+    {
+        $this->expectException(InvalidKidException::class);
+        unserialize('O:22:"Keboola\\Identifier\\Kid":1:{s:3:"kid";s:9:"KID:A::::";}');
+    }
+
+    public function testUnserializeRejectsLegacyPropertyPayload(): void
+    {
+        // The former private-property layout must not bypass validation either.
+        $this->expectException(InvalidKidException::class);
+        unserialize('O:22:"Keboola\\Identifier\\Kid":1:{s:9:"canonical";s:9:"KID:A::::";}');
+    }
+
     public function testUnicodeIsNotNormalized(): void
     {
         self::assertFalse(Kid::create('s', ['config' => 'é'])->equals(Kid::create('s', ['config' => "e\u{0301}"])));

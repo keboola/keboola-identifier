@@ -179,6 +179,23 @@ final readonly class Kid implements \Stringable
         return $this->canonical;
     }
 
+    /** @return array{kid: string} */
+    public function __serialize(): array
+    {
+        return ['kid' => $this->canonical];
+    }
+
+    /** @param array<string, mixed> $data */
+    public function __unserialize(array $data): void
+    {
+        // Re-validate so a forged or stale payload cannot produce an unchecked instance.
+        $text = $data['kid'] ?? null;
+        if (!is_string($text)) {
+            throw new InvalidKidException('bad_prefix');
+        }
+        $this->canonical = self::parse($text)->canonical;
+    }
+
     /** @return array<string, string> Canonical order; an absent branch reads as `default` (§4.2). */
     private function encodedEntities(): array
     {
