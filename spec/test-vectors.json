@@ -971,24 +971,6 @@
       "note": ""
     },
     {
-      "input": "KID:s:maintainer-001",
-      "canonical": "KID:s:maintainer-001",
-      "array": {
-        "stack": "s",
-        "branch": "default",
-        "maintainer": "001"
-      },
-      "entities": {
-        "branch": "default",
-        "maintainer": "001"
-      },
-      "wildcards": [],
-      "isPattern": false,
-      "isCanonical": true,
-      "branch": "default",
-      "note": ""
-    },
-    {
       "input": "KID:s:maintainer-999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999",
       "canonical": "KID:s:maintainer-999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999",
       "array": {
@@ -1037,24 +1019,6 @@
       "entities": {
         "branch": "default",
         "org": "0"
-      },
-      "wildcards": [],
-      "isPattern": false,
-      "isCanonical": true,
-      "branch": "default",
-      "note": ""
-    },
-    {
-      "input": "KID:s:org-001",
-      "canonical": "KID:s:org-001",
-      "array": {
-        "stack": "s",
-        "branch": "default",
-        "org": "001"
-      },
-      "entities": {
-        "branch": "default",
-        "org": "001"
       },
       "wildcards": [],
       "isPattern": false,
@@ -1119,24 +1083,6 @@
       "note": ""
     },
     {
-      "input": "KID:s:project-001",
-      "canonical": "KID:s:project-001",
-      "array": {
-        "stack": "s",
-        "branch": "default",
-        "project": "001"
-      },
-      "entities": {
-        "branch": "default",
-        "project": "001"
-      },
-      "wildcards": [],
-      "isPattern": false,
-      "isCanonical": true,
-      "branch": "default",
-      "note": ""
-    },
-    {
       "input": "KID:s:project-999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999",
       "canonical": "KID:s:project-999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999",
       "array": {
@@ -1188,22 +1134,6 @@
       "isPattern": false,
       "isCanonical": true,
       "branch": "0",
-      "note": ""
-    },
-    {
-      "input": "KID:s:branch-001",
-      "canonical": "KID:s:branch-001",
-      "array": {
-        "stack": "s",
-        "branch": "001"
-      },
-      "entities": {
-        "branch": "001"
-      },
-      "wildcards": [],
-      "isPattern": false,
-      "isCanonical": true,
-      "branch": "001",
       "note": ""
     },
     {
@@ -2023,6 +1953,30 @@
       "code": "bad_segment",
       "segment": "stack-%FF",
       "note": "stack is reserved; name validation precedes value validation"
+    },
+    {
+      "input": "KID:s:maintainer-001",
+      "code": "bad_value",
+      "segment": "maintainer-001",
+      "note": "leading zero in a numeric ID would alias another identity"
+    },
+    {
+      "input": "KID:s:org-001",
+      "code": "bad_value",
+      "segment": "org-001",
+      "note": "leading zero in a numeric ID would alias another identity"
+    },
+    {
+      "input": "KID:s:project-001",
+      "code": "bad_value",
+      "segment": "project-001",
+      "note": "leading zero in a numeric ID would alias another identity"
+    },
+    {
+      "input": "KID:s:branch-001",
+      "code": "bad_value",
+      "segment": "branch-001",
+      "note": "leading zero in a numeric ID would alias another identity"
     }
   ],
   "create": [
@@ -2285,13 +2239,6 @@
     {
       "stack": "s",
       "entities": {
-        "maintainer": "001"
-      },
-      "canonical": "KID:s:maintainer-001"
-    },
-    {
-      "stack": "s",
-      "entities": {
         "maintainer": "999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
       },
       "canonical": "KID:s:maintainer-999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
@@ -2309,13 +2256,6 @@
         "org": "0"
       },
       "canonical": "KID:s:org-0"
-    },
-    {
-      "stack": "s",
-      "entities": {
-        "org": "001"
-      },
-      "canonical": "KID:s:org-001"
     },
     {
       "stack": "s",
@@ -2341,13 +2281,6 @@
     {
       "stack": "s",
       "entities": {
-        "project": "001"
-      },
-      "canonical": "KID:s:project-001"
-    },
-    {
-      "stack": "s",
-      "entities": {
         "project": "999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
       },
       "canonical": "KID:s:project-999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
@@ -2365,13 +2298,6 @@
         "branch": "0"
       },
       "canonical": "KID:s:branch-0"
-    },
-    {
-      "stack": "s",
-      "entities": {
-        "branch": "001"
-      },
-      "canonical": "KID:s:branch-001"
     },
     {
       "stack": "s",
@@ -2879,6 +2805,42 @@
       "code": "bad_segment",
       "segment": null,
       "note": "create rejects the reserved stack entity before validating its value"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "maintainer": "001"
+      },
+      "code": "bad_value",
+      "segment": "maintainer-001",
+      "note": "leading zero in a numeric ID is rejected, not normalized"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "org": "001"
+      },
+      "code": "bad_value",
+      "segment": "org-001",
+      "note": "leading zero in a numeric ID is rejected, not normalized"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "project": "001"
+      },
+      "code": "bad_value",
+      "segment": "project-001",
+      "note": "leading zero in a numeric ID is rejected, not normalized"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "branch": "001"
+      },
+      "code": "bad_value",
+      "segment": "branch-001",
+      "note": "leading zero in a numeric ID is rejected, not normalized"
     }
   ],
   "canonicalOrder": "ascii"

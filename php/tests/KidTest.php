@@ -179,9 +179,15 @@ final class KidTest extends TestCase
         self::assertFalse(Kid::parse('KID:s')->equals(Kid::parse('KID:t')));
     }
 
-    public function testNumericValuesAreNotNormalized(): void
+    public function testLeadingZerosInNumericIdsAreRejectedNotNormalized(): void
     {
-        self::assertSame('001', Kid::create('s', ['project' => '001'])->project());
+        $this->assertInvalid(static fn() => Kid::create('s', ['project' => '001']), 'bad_value', 'project-001');
+        $this->assertInvalid(static fn() => Kid::parse('KID:s:project-01'), 'bad_value', 'project-01');
+        $this->assertInvalid(static fn() => Kid::create('s', ['branch' => '007']), 'bad_value', 'branch-007');
+        self::assertSame('0', Kid::create('s', ['project' => '0'])->project());
+        self::assertSame('10', Kid::parse('KID:s:org-10')->organization());
+        // Open-catalog entities keep their value bytes as given.
+        self::assertSame('007', Kid::create('s', ['config' => '007'])->get('config'));
     }
 
     public function testInstanceStateIsImmutableAndCanonicalOnly(): void

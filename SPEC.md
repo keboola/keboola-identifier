@@ -73,12 +73,15 @@ convert hostnames to stack identifiers.
 
 | Entity | Meaning | Allowed values |
 |---|---|---|
-| `maintainer` | maintainer | `^[0-9]+$` or `*` |
-| `org` | organization | `^[0-9]+$` or `*` |
-| `project` | project | `^[0-9]+$` or `*` |
-| `branch` | branch | `^[0-9]+$`, `dev`, `default` or `*` |
+| `maintainer` | maintainer | `^(0|[1-9][0-9]*)$` or `*` |
+| `org` | organization | `^(0|[1-9][0-9]*)$` or `*` |
+| `project` | project | `^(0|[1-9][0-9]*)$` or `*` |
+| `branch` | branch | `^(0|[1-9][0-9]*)$`, `dev`, `default` or `*` |
 
-Any other value for these entities is `bad_value`.
+Any other value for these entities is `bad_value`, including a numeric ID with leading
+zeros: `project-007` would otherwise be a second canonical identity for project 7, and
+identities are compared by exact canonical string (§6). The library rejects such input
+rather than normalizing it.
 
 These value constraints do not imply any ordering or parent relationship.
 All entities have equal ordering semantics: input order does not affect identity,
@@ -303,7 +306,7 @@ installation and usage examples.
   `branch-default`, both together);
 - invalid inputs with the expected error code, including: each error code at least once,
   `%2A` vs `*`, bare `*` inside a value, `%2a`, `%69`, trailing `%`, `%F`, empty value,
-  `project-abc`, `branch-main`, duplicate entity, uppercase entity, missing hyphen, 2048 vs 2049
+  `project-abc`, `project-001` (leading zero), `branch-main`, duplicate entity, uppercase entity, missing hyphen, 2048 vs 2049
   bytes, a 255- vs 256-byte raw value, invalid UTF-8 (`%FF`), `+` and `~` handling, a
   multibyte UTF-8 value, `isCanonical` on invalid input (false);
 - `create()` cases: raw value → canonical, entities given in non-canonical order → canonical, `branch-default` dropped, integer values converted, other non-string input rejected, invalid UTF-8 rejected;

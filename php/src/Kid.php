@@ -247,8 +247,9 @@ final readonly class Kid implements \Stringable, \JsonSerializable
     private static function checkValue(string $entity, string $value, string $segment): void
     {
         $valid = match ($entity) {
-            'maintainer', 'org', 'project' => preg_match('/\A(?:[0-9]+|\*)\z/', $value) === 1,
-            'branch' => preg_match('/\A(?:[0-9]+|dev|default|\*)\z/', $value) === 1,
+            // No leading zeros: `project-007` would be a second identity for project 7 (§4.1).
+            'maintainer', 'org', 'project' => preg_match('/\A(?:0|[1-9][0-9]*|\*)\z/', $value) === 1,
+            'branch' => preg_match('/\A(?:0|[1-9][0-9]*|dev|default|\*)\z/', $value) === 1,
             default => $value !== '',
         };
         if (!$valid) {
