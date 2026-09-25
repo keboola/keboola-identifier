@@ -11,7 +11,7 @@ Implementations share the same specification and committed test vectors:
 | Language | Package | Runtime |
 |---|---|---|
 | [PHP](php/README.md) | `keboola/identifier` | PHP 8.3+ |
-| [Go](go/README.md) | `github.com/keboola/keboola-identifier/go` (package `kid`) | Go 1.23+ |
+| [Go](go/README.md) | `github.com/keboola/keboola-identifier/go/kid` | Go 1.23+ |
 | [Python](python/README.md) | `keboola-identifier` (import `keboola_identifier`) | Python 3.11+ |
 | [JavaScript](javascript/README.md) | `@keboola/identifier` (ESM, TypeScript declarations included) | Node.js 22+ |
 

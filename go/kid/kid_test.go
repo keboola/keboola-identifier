@@ -12,7 +12,7 @@ import (
 	"strings"
 	"testing"
 
-	kid "github.com/keboola/keboola-identifier/go"
+	kid "github.com/keboola/keboola-identifier/go/kid"
 )
 
 type vector struct {
@@ -64,7 +64,7 @@ func stringEntities(t *testing.T, c vector) map[string]string {
 }
 
 func TestSharedVectors(t *testing.T) {
-	data, err := os.ReadFile("../spec/test-vectors.json")
+	data, err := os.ReadFile("../../spec/test-vectors.json")
 	if err != nil {
 		t.Fatal(err)
 	}

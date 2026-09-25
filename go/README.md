@@ -1,6 +1,6 @@
 # Keboola Identifier — Go
 
-Module `github.com/keboola/keboola-identifier/go`, package `kid`, Go 1.23+.
+Module `github.com/keboola/keboola-identifier/go`, package `github.com/keboola/keboola-identifier/go/kid`, Go 1.23+.
 No external dependencies. Implements [SPEC.md](../SPEC.md), with shared
 vectors, race-enabled tests and a round-trip fuzz target.
 
@@ -10,7 +10,7 @@ In a consuming module, use a local replacement while this branch is under review
 
 ```bash
 go mod edit -replace github.com/keboola/keboola-identifier/go=/path/to/keboola-identifier/go
-go get github.com/keboola/keboola-identifier/go
+go get github.com/keboola/keboola-identifier/go/kid
 ```
 
 From `go/`:
@@ -25,7 +25,7 @@ go test -fuzz=FuzzRoundTrip -fuzztime=10s
 ## Usage
 
 ```go
-import kid "github.com/keboola/keboola-identifier/go"
+import kid "github.com/keboola/keboola-identifier/go/kid"
 
 value, err := kid.New("kbc-eu-central-1", map[string]string{
     kid.EntityProject: strconv.Itoa(9876), kid.EntityConfig: "my config",

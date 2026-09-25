@@ -5,7 +5,7 @@ import (
 	"log"
 	"strconv"
 
-	kid "github.com/keboola/keboola-identifier/go"
+	kid "github.com/keboola/keboola-identifier/go/kid"
 )
 
 func main() {
