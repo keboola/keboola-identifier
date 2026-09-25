@@ -4,6 +4,7 @@ import re
 from collections.abc import Mapping
 from dataclasses import dataclass
 from enum import StrEnum
+from typing import TypeVar
 
 
 class Entity(StrEnum):
@@ -35,6 +36,8 @@ class InvalidKidError(ValueError):
 
 
 _UNENCODED = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789._-"
+# Mapping keys are invariant, so a dict[Entity, str] needs a str-bound type variable to type-check.
+_EntityName = TypeVar("_EntityName", bound=str)
 
 
 def _bytes(value: str) -> bytes:
@@ -52,7 +55,7 @@ def _entity(entity: str, segment: str | None) -> None:
         raise InvalidKidError("bad_segment", segment)
 
 
-def _value(entity: str, value: str, segment: str) -> None:
+def _value(entity: str, value: str, segment: str | None) -> None:
     valid = bool(value)
     if entity in ("maintainer", "org", "project", "branch"):
         # No leading zeros: project-007 would be a second identity for project 7 (SPEC §4.1).
@@ -157,13 +160,17 @@ class Kid:
         return cls(text)
 
     @classmethod
-    def create(cls, stack: str, entities: Mapping[str, str | int]) -> "Kid":
+    def create(cls, stack: str, entities: Mapping[_EntityName, str | int]) -> "Kid":
         _stack(stack)
-        encoded = {}
+        encoded: dict[str, str] = {}
         for entity, value in entities.items():
             # Integers become their decimal string form; bool is an int subclass but not accepted.
             if isinstance(value, int) and not isinstance(value, bool):
-                value = str(int(value))
+                try:
+                    value = str(int(value))
+                except ValueError:
+                    # Beyond CPython's int-to-str digit limit (4300 digits by default); far past 255 bytes anyway.
+                    raise InvalidKidError("too_long") from None
             segment = f"{entity}-{value}" if isinstance(value, str) else None
             _entity(entity, segment)
             if not isinstance(value, str):
@@ -237,7 +244,7 @@ class Kid:
     def __hash__(self) -> int:
         return hash(self._canonical)
 
-    def __reduce__(self) -> tuple:
+    def __reduce__(self) -> tuple[type["Kid"], tuple[str]]:
         # Pickle stores the canonical string and rebuilds through the constructor, so a forged or
         # stale payload is re-validated rather than restored unchecked.
         return (Kid, (self._canonical,))

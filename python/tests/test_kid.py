@@ -1,4 +1,5 @@
 import copy
+import enum
 import itertools
 import json
 import pickle
@@ -109,7 +110,10 @@ class PythonTest(ErrorAssertions):
         # A negative integer becomes a string with a minus sign and is validated as such.
         self.assert_error(lambda: Kid.create("s", {"project": -1}), "bad_value", "project--1")
         self.assertEqual("KID:s:config--1", str(Kid.create("s", {"config": -1})))
-        self.assertEqual("KID:s:project-3", str(Kid.create("s", {"project": Entity.PROJECT and 3})))
+        self.assertEqual("KID:s:project-3", str(Kid.create("s", {"project": enum.IntEnum("Ids", {"X": 3}).X})))
+        # An integer too large for CPython's int-to-str conversion is too_long, not a stray ValueError.
+        self.assert_error(lambda: Kid.create("s", {"config": 10 ** 5000}), "too_long", None)
+        self.assert_error(lambda: Kid.create("s", {"config": 10 ** 300}), "too_long", "config-1" + "0" * 300)
         # bool is an int subclass in Python but is not an integer value here.
         self.assert_error(lambda: Kid.create("s", {"project": True}), "bad_value", None)
 

@@ -17,6 +17,7 @@ source .venv/bin/activate
 python -m pip install .
 python -m unittest discover -s tests -v
 python examples/usage.py
+python -m pip install mypy && (cd src && python -m mypy --strict -p keboola_identifier)
 ```
 
 ## Usage
@@ -63,7 +64,9 @@ decimal string form (`{"project": 9876}` equals `{"project": "9876"}`; `-1` beco
 `"-1"` and fails the numeric entity sets). `bool` is an `int` subclass in Python but
 is rejected like floats, bytes, `None` and containers (`bad_value`). Numeric IDs of
 `maintainer`, `org`, `project` and `branch` must not have leading zeros (`bad_value`);
-`0` is accepted. Open-catalog values keep their characters as given.
+`0` is accepted. Open-catalog values keep their characters as given. An integer too
+large for CPython's int-to-str conversion is `too_long`. `dataclasses.asdict()` is
+not a serialization of a `Kid`; use `str(value)`.
 
 When the KID carries no branch, every reader falls back to the default branch:
 `branch`, `get("branch")`, `entities()` and `to_dict()` report `"default"` and
