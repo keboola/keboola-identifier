@@ -1,5 +1,7 @@
+import copy
 import itertools
 import json
+import pickle
 import unittest
 from dataclasses import FrozenInstanceError
 from pathlib import Path
@@ -138,6 +140,18 @@ class PythonTest(ErrorAssertions):
         self.assertEqual("10", Kid.parse("KID:s:org-10").organization)
         # Open-catalog entities keep their value bytes as given.
         self.assertEqual("007", Kid.create("s", {"config": "007"}).get("config"))
+
+    def test_pickle_round_trips_through_canonical_form(self):
+        value = Kid.parse("KID:s:project-1:branch-default:config-my%20config")
+        restored = pickle.loads(pickle.dumps(value))
+        self.assertEqual(value, restored)
+        self.assertEqual("KID:s:config-my%20config:project-1", str(restored))
+        self.assertEqual(value, copy.deepcopy(value))
+        # A forged payload must not bypass validation.
+        forged = pickle.dumps(value).replace(b"KID:s:config-my%20config:project-1", b"KID:s:config-my%20config:project-a")
+        self.assert_error(lambda: pickle.loads(forged), "bad_value", "project-a")
+        with self.assertRaises(TypeError):
+            json.dumps(value)
 
     def test_immutable_and_equality(self):
         entities = {Entity.PROJECT: "1"}

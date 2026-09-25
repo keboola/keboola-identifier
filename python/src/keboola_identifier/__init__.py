@@ -236,3 +236,8 @@ class Kid:
 
     def __hash__(self) -> int:
         return hash(self._canonical)
+
+    def __reduce__(self) -> tuple:
+        # Pickle stores the canonical string and rebuilds through the constructor, so a forged or
+        # stale payload is re-validated rather than restored unchecked.
+        return (Kid, (self._canonical,))

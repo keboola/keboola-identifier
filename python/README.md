@@ -50,6 +50,9 @@ assert kid.parse("KID:s:project-1").to_dict() == {"stack": "s", "branch": "defau
   `toArray()`), `is_wildcard(entity)`, `is_pattern()`.
 - `str(value)` returns the canonical KID; equality and hashing use that string.
   Foreign-type equality returns `NotImplemented`. KIDs can be dictionary keys.
+- `pickle` and `copy` round-trip through the canonical string and re-validate on
+  load, so a forged payload raises `InvalidKidError`. `json.dumps(value)` raises
+  `TypeError` as for any object; serialize `str(value)` instead.
 - `Entity` is a `StrEnum` of the launch catalog (`MAINTAINER`, `ORG`, `PROJECT`,
   `BRANCH`, `BUCKET`, `TABLE`, `COMPONENT`, `CONFIG`, `ROW`, `WORKSPACE`, `USER`,
   `APP`, `STREAM`). Plain strings also support the open catalog. `DEFAULT_BRANCH`
