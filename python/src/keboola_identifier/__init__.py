@@ -49,13 +49,14 @@ def _decimal(value: int) -> str:
     try:
         return str(value)
     except ValueError:
-        # Beyond CPython's int-to-str digit limit (4300 by default): render in chunks so the
-        # usual checks still run in SPEC §8 order and report the full segment.
+        # Beyond CPython's int-to-str digit limit (4300 by default, 640 at the lowest a caller can
+        # set): render in 600-digit chunks so the usual checks still run in SPEC §8 order and
+        # report the full segment.
         magnitude, chunks = abs(value), []
         while magnitude:
-            magnitude, chunk = divmod(magnitude, 10**4000)
+            magnitude, chunk = divmod(magnitude, 10**600)
             chunks.append(str(chunk))
-        return ("-" if value < 0 else "") + chunks[-1] + "".join(chunk.zfill(4000) for chunk in reversed(chunks[:-1]))
+        return ("-" if value < 0 else "") + chunks[-1] + "".join(chunk.zfill(600) for chunk in reversed(chunks[:-1]))
 
 
 def _stack(stack: str) -> None:

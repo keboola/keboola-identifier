@@ -3,6 +3,7 @@ import enum
 import itertools
 import json
 import pickle
+import sys
 import unittest
 from dataclasses import FrozenInstanceError
 from pathlib import Path
@@ -117,6 +118,14 @@ class PythonTest(ErrorAssertions):
         self.assert_error(lambda: Kid.create("s", {"project": -(10 ** 5000)}), "bad_value", "project--1" + "0" * 5000)
         self.assert_error(lambda: Kid.create("s", {"config": 10 ** 300}), "too_long", "config-1" + "0" * 300)
         self.assert_error(lambda: Kid.create("s", {"config": 10 ** 8000 + 7}), "too_long", "config-1" + "0" * 7999 + "7")
+        # The chunks fit under the lowest digit limit a caller may set (640).
+        limit = sys.get_int_max_str_digits()
+        sys.set_int_max_str_digits(640)
+        try:
+            self.assert_error(lambda: Kid.create("s", {"config": 10 ** 5000 + 7}), "too_long", "config-1" + "0" * 4999 + "7")
+            self.assert_error(lambda: Kid.create("s", {"config": -(3 * 10 ** 1300 + 10 ** 599)}), "too_long", "config--3" + "0" * 700 + "1" + "0" * 599)
+        finally:
+            sys.set_int_max_str_digits(limit)
         # bool is an int subclass in Python but is not an integer value here.
         self.assert_error(lambda: Kid.create("s", {"project": True}), "bad_value", None)
 
