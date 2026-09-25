@@ -1,786 +1,1246 @@
 {
-  "spec": "SPEC.md 1.0-draft 2026-09-22",
+  "spec": "SPEC.md 1.0-draft full entity names, uniform ASCII order",
   "limits": {
     "maxKidBytes": 2048,
     "maxValueBytes": 255,
     "maxStackChars": 64
   },
-  "canonicalOrderHead": [
-    "m",
-    "o",
-    "p",
-    "b"
-  ],
   "valid": [
+    {
+      "input": "KID:s:entities-y",
+      "canonical": "KID:s:entities-y",
+      "array": {
+        "stack": "s",
+        "branch": "default",
+        "entities": "y"
+      },
+      "entities": {
+        "branch": "default",
+        "entities": "y"
+      },
+      "wildcards": [],
+      "isPattern": false,
+      "isCanonical": true,
+      "branch": "default",
+      "note": "entities is an ordinary open entity in the flat toArray() map"
+    },
     {
       "input": "KID:kbc-eu-central-1",
       "canonical": "KID:kbc-eu-central-1",
-      "parse": {
+      "array": {
         "stack": "kbc-eu-central-1",
-        "entities": {}
+        "branch": "default"
       },
-      "entities": {},
+      "entities": {
+        "branch": "default"
+      },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
-      "branch": null,
+      "branch": "default",
       "note": "bare stack = identity of the stack"
     },
     {
-      "input": "KID:kbc-eu-central-1:m-123",
-      "canonical": "KID:kbc-eu-central-1:m-123",
-      "parse": {
+      "input": "KID:kbc-eu-central-1:maintainer-123",
+      "canonical": "KID:kbc-eu-central-1:maintainer-123",
+      "array": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "m": "123"
-        }
+        "branch": "default",
+        "maintainer": "123"
       },
       "entities": {
-        "m": "123"
+        "branch": "default",
+        "maintainer": "123"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
-      "branch": null
+      "branch": "default"
     },
     {
-      "input": "KID:kbc-eu-central-1:o-42",
-      "canonical": "KID:kbc-eu-central-1:o-42",
-      "parse": {
+      "input": "KID:kbc-eu-central-1:org-42",
+      "canonical": "KID:kbc-eu-central-1:org-42",
+      "array": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "o": "42"
-        }
+        "branch": "default",
+        "org": "42"
       },
       "entities": {
-        "o": "42"
+        "branch": "default",
+        "org": "42"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
-      "branch": null
+      "branch": "default"
     },
     {
-      "input": "KID:kbc-eu-central-1:m-123:o-42:p-9876",
-      "canonical": "KID:kbc-eu-central-1:m-123:o-42:p-9876",
-      "parse": {
+      "input": "KID:kbc-eu-central-1:maintainer-123:org-42:project-9876",
+      "canonical": "KID:kbc-eu-central-1:maintainer-123:org-42:project-9876",
+      "array": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "m": "123",
-          "o": "42",
-          "p": "9876"
-        }
+        "branch": "default",
+        "maintainer": "123",
+        "org": "42",
+        "project": "9876"
       },
       "entities": {
-        "m": "123",
-        "o": "42",
-        "p": "9876"
+        "branch": "default",
+        "maintainer": "123",
+        "org": "42",
+        "project": "9876"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
-      "branch": null
+      "branch": "default"
     },
     {
-      "input": "KID:kbc-eu-central-1:p-9876:b-555",
-      "canonical": "KID:kbc-eu-central-1:p-9876:b-555",
-      "parse": {
+      "input": "KID:kbc-eu-central-1:project-9876:branch-555",
+      "canonical": "KID:kbc-eu-central-1:branch-555:project-9876",
+      "array": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "p": "9876",
-          "b": "555"
-        }
+        "branch": "555",
+        "project": "9876"
       },
       "entities": {
-        "p": "9876",
-        "b": "555"
+        "branch": "555",
+        "project": "9876"
       },
       "wildcards": [],
       "isPattern": false,
-      "isCanonical": true,
+      "isCanonical": false,
       "branch": "555"
     },
     {
-      "input": "KID:kbc-eu-central-1:p-9876:bucket-in.c-main:table-orders",
-      "canonical": "KID:kbc-eu-central-1:p-9876:bucket-in.c-main:table-orders",
-      "parse": {
+      "input": "KID:kbc-eu-central-1:project-9876:bucket-in.c-main:table-orders",
+      "canonical": "KID:kbc-eu-central-1:bucket-in.c-main:project-9876:table-orders",
+      "array": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "p": "9876",
-          "bucket": "in.c-main",
-          "table": "orders"
-        }
+        "branch": "default",
+        "bucket": "in.c-main",
+        "project": "9876",
+        "table": "orders"
       },
       "entities": {
-        "p": "9876",
+        "branch": "default",
         "bucket": "in.c-main",
+        "project": "9876",
         "table": "orders"
       },
       "wildcards": [],
       "isPattern": false,
-      "isCanonical": true,
-      "branch": null,
+      "isCanonical": false,
+      "branch": "default",
       "note": "hyphen inside a value; split on the first hyphen only"
     },
     {
-      "input": "KID:kbc-eu-central-1:p-9876:b-555:bucket-in.c-main:table-orders",
-      "canonical": "KID:kbc-eu-central-1:p-9876:b-555:bucket-in.c-main:table-orders",
-      "parse": {
+      "input": "KID:kbc-eu-central-1:project-9876:branch-555:bucket-in.c-main:table-orders",
+      "canonical": "KID:kbc-eu-central-1:branch-555:bucket-in.c-main:project-9876:table-orders",
+      "array": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "p": "9876",
-          "b": "555",
-          "bucket": "in.c-main",
-          "table": "orders"
-        }
+        "branch": "555",
+        "bucket": "in.c-main",
+        "project": "9876",
+        "table": "orders"
       },
       "entities": {
-        "p": "9876",
-        "b": "555",
+        "branch": "555",
         "bucket": "in.c-main",
+        "project": "9876",
         "table": "orders"
       },
       "wildcards": [],
       "isPattern": false,
-      "isCanonical": true,
+      "isCanonical": false,
       "branch": "555"
     },
     {
-      "input": "KID:kbc-eu-central-1:p-9876:component-keboola.ex-db-snowflake:config-1234:row-7",
-      "canonical": "KID:kbc-eu-central-1:p-9876:component-keboola.ex-db-snowflake:config-1234:row-7",
-      "parse": {
+      "input": "KID:kbc-eu-central-1:project-9876:component-keboola.ex-db-snowflake:config-1234:row-7",
+      "canonical": "KID:kbc-eu-central-1:component-keboola.ex-db-snowflake:config-1234:project-9876:row-7",
+      "array": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "p": "9876",
-          "component": "keboola.ex-db-snowflake",
-          "config": "1234",
-          "row": "7"
-        }
-      },
-      "entities": {
-        "p": "9876",
+        "branch": "default",
         "component": "keboola.ex-db-snowflake",
         "config": "1234",
+        "project": "9876",
+        "row": "7"
+      },
+      "entities": {
+        "branch": "default",
+        "component": "keboola.ex-db-snowflake",
+        "config": "1234",
+        "project": "9876",
         "row": "7"
       },
       "wildcards": [],
       "isPattern": false,
-      "isCanonical": true,
-      "branch": null
+      "isCanonical": false,
+      "branch": "default"
     },
     {
-      "input": "KID:kbc-eu-central-1:p-9876:component-keboola.ex-db-snowflake:config-my%20config",
-      "canonical": "KID:kbc-eu-central-1:p-9876:component-keboola.ex-db-snowflake:config-my%20config",
-      "parse": {
+      "input": "KID:kbc-eu-central-1:project-9876:component-keboola.ex-db-snowflake:config-my%20config",
+      "canonical": "KID:kbc-eu-central-1:component-keboola.ex-db-snowflake:config-my%20config:project-9876",
+      "array": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "p": "9876",
-          "component": "keboola.ex-db-snowflake",
-          "config": "my%20config"
-        }
+        "branch": "default",
+        "component": "keboola.ex-db-snowflake",
+        "config": "my config",
+        "project": "9876"
       },
       "entities": {
-        "p": "9876",
+        "branch": "default",
         "component": "keboola.ex-db-snowflake",
-        "config": "my config"
+        "config": "my config",
+        "project": "9876"
       },
       "wildcards": [],
       "isPattern": false,
-      "isCanonical": true,
-      "branch": null,
-      "note": "parse() keeps the encoded value, entities()/get() decode"
+      "isCanonical": false,
+      "branch": "default",
+      "note": "toArray(), entities() and get() return the decoded value"
     },
     {
       "input": "KID:kbc-eu-central-1:user-555",
       "canonical": "KID:kbc-eu-central-1:user-555",
-      "parse": {
+      "array": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "user": "555"
-        }
+        "branch": "default",
+        "user": "555"
       },
       "entities": {
+        "branch": "default",
         "user": "555"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
-      "branch": null
+      "branch": "default"
     },
     {
-      "input": "KID:kbc-eu-central-1:p-9876:workspace-8812",
-      "canonical": "KID:kbc-eu-central-1:p-9876:workspace-8812",
-      "parse": {
+      "input": "KID:kbc-eu-central-1:project-9876:workspace-8812",
+      "canonical": "KID:kbc-eu-central-1:project-9876:workspace-8812",
+      "array": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "p": "9876",
-          "workspace": "8812"
-        }
+        "branch": "default",
+        "project": "9876",
+        "workspace": "8812"
       },
       "entities": {
-        "p": "9876",
+        "branch": "default",
+        "project": "9876",
         "workspace": "8812"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
-      "branch": null
+      "branch": "default"
     },
     {
-      "input": "KID:kbc-eu-central-1:p-9876:dashboard-abc-42",
-      "canonical": "KID:kbc-eu-central-1:p-9876:dashboard-abc-42",
-      "parse": {
+      "input": "KID:kbc-eu-central-1:project-9876:dashboard-abc-42",
+      "canonical": "KID:kbc-eu-central-1:dashboard-abc-42:project-9876",
+      "array": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "p": "9876",
-          "dashboard": "abc-42"
-        }
+        "branch": "default",
+        "dashboard": "abc-42",
+        "project": "9876"
       },
       "entities": {
-        "p": "9876",
-        "dashboard": "abc-42"
+        "branch": "default",
+        "dashboard": "abc-42",
+        "project": "9876"
       },
       "wildcards": [],
       "isPattern": false,
-      "isCanonical": true,
-      "branch": null,
+      "isCanonical": false,
+      "branch": "default",
       "note": "unknown entity passes, value opaque"
     },
     {
-      "input": "KID:kbc-us-east-1:p-1",
-      "canonical": "KID:kbc-us-east-1:p-1",
-      "parse": {
+      "input": "KID:kbc-us-east-1:project-1",
+      "canonical": "KID:kbc-us-east-1:project-1",
+      "array": {
         "stack": "kbc-us-east-1",
-        "entities": {
-          "p": "1"
-        }
+        "branch": "default",
+        "project": "1"
       },
       "entities": {
-        "p": "1"
+        "branch": "default",
+        "project": "1"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
-      "branch": null
+      "branch": "default"
     },
     {
-      "input": "KID:a:p-1",
-      "canonical": "KID:a:p-1",
-      "parse": {
+      "input": "KID:a:project-1",
+      "canonical": "KID:a:project-1",
+      "array": {
         "stack": "a",
-        "entities": {
-          "p": "1"
-        }
+        "branch": "default",
+        "project": "1"
       },
       "entities": {
-        "p": "1"
+        "branch": "default",
+        "project": "1"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
-      "branch": null,
+      "branch": "default",
       "note": "one-character stack"
     },
     {
       "input": "KID:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
       "canonical": "KID:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-      "parse": {
+      "array": {
         "stack": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-        "entities": {}
+        "branch": "default"
       },
-      "entities": {},
+      "entities": {
+        "branch": "default"
+      },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
-      "branch": null,
+      "branch": "default",
       "note": "stack at 64 chars"
     },
     {
-      "input": "KID:kbc-eu-central-1:o-42:p-*:bucket-*",
-      "canonical": "KID:kbc-eu-central-1:o-42:p-*:bucket-*",
-      "parse": {
+      "input": "KID:kbc-eu-central-1:org-42:project-*:bucket-*",
+      "canonical": "KID:kbc-eu-central-1:bucket-*:org-42:project-*",
+      "array": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "o": "42",
-          "p": "*",
-          "bucket": "*"
-        }
+        "branch": "default",
+        "bucket": "*",
+        "org": "42",
+        "project": "*"
       },
       "entities": {
-        "o": "42",
-        "p": "*",
-        "bucket": "*"
+        "branch": "default",
+        "bucket": "*",
+        "org": "42",
+        "project": "*"
       },
       "wildcards": [
-        "p",
+        "project",
         "bucket"
       ],
       "isPattern": true,
-      "isCanonical": true,
-      "branch": null
+      "isCanonical": false,
+      "branch": "default"
     },
     {
-      "input": "KID:kbc-eu-central-1:p-9876:b-dev:component-keboola.wr-db:config-*",
-      "canonical": "KID:kbc-eu-central-1:p-9876:b-dev:component-keboola.wr-db:config-*",
-      "parse": {
+      "input": "KID:kbc-eu-central-1:project-9876:branch-dev:component-keboola.wr-db:config-*",
+      "canonical": "KID:kbc-eu-central-1:branch-dev:component-keboola.wr-db:config-*:project-9876",
+      "array": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "p": "9876",
-          "b": "dev",
-          "component": "keboola.wr-db",
-          "config": "*"
-        }
+        "branch": "dev",
+        "component": "keboola.wr-db",
+        "config": "*",
+        "project": "9876"
       },
       "entities": {
-        "p": "9876",
-        "b": "dev",
+        "branch": "dev",
         "component": "keboola.wr-db",
-        "config": "*"
+        "config": "*",
+        "project": "9876"
       },
       "wildcards": [
         "config"
       ],
       "isPattern": true,
-      "isCanonical": true,
+      "isCanonical": false,
       "branch": "dev",
-      "note": "b-dev makes it a pattern but is not a wildcard"
+      "note": "branch-dev makes it a pattern but is not a wildcard"
     },
     {
-      "input": "KID:kbc-eu-central-1:p-9876:b-*:bucket-in.c-main",
-      "canonical": "KID:kbc-eu-central-1:p-9876:b-*:bucket-in.c-main",
-      "parse": {
+      "input": "KID:kbc-eu-central-1:project-9876:branch-*:bucket-in.c-main",
+      "canonical": "KID:kbc-eu-central-1:branch-*:bucket-in.c-main:project-9876",
+      "array": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "p": "9876",
-          "b": "*",
-          "bucket": "in.c-main"
-        }
+        "branch": "*",
+        "bucket": "in.c-main",
+        "project": "9876"
       },
       "entities": {
-        "p": "9876",
-        "b": "*",
-        "bucket": "in.c-main"
+        "branch": "*",
+        "bucket": "in.c-main",
+        "project": "9876"
       },
       "wildcards": [
-        "b"
+        "branch"
       ],
       "isPattern": true,
-      "isCanonical": true,
+      "isCanonical": false,
       "branch": "*"
     },
     {
-      "input": "KID:kbc-eu-central-1:p-*",
-      "canonical": "KID:kbc-eu-central-1:p-*",
-      "parse": {
+      "input": "KID:kbc-eu-central-1:project-*",
+      "canonical": "KID:kbc-eu-central-1:project-*",
+      "array": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "p": "*"
-        }
+        "branch": "default",
+        "project": "*"
       },
       "entities": {
-        "p": "*"
+        "branch": "default",
+        "project": "*"
       },
       "wildcards": [
-        "p"
+        "project"
       ],
       "isPattern": true,
       "isCanonical": true,
-      "branch": null
+      "branch": "default"
     },
     {
-      "input": "KID:kbc-eu-central-1:m-*:o-*:p-*:b-*",
-      "canonical": "KID:kbc-eu-central-1:m-*:o-*:p-*:b-*",
-      "parse": {
+      "input": "KID:kbc-eu-central-1:maintainer-*:org-*:project-*:branch-*",
+      "canonical": "KID:kbc-eu-central-1:branch-*:maintainer-*:org-*:project-*",
+      "array": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "m": "*",
-          "o": "*",
-          "p": "*",
-          "b": "*"
-        }
+        "branch": "*",
+        "maintainer": "*",
+        "org": "*",
+        "project": "*"
       },
       "entities": {
-        "m": "*",
-        "o": "*",
-        "p": "*",
-        "b": "*"
+        "branch": "*",
+        "maintainer": "*",
+        "org": "*",
+        "project": "*"
       },
       "wildcards": [
-        "m",
-        "o",
-        "p",
-        "b"
+        "maintainer",
+        "org",
+        "project",
+        "branch"
       ],
       "isPattern": true,
-      "isCanonical": true,
+      "isCanonical": false,
       "branch": "*"
     },
     {
-      "input": "KID:kbc-eu-central-1:p-9876:component-x:config-%2A",
-      "canonical": "KID:kbc-eu-central-1:p-9876:component-x:config-%2A",
-      "parse": {
+      "input": "KID:kbc-eu-central-1:project-9876:component-x:config-%2A",
+      "canonical": "KID:kbc-eu-central-1:component-x:config-%2A:project-9876",
+      "array": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "p": "9876",
-          "component": "x",
-          "config": "%2A"
-        }
-      },
-      "entities": {
-        "p": "9876",
+        "branch": "default",
         "component": "x",
-        "config": "*"
+        "config": "*",
+        "project": "9876"
+      },
+      "entities": {
+        "branch": "default",
+        "component": "x",
+        "config": "*",
+        "project": "9876"
       },
       "wildcards": [],
       "isPattern": false,
-      "isCanonical": true,
-      "branch": null,
+      "isCanonical": false,
+      "branch": "default",
       "note": "decoded literal * looks like a wildcard in entities(); isWildcard(config) is false"
     },
     {
-      "input": "KID:kbc-eu-central-1:p-9876:config-a%2Ab",
-      "canonical": "KID:kbc-eu-central-1:p-9876:config-a%2Ab",
-      "parse": {
+      "input": "KID:kbc-eu-central-1:project-9876:config-a%2Ab",
+      "canonical": "KID:kbc-eu-central-1:config-a%2Ab:project-9876",
+      "array": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "p": "9876",
-          "config": "a%2Ab"
-        }
+        "branch": "default",
+        "config": "a*b",
+        "project": "9876"
       },
       "entities": {
-        "p": "9876",
-        "config": "a*b"
+        "branch": "default",
+        "config": "a*b",
+        "project": "9876"
       },
       "wildcards": [],
       "isPattern": false,
-      "isCanonical": true,
-      "branch": null
+      "isCanonical": false,
+      "branch": "default"
     },
     {
-      "input": "KID:kbc-eu-central-1:p-9876:config-%C5%99e%C5%A1%C3%AD",
-      "canonical": "KID:kbc-eu-central-1:p-9876:config-%C5%99e%C5%A1%C3%AD",
-      "parse": {
+      "input": "KID:kbc-eu-central-1:project-9876:config-%C5%99e%C5%A1%C3%AD",
+      "canonical": "KID:kbc-eu-central-1:config-%C5%99e%C5%A1%C3%AD:project-9876",
+      "array": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "p": "9876",
-          "config": "%C5%99e%C5%A1%C3%AD"
-        }
+        "branch": "default",
+        "config": "řeší",
+        "project": "9876"
       },
       "entities": {
-        "p": "9876",
-        "config": "řeší"
+        "branch": "default",
+        "config": "řeší",
+        "project": "9876"
       },
       "wildcards": [],
       "isPattern": false,
-      "isCanonical": true,
-      "branch": null,
+      "isCanonical": false,
+      "branch": "default",
       "note": "multibyte UTF-8"
     },
     {
-      "input": "KID:kbc-eu-central-1:p-9876:config-a%7Eb%2Bc%21d%28e%29f%27g%2Fh%3Ai%25j",
-      "canonical": "KID:kbc-eu-central-1:p-9876:config-a%7Eb%2Bc%21d%28e%29f%27g%2Fh%3Ai%25j",
-      "parse": {
+      "input": "KID:kbc-eu-central-1:project-9876:config-a%7Eb%2Bc%21d%28e%29f%27g%2Fh%3Ai%25j",
+      "canonical": "KID:kbc-eu-central-1:config-a%7Eb%2Bc%21d%28e%29f%27g%2Fh%3Ai%25j:project-9876",
+      "array": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "p": "9876",
-          "config": "a%7Eb%2Bc%21d%28e%29f%27g%2Fh%3Ai%25j"
-        }
+        "branch": "default",
+        "config": "a~b+c!d(e)f'g/h:i%j",
+        "project": "9876"
       },
       "entities": {
-        "p": "9876",
-        "config": "a~b+c!d(e)f'g/h:i%j"
+        "branch": "default",
+        "config": "a~b+c!d(e)f'g/h:i%j",
+        "project": "9876"
       },
       "wildcards": [],
       "isPattern": false,
-      "isCanonical": true,
-      "branch": null,
+      "isCanonical": false,
+      "branch": "default",
       "note": "~ + ! ( ) ' / : % are all encoded; stdlib helpers disagree on several of these"
     },
     {
-      "input": "KID:kbc-eu-central-1:p-9876:config-A-Za_z0.9",
-      "canonical": "KID:kbc-eu-central-1:p-9876:config-A-Za_z0.9",
-      "parse": {
+      "input": "KID:kbc-eu-central-1:project-9876:config-A-Za_z0.9",
+      "canonical": "KID:kbc-eu-central-1:config-A-Za_z0.9:project-9876",
+      "array": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "p": "9876",
-          "config": "A-Za_z0.9"
-        }
+        "branch": "default",
+        "config": "A-Za_z0.9",
+        "project": "9876"
       },
       "entities": {
-        "p": "9876",
-        "config": "A-Za_z0.9"
+        "branch": "default",
+        "config": "A-Za_z0.9",
+        "project": "9876"
       },
       "wildcards": [],
       "isPattern": false,
-      "isCanonical": true,
-      "branch": null,
+      "isCanonical": false,
+      "branch": "default",
       "note": "every unencoded byte class, case preserved"
     },
     {
-      "input": "KID:kbc-eu-central-1:p-9876:config-%F0%9F%98%80",
-      "canonical": "KID:kbc-eu-central-1:p-9876:config-%F0%9F%98%80",
-      "parse": {
+      "input": "KID:kbc-eu-central-1:project-9876:config-%F0%9F%98%80",
+      "canonical": "KID:kbc-eu-central-1:config-%F0%9F%98%80:project-9876",
+      "array": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "p": "9876",
-          "config": "%F0%9F%98%80"
-        }
+        "branch": "default",
+        "config": "😀",
+        "project": "9876"
       },
       "entities": {
-        "p": "9876",
-        "config": "😀"
+        "branch": "default",
+        "config": "😀",
+        "project": "9876"
       },
       "wildcards": [],
       "isPattern": false,
-      "isCanonical": true,
-      "branch": null,
+      "isCanonical": false,
+      "branch": "default",
       "note": "4-byte UTF-8"
     },
     {
-      "input": "KID:kbc-eu-central-1:p-9876:config-%CC%81",
-      "canonical": "KID:kbc-eu-central-1:p-9876:config-%CC%81",
-      "parse": {
+      "input": "KID:kbc-eu-central-1:project-9876:config-%CC%81",
+      "canonical": "KID:kbc-eu-central-1:config-%CC%81:project-9876",
+      "array": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "p": "9876",
-          "config": "%CC%81"
-        }
+        "branch": "default",
+        "config": "́",
+        "project": "9876"
       },
       "entities": {
-        "p": "9876",
-        "config": "́"
+        "branch": "default",
+        "config": "́",
+        "project": "9876"
       },
       "wildcards": [],
       "isPattern": false,
-      "isCanonical": true,
-      "branch": null,
+      "isCanonical": false,
+      "branch": "default",
       "note": "combining mark alone; no normalization, byte-wise identity"
     },
     {
-      "input": "KID:kbc-eu-central-1:p-9876:b-default:bucket-in.c-main",
-      "canonical": "KID:kbc-eu-central-1:p-9876:bucket-in.c-main",
-      "parse": {
+      "input": "KID:kbc-eu-central-1:project-9876:branch-default:bucket-in.c-main",
+      "canonical": "KID:kbc-eu-central-1:bucket-in.c-main:project-9876",
+      "array": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "p": "9876",
-          "b": "default",
-          "bucket": "in.c-main"
-        }
-      },
-      "entities": {
-        "p": "9876",
-        "bucket": "in.c-main"
-      },
-      "wildcards": [],
-      "isPattern": false,
-      "isCanonical": false,
-      "branch": null,
-      "note": "b-default is kept by parse(), dropped by canonicalization; branch() absent"
-    },
-    {
-      "input": "KID:kbc-eu-central-1:b-default",
-      "canonical": "KID:kbc-eu-central-1",
-      "parse": {
-        "stack": "kbc-eu-central-1",
-        "entities": {
-          "b": "default"
-        }
-      },
-      "entities": {},
-      "wildcards": [],
-      "isPattern": false,
-      "isCanonical": false,
-      "branch": null
-    },
-    {
-      "input": "KID:kbc-eu-central-1:table-orders:p-9876:bucket-in.c-main:o-42",
-      "canonical": "KID:kbc-eu-central-1:o-42:p-9876:bucket-in.c-main:table-orders",
-      "parse": {
-        "stack": "kbc-eu-central-1",
-        "entities": {
-          "table": "orders",
-          "p": "9876",
-          "bucket": "in.c-main",
-          "o": "42"
-        }
-      },
-      "entities": {
-        "o": "42",
-        "p": "9876",
+        "branch": "default",
         "bucket": "in.c-main",
+        "project": "9876"
+      },
+      "entities": {
+        "branch": "default",
+        "bucket": "in.c-main",
+        "project": "9876"
+      },
+      "wildcards": [],
+      "isPattern": false,
+      "isCanonical": false,
+      "branch": "default",
+      "note": "branch-default is dropped by canonicalization; readers fall back to default"
+    },
+    {
+      "input": "KID:kbc-eu-central-1:branch-default",
+      "canonical": "KID:kbc-eu-central-1",
+      "array": {
+        "stack": "kbc-eu-central-1",
+        "branch": "default"
+      },
+      "entities": {
+        "branch": "default"
+      },
+      "wildcards": [],
+      "isPattern": false,
+      "isCanonical": false,
+      "branch": "default"
+    },
+    {
+      "input": "KID:kbc-eu-central-1:table-orders:project-9876:bucket-in.c-main:org-42",
+      "canonical": "KID:kbc-eu-central-1:bucket-in.c-main:org-42:project-9876:table-orders",
+      "array": {
+        "stack": "kbc-eu-central-1",
+        "branch": "default",
+        "bucket": "in.c-main",
+        "org": "42",
+        "project": "9876",
+        "table": "orders"
+      },
+      "entities": {
+        "branch": "default",
+        "bucket": "in.c-main",
+        "org": "42",
+        "project": "9876",
         "table": "orders"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": false,
-      "branch": null,
-      "note": "shuffled input; parse() keeps input order, canonical reorders"
+      "branch": "default",
+      "note": "shuffled input; canonical and toArray() reorder"
     },
     {
-      "input": "KID:kbc-eu-central-1:zeta-1:b-default:alpha-2:m-5",
-      "canonical": "KID:kbc-eu-central-1:m-5:alpha-2:zeta-1",
-      "parse": {
+      "input": "KID:kbc-eu-central-1:zeta-1:branch-default:alpha-2:maintainer-5",
+      "canonical": "KID:kbc-eu-central-1:alpha-2:maintainer-5:zeta-1",
+      "array": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "zeta": "1",
-          "b": "default",
-          "alpha": "2",
-          "m": "5"
-        }
+        "alpha": "2",
+        "branch": "default",
+        "maintainer": "5",
+        "zeta": "1"
       },
       "entities": {
-        "m": "5",
         "alpha": "2",
+        "branch": "default",
+        "maintainer": "5",
         "zeta": "1"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": false,
-      "branch": null
+      "branch": "default"
     },
     {
       "input": "KID:kbc-eu-central-1:ab-z:a1-x:a-y",
       "canonical": "KID:kbc-eu-central-1:a-y:a1-x:ab-z",
-      "parse": {
+      "array": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "ab": "z",
-          "a1": "x",
-          "a": "y"
-        }
+        "a": "y",
+        "a1": "x",
+        "ab": "z",
+        "branch": "default"
       },
       "entities": {
         "a": "y",
         "a1": "x",
-        "ab": "z"
+        "ab": "z",
+        "branch": "default"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": false,
-      "branch": null,
+      "branch": "default",
       "note": "byte order: a < a1 < ab because 0x31 < 0x62; no locale collation"
     },
     {
-      "input": "KID:kbc-eu-central-1:b-555:p-9876:o-42:m-1",
-      "canonical": "KID:kbc-eu-central-1:m-1:o-42:p-9876:b-555",
-      "parse": {
+      "input": "KID:kbc-eu-central-1:branch-555:project-9876:org-42:maintainer-1",
+      "canonical": "KID:kbc-eu-central-1:branch-555:maintainer-1:org-42:project-9876",
+      "array": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "b": "555",
-          "p": "9876",
-          "o": "42",
-          "m": "1"
-        }
+        "branch": "555",
+        "maintainer": "1",
+        "org": "42",
+        "project": "9876"
       },
       "entities": {
-        "m": "1",
-        "o": "42",
-        "p": "9876",
-        "b": "555"
+        "branch": "555",
+        "maintainer": "1",
+        "org": "42",
+        "project": "9876"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": false,
       "branch": "555",
-      "note": "frozen head order m o p b regardless of input"
+      "note": "all entity names sort by ASCII bytes without hierarchy priority"
     },
     {
-      "input": "KID:kbc-eu-central-1:b-*:p-9876:b2-x:a-1",
-      "canonical": "KID:kbc-eu-central-1:p-9876:b-*:a-1:b2-x",
-      "parse": {
+      "input": "KID:kbc-eu-central-1:branch-*:project-9876:b2-x:a-1",
+      "canonical": "KID:kbc-eu-central-1:a-1:b2-x:branch-*:project-9876",
+      "array": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "b": "*",
-          "p": "9876",
-          "b2": "x",
-          "a": "1"
-        }
+        "a": "1",
+        "b2": "x",
+        "branch": "*",
+        "project": "9876"
       },
       "entities": {
-        "p": "9876",
-        "b": "*",
         "a": "1",
-        "b2": "x"
+        "b2": "x",
+        "branch": "*",
+        "project": "9876"
       },
       "wildcards": [
-        "b"
+        "branch"
       ],
       "isPattern": true,
       "isCanonical": false,
       "branch": "*",
-      "note": "b is in the frozen head; b2 is an ordinary entity sorted alphabetically"
+      "note": "all entity names sort by ASCII bytes without hierarchy priority"
     },
     {
-      "input": "KID:kbc-eu-central-1:p-9876:config-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-      "canonical": "KID:kbc-eu-central-1:p-9876:config-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-      "parse": {
+      "input": "KID:kbc-eu-central-1:project-9876:config-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "canonical": "KID:kbc-eu-central-1:config-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:project-9876",
+      "array": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "p": "9876",
-          "config": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-        }
+        "branch": "default",
+        "config": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "project": "9876"
       },
       "entities": {
-        "p": "9876",
-        "config": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        "branch": "default",
+        "config": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "project": "9876"
       },
       "wildcards": [],
       "isPattern": false,
-      "isCanonical": true,
-      "branch": null,
+      "isCanonical": false,
+      "branch": "default",
       "note": "raw value at 255 bytes"
     },
     {
-      "input": "KID:kbc-eu-central-1:p-9876:config-%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99",
-      "canonical": "KID:kbc-eu-central-1:p-9876:config-%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99",
-      "parse": {
+      "input": "KID:kbc-eu-central-1:project-9876:config-%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC",
+      "canonical": "KID:kbc-eu-central-1:config-%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC:project-9876",
+      "array": {
         "stack": "kbc-eu-central-1",
-        "entities": {
-          "p": "9876",
-          "config": "%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99"
-        }
+        "branch": "default",
+        "config": "€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€",
+        "project": "9876"
       },
       "entities": {
-        "p": "9876",
-        "config": "řřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřř"
+        "branch": "default",
+        "config": "€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€",
+        "project": "9876"
       },
       "wildcards": [],
       "isPattern": false,
-      "isCanonical": true,
-      "branch": null,
+      "isCanonical": false,
+      "branch": "default",
       "note": "255 raw bytes of multibyte text = 765 encoded bytes; the cap is on raw bytes"
     },
     {
-      "input": "KID:s:a-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:b-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:c-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:d-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:e-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:f-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:g-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:z-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-      "canonical": "KID:s:a-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:b-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:c-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:d-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:e-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:f-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:g-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:z-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-      "parse": {
+      "input": "KID:s:a-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:c-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:d-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:e-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:f-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:g-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:h-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:z-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "canonical": "KID:s:a-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:c-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:d-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:e-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:f-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:g-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:h-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:z-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "array": {
         "stack": "s",
-        "entities": {
-          "a": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-          "b": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-          "c": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-          "d": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-          "e": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-          "f": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-          "g": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-          "z": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-        }
-      },
-      "entities": {
         "a": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-        "b": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "branch": "default",
         "c": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         "d": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         "e": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         "f": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         "g": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "h": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "z": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "entities": {
+        "a": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "branch": "default",
+        "c": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "d": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "e": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "f": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "g": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "h": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         "z": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
-      "branch": null,
+      "branch": "default",
       "note": "exactly 2048 bytes"
+    },
+    {
+      "input": "KID:s:config-%EF%BB%BFx",
+      "canonical": "KID:s:config-%EF%BB%BFx",
+      "array": {
+        "stack": "s",
+        "branch": "default",
+        "config": "﻿x"
+      },
+      "entities": {
+        "branch": "default",
+        "config": "﻿x"
+      },
+      "wildcards": [],
+      "isPattern": false,
+      "isCanonical": true,
+      "branch": "default",
+      "note": "opaque Unicode/control value preserved exactly"
+    },
+    {
+      "input": "KID:s:config-%EF%BB%BF",
+      "canonical": "KID:s:config-%EF%BB%BF",
+      "array": {
+        "stack": "s",
+        "branch": "default",
+        "config": "﻿"
+      },
+      "entities": {
+        "branch": "default",
+        "config": "﻿"
+      },
+      "wildcards": [],
+      "isPattern": false,
+      "isCanonical": true,
+      "branch": "default",
+      "note": "opaque Unicode/control value preserved exactly"
+    },
+    {
+      "input": "KID:s:config-%00",
+      "canonical": "KID:s:config-%00",
+      "array": {
+        "stack": "s",
+        "branch": "default",
+        "config": "\u0000"
+      },
+      "entities": {
+        "branch": "default",
+        "config": "\u0000"
+      },
+      "wildcards": [],
+      "isPattern": false,
+      "isCanonical": true,
+      "branch": "default",
+      "note": "opaque Unicode/control value preserved exactly"
+    },
+    {
+      "input": "KID:s:config-%0D%0A",
+      "canonical": "KID:s:config-%0D%0A",
+      "array": {
+        "stack": "s",
+        "branch": "default",
+        "config": "\r\n"
+      },
+      "entities": {
+        "branch": "default",
+        "config": "\r\n"
+      },
+      "wildcards": [],
+      "isPattern": false,
+      "isCanonical": true,
+      "branch": "default",
+      "note": "opaque Unicode/control value preserved exactly"
+    },
+    {
+      "input": "KID:s:config-%C3%A9",
+      "canonical": "KID:s:config-%C3%A9",
+      "array": {
+        "stack": "s",
+        "branch": "default",
+        "config": "é"
+      },
+      "entities": {
+        "branch": "default",
+        "config": "é"
+      },
+      "wildcards": [],
+      "isPattern": false,
+      "isCanonical": true,
+      "branch": "default",
+      "note": "opaque Unicode/control value preserved exactly"
+    },
+    {
+      "input": "KID:s:config-e%CC%81",
+      "canonical": "KID:s:config-e%CC%81",
+      "array": {
+        "stack": "s",
+        "branch": "default",
+        "config": "é"
+      },
+      "entities": {
+        "branch": "default",
+        "config": "é"
+      },
+      "wildcards": [],
+      "isPattern": false,
+      "isCanonical": true,
+      "branch": "default",
+      "note": "opaque Unicode/control value preserved exactly"
+    },
+    {
+      "input": "KID:s:config-%EF%BF%BD",
+      "canonical": "KID:s:config-%EF%BF%BD",
+      "array": {
+        "stack": "s",
+        "branch": "default",
+        "config": "�"
+      },
+      "entities": {
+        "branch": "default",
+        "config": "�"
+      },
+      "wildcards": [],
+      "isPattern": false,
+      "isCanonical": true,
+      "branch": "default",
+      "note": "opaque Unicode/control value preserved exactly"
+    },
+    {
+      "input": "KID:s:constructor-x",
+      "canonical": "KID:s:constructor-x",
+      "array": {
+        "stack": "s",
+        "branch": "default",
+        "constructor": "x"
+      },
+      "entities": {
+        "branch": "default",
+        "constructor": "x"
+      },
+      "wildcards": [],
+      "isPattern": false,
+      "isCanonical": true,
+      "branch": "default",
+      "note": "constructor is a valid open entity"
+    },
+    {
+      "input": "KID:s:zeta-9:branch-555:project-3:org-2:maintainer-1:alpha-x",
+      "canonical": "KID:s:alpha-x:branch-555:maintainer-1:org-2:project-3:zeta-9",
+      "array": {
+        "stack": "s",
+        "alpha": "x",
+        "branch": "555",
+        "maintainer": "1",
+        "org": "2",
+        "project": "3",
+        "zeta": "9"
+      },
+      "entities": {
+        "alpha": "x",
+        "branch": "555",
+        "maintainer": "1",
+        "org": "2",
+        "project": "3",
+        "zeta": "9"
+      },
+      "wildcards": [],
+      "isPattern": false,
+      "isCanonical": false,
+      "branch": "555",
+      "note": "uniform ASCII order for all entities"
+    },
+    {
+      "input": "KID:s:maintainer-0",
+      "canonical": "KID:s:maintainer-0",
+      "array": {
+        "stack": "s",
+        "branch": "default",
+        "maintainer": "0"
+      },
+      "entities": {
+        "branch": "default",
+        "maintainer": "0"
+      },
+      "wildcards": [],
+      "isPattern": false,
+      "isCanonical": true,
+      "branch": "default",
+      "note": ""
+    },
+    {
+      "input": "KID:s:maintainer-999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999",
+      "canonical": "KID:s:maintainer-999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999",
+      "array": {
+        "stack": "s",
+        "branch": "default",
+        "maintainer": "999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
+      },
+      "entities": {
+        "branch": "default",
+        "maintainer": "999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
+      },
+      "wildcards": [],
+      "isPattern": false,
+      "isCanonical": true,
+      "branch": "default",
+      "note": ""
+    },
+    {
+      "input": "KID:s:maintainer-*",
+      "canonical": "KID:s:maintainer-*",
+      "array": {
+        "stack": "s",
+        "branch": "default",
+        "maintainer": "*"
+      },
+      "entities": {
+        "branch": "default",
+        "maintainer": "*"
+      },
+      "wildcards": [
+        "maintainer"
+      ],
+      "isPattern": true,
+      "isCanonical": true,
+      "branch": "default",
+      "note": ""
+    },
+    {
+      "input": "KID:s:org-0",
+      "canonical": "KID:s:org-0",
+      "array": {
+        "stack": "s",
+        "branch": "default",
+        "org": "0"
+      },
+      "entities": {
+        "branch": "default",
+        "org": "0"
+      },
+      "wildcards": [],
+      "isPattern": false,
+      "isCanonical": true,
+      "branch": "default",
+      "note": ""
+    },
+    {
+      "input": "KID:s:org-999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999",
+      "canonical": "KID:s:org-999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999",
+      "array": {
+        "stack": "s",
+        "branch": "default",
+        "org": "999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
+      },
+      "entities": {
+        "branch": "default",
+        "org": "999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
+      },
+      "wildcards": [],
+      "isPattern": false,
+      "isCanonical": true,
+      "branch": "default",
+      "note": ""
+    },
+    {
+      "input": "KID:s:org-*",
+      "canonical": "KID:s:org-*",
+      "array": {
+        "stack": "s",
+        "branch": "default",
+        "org": "*"
+      },
+      "entities": {
+        "branch": "default",
+        "org": "*"
+      },
+      "wildcards": [
+        "org"
+      ],
+      "isPattern": true,
+      "isCanonical": true,
+      "branch": "default",
+      "note": ""
+    },
+    {
+      "input": "KID:s:project-0",
+      "canonical": "KID:s:project-0",
+      "array": {
+        "stack": "s",
+        "branch": "default",
+        "project": "0"
+      },
+      "entities": {
+        "branch": "default",
+        "project": "0"
+      },
+      "wildcards": [],
+      "isPattern": false,
+      "isCanonical": true,
+      "branch": "default",
+      "note": ""
+    },
+    {
+      "input": "KID:s:project-999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999",
+      "canonical": "KID:s:project-999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999",
+      "array": {
+        "stack": "s",
+        "branch": "default",
+        "project": "999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
+      },
+      "entities": {
+        "branch": "default",
+        "project": "999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
+      },
+      "wildcards": [],
+      "isPattern": false,
+      "isCanonical": true,
+      "branch": "default",
+      "note": ""
+    },
+    {
+      "input": "KID:s:project-*",
+      "canonical": "KID:s:project-*",
+      "array": {
+        "stack": "s",
+        "branch": "default",
+        "project": "*"
+      },
+      "entities": {
+        "branch": "default",
+        "project": "*"
+      },
+      "wildcards": [
+        "project"
+      ],
+      "isPattern": true,
+      "isCanonical": true,
+      "branch": "default",
+      "note": ""
+    },
+    {
+      "input": "KID:s:branch-0",
+      "canonical": "KID:s:branch-0",
+      "array": {
+        "stack": "s",
+        "branch": "0"
+      },
+      "entities": {
+        "branch": "0"
+      },
+      "wildcards": [],
+      "isPattern": false,
+      "isCanonical": true,
+      "branch": "0",
+      "note": ""
+    },
+    {
+      "input": "KID:s:branch-999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999",
+      "canonical": "KID:s:branch-999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999",
+      "array": {
+        "stack": "s",
+        "branch": "999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
+      },
+      "entities": {
+        "branch": "999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
+      },
+      "wildcards": [],
+      "isPattern": false,
+      "isCanonical": true,
+      "branch": "999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999",
+      "note": ""
+    },
+    {
+      "input": "KID:s:branch-*",
+      "canonical": "KID:s:branch-*",
+      "array": {
+        "stack": "s",
+        "branch": "*"
+      },
+      "entities": {
+        "branch": "*"
+      },
+      "wildcards": [
+        "branch"
+      ],
+      "isPattern": true,
+      "isCanonical": true,
+      "branch": "*",
+      "note": ""
+    },
+    {
+      "input": "KID:s:branch-dev",
+      "canonical": "KID:s:branch-dev",
+      "array": {
+        "stack": "s",
+        "branch": "dev"
+      },
+      "entities": {
+        "branch": "dev"
+      },
+      "wildcards": [],
+      "isPattern": true,
+      "isCanonical": true,
+      "branch": "dev",
+      "note": ""
+    },
+    {
+      "input": "KID:s:maintainer-1:org-2:project-3:branch-4:extra0-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra1-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra2-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra3-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra4-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra5-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra6-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:tail-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "canonical": "KID:s:branch-4:extra0-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra1-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra2-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra3-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra4-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra5-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra6-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:maintainer-1:org-2:project-3:tail-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "array": {
+        "stack": "s",
+        "branch": "4",
+        "extra0": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "extra1": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "extra2": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "extra3": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "extra4": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "extra5": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "extra6": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "maintainer": "1",
+        "org": "2",
+        "project": "3",
+        "tail": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      },
+      "entities": {
+        "branch": "4",
+        "extra0": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "extra1": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "extra2": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "extra3": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "extra4": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "extra5": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "extra6": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "maintainer": "1",
+        "org": "2",
+        "project": "3",
+        "tail": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      },
+      "wildcards": [],
+      "isPattern": false,
+      "isCanonical": false,
+      "branch": "4",
+      "note": "2048 bytes with full entity names"
+    },
+    {
+      "input": "KID:eu-central:project-1",
+      "canonical": "KID:eu-central:project-1",
+      "array": {
+        "stack": "eu-central",
+        "branch": "default",
+        "project": "1"
+      },
+      "entities": {
+        "branch": "default",
+        "project": "1"
+      },
+      "wildcards": [],
+      "isPattern": false,
+      "isCanonical": true,
+      "branch": "default",
+      "note": "flat toArray() result with string-valued numeric project ID"
     }
   ],
   "invalid": [
@@ -817,40 +1277,40 @@
       "note": "empty stack"
     },
     {
-      "input": "KID:AWS-EU:p-1",
+      "input": "KID:AWS-EU:project-1",
       "code": "bad_stack",
       "segment": null
     },
     {
-      "input": "KID:-kbc:p-1",
+      "input": "KID:-kbc:project-1",
       "code": "bad_stack",
       "segment": null,
       "note": "leading hyphen"
     },
     {
-      "input": "KID:kbc-:p-1",
+      "input": "KID:kbc-:project-1",
       "code": "bad_stack",
       "segment": null,
       "note": "trailing hyphen"
     },
     {
-      "input": "KID:kbc--eu:p-1",
+      "input": "KID:kbc--eu:project-1",
       "code": "bad_stack",
       "segment": null,
       "note": "double hyphen"
     },
     {
-      "input": "KID:kbc_eu:p-1",
+      "input": "KID:kbc_eu:project-1",
       "code": "bad_stack",
       "segment": null
     },
     {
-      "input": "KID:kbc.eu:p-1",
+      "input": "KID:kbc.eu:project-1",
       "code": "bad_stack",
       "segment": null
     },
     {
-      "input": "KID:*:p-1",
+      "input": "KID:*:project-1",
       "code": "bad_stack",
       "segment": null,
       "note": "no wildcard on stack"
@@ -862,12 +1322,12 @@
       "note": "65 chars"
     },
     {
-      "input": "KID:s::p-1",
+      "input": "KID:s::project-1",
       "code": "empty_segment",
       "segment": ""
     },
     {
-      "input": "KID:s:p-1:",
+      "input": "KID:s:project-1:",
       "code": "empty_segment",
       "segment": "",
       "note": "trailing colon"
@@ -878,7 +1338,7 @@
       "segment": ""
     },
     {
-      "input": "KID:s:p-1:x",
+      "input": "KID:s:project-1:x",
       "code": "bad_segment",
       "segment": "x",
       "note": "no hyphen"
@@ -890,31 +1350,31 @@
       "note": "empty entity"
     },
     {
-      "input": "KID:s:p-1:Bucket-in.c-main",
+      "input": "KID:s:project-1:Bucket-in.c-main",
       "code": "bad_segment",
       "segment": "Bucket-in.c-main",
       "note": "entity must be lowercase"
     },
     {
-      "input": "KID:s:p-1:1a-b",
+      "input": "KID:s:project-1:1a-b",
       "code": "bad_segment",
       "segment": "1a-b",
       "note": "entity must start with a letter"
     },
     {
-      "input": "KID:s:p-1:my_ent-b",
+      "input": "KID:s:project-1:my_ent-b",
       "code": "bad_segment",
       "segment": "my_ent-b"
     },
     {
-      "input": "KID:s:p-1:ent%20-b",
+      "input": "KID:s:project-1:ent%20-b",
       "code": "bad_segment",
       "segment": "ent%20-b"
     },
     {
-      "input": "KID:s:p-1:p-2",
+      "input": "KID:s:project-1:project-2",
       "code": "duplicate_entity",
-      "segment": "p-2"
+      "segment": "project-2"
     },
     {
       "input": "KID:s:bucket-a:bucket-a",
@@ -923,218 +1383,218 @@
       "note": "same value still duplicate"
     },
     {
-      "input": "KID:s:p-abc",
+      "input": "KID:s:project-abc",
       "code": "bad_value",
-      "segment": "p-abc"
+      "segment": "project-abc"
     },
     {
-      "input": "KID:s:p-",
+      "input": "KID:s:project-",
       "code": "bad_value",
-      "segment": "p-",
+      "segment": "project-",
       "note": "empty value"
     },
     {
-      "input": "KID:s:p-1:config-",
+      "input": "KID:s:project-1:config-",
       "code": "bad_value",
       "segment": "config-",
       "note": "empty value on an open entity"
     },
     {
-      "input": "KID:s:p-*1",
+      "input": "KID:s:project-*1",
       "code": "bad_value",
-      "segment": "p-*1"
+      "segment": "project-*1"
     },
     {
-      "input": "KID:s:p-1*",
+      "input": "KID:s:project-1*",
       "code": "bad_value",
-      "segment": "p-1*"
+      "segment": "project-1*"
     },
     {
-      "input": "KID:s:p-%2A",
+      "input": "KID:s:project-%2A",
       "code": "bad_value",
-      "segment": "p-%2A",
-      "note": "short entities take digits or a bare *, never an encoded star"
+      "segment": "project-%2A",
+      "note": "constrained entities take digits or a bare *, never an encoded star"
     },
     {
-      "input": "KID:s:m-01x",
+      "input": "KID:s:maintainer-01x",
       "code": "bad_value",
-      "segment": "m-01x"
+      "segment": "maintainer-01x"
     },
     {
-      "input": "KID:s:o-4.2",
+      "input": "KID:s:org-4.2",
       "code": "bad_value",
-      "segment": "o-4.2"
+      "segment": "org-4.2"
     },
     {
-      "input": "KID:s:b-main",
+      "input": "KID:s:branch-main",
       "code": "bad_value",
-      "segment": "b-main"
+      "segment": "branch-main"
     },
     {
-      "input": "KID:s:b-Default",
+      "input": "KID:s:branch-Default",
       "code": "bad_value",
-      "segment": "b-Default"
+      "segment": "branch-Default"
     },
     {
-      "input": "KID:s:b-DEV",
+      "input": "KID:s:branch-DEV",
       "code": "bad_value",
-      "segment": "b-DEV"
+      "segment": "branch-DEV"
     },
     {
-      "input": "KID:s:b-",
+      "input": "KID:s:branch-",
       "code": "bad_value",
-      "segment": "b-"
+      "segment": "branch-"
     },
     {
-      "input": "KID:s:p-1:bucket-in.c-*",
+      "input": "KID:s:project-1:bucket-in.c-*",
       "code": "bad_value",
       "segment": "bucket-in.c-*",
       "note": "partial wildcard"
     },
     {
-      "input": "KID:s:p-1:bucket-*.c-main",
+      "input": "KID:s:project-1:bucket-*.c-main",
       "code": "bad_value",
       "segment": "bucket-*.c-main"
     },
     {
-      "input": "KID:s:p-1:bucket-**",
+      "input": "KID:s:project-1:bucket-**",
       "code": "bad_value",
       "segment": "bucket-**"
     },
     {
-      "input": "KID:s:p-1:config-my config",
+      "input": "KID:s:project-1:config-my config",
       "code": "bad_value",
       "segment": "config-my config",
       "note": "unencoded space"
     },
     {
-      "input": "KID:s:p-1:config-a~b",
+      "input": "KID:s:project-1:config-a~b",
       "code": "bad_value",
       "segment": "config-a~b",
       "note": "~ is not in the unencoded set"
     },
     {
-      "input": "KID:s:p-1:config-a+b",
+      "input": "KID:s:project-1:config-a+b",
       "code": "bad_value",
       "segment": "config-a+b"
     },
     {
-      "input": "KID:s:p-1:config-a/b",
+      "input": "KID:s:project-1:config-a/b",
       "code": "bad_value",
       "segment": "config-a/b"
     },
     {
-      "input": "KID:s:p-1:config-ře",
+      "input": "KID:s:project-1:config-ře",
       "code": "bad_value",
       "segment": "config-ře",
       "note": "raw multibyte must be encoded"
     },
     {
-      "input": "KID:s:p-1:config-my%20conf%69g",
+      "input": "KID:s:project-1:config-my%20conf%69g",
       "code": "non_canonical_encoding",
       "segment": "config-my%20conf%69g",
       "note": "%69 is the unencoded byte i"
     },
     {
-      "input": "KID:s:p-1:config-%2a",
+      "input": "KID:s:project-1:config-%2a",
       "code": "non_canonical_encoding",
       "segment": "config-%2a",
       "note": "lowercase hex"
     },
     {
-      "input": "KID:s:p-1:config-abc%",
+      "input": "KID:s:project-1:config-abc%",
       "code": "non_canonical_encoding",
       "segment": "config-abc%",
       "note": "trailing %"
     },
     {
-      "input": "KID:s:p-1:config-%F",
+      "input": "KID:s:project-1:config-%F",
       "code": "non_canonical_encoding",
       "segment": "config-%F"
     },
     {
-      "input": "KID:s:p-1:config-%zz",
+      "input": "KID:s:project-1:config-%zz",
       "code": "non_canonical_encoding",
       "segment": "config-%zz"
     },
     {
-      "input": "KID:s:p-1:config-%2E",
+      "input": "KID:s:project-1:config-%2E",
       "code": "non_canonical_encoding",
       "segment": "config-%2E",
       "note": "encoded ."
     },
     {
-      "input": "KID:s:p-1:config-%2D",
+      "input": "KID:s:project-1:config-%2D",
       "code": "non_canonical_encoding",
       "segment": "config-%2D",
       "note": "encoded -"
     },
     {
-      "input": "KID:s:p-1:config-%5F",
+      "input": "KID:s:project-1:config-%5F",
       "code": "non_canonical_encoding",
       "segment": "config-%5F",
       "note": "encoded _"
     },
     {
-      "input": "KID:s:p-1:config-%41",
+      "input": "KID:s:project-1:config-%41",
       "code": "non_canonical_encoding",
       "segment": "config-%41",
       "note": "encoded A"
     },
     {
-      "input": "KID:s:p-1:config-%%20",
+      "input": "KID:s:project-1:config-%%20",
       "code": "non_canonical_encoding",
       "segment": "config-%%20"
     },
     {
-      "input": "KID:s:p-1:config-%FF",
+      "input": "KID:s:project-1:config-%FF",
       "code": "bad_utf8",
       "segment": "config-%FF"
     },
     {
-      "input": "KID:s:p-1:config-%C3",
+      "input": "KID:s:project-1:config-%C3",
       "code": "bad_utf8",
       "segment": "config-%C3",
       "note": "truncated sequence"
     },
     {
-      "input": "KID:s:p-1:config-%C3%28",
+      "input": "KID:s:project-1:config-%C3%28",
       "code": "bad_utf8",
       "segment": "config-%C3%28",
       "note": "invalid continuation"
     },
     {
-      "input": "KID:s:p-1:config-%ED%A0%80",
+      "input": "KID:s:project-1:config-%ED%A0%80",
       "code": "bad_utf8",
       "segment": "config-%ED%A0%80",
       "note": "UTF-16 surrogate encoded in UTF-8"
     },
     {
-      "input": "KID:s:p-1:config-%C0%AF",
+      "input": "KID:s:project-1:config-%C0%AF",
       "code": "bad_utf8",
       "segment": "config-%C0%AF",
       "note": "overlong encoding of /"
     },
     {
-      "input": "KID:s:p-1:config-%F4%90%80%80",
+      "input": "KID:s:project-1:config-%F4%90%80%80",
       "code": "bad_utf8",
       "segment": "config-%F4%90%80%80",
       "note": "above U+10FFFF"
     },
     {
-      "input": "KID:s:p-1:config-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "input": "KID:s:project-1:config-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
       "code": "too_long",
       "segment": "config-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
       "note": "raw value 256 bytes; segment set"
     },
     {
-      "input": "KID:s:p-1:config-%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99",
+      "input": "KID:s:project-1:config-%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC",
       "code": "too_long",
-      "segment": "config-%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99",
+      "segment": "config-%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC",
       "note": "86 three-byte chars = 258 raw bytes"
     },
     {
-      "input": "KID:s:a-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:b-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:c-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:d-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:e-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:f-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:g-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:z-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "input": "KID:s:a-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:c-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:d-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:e-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:f-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:g-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:h-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:z-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
       "code": "too_long",
       "segment": null,
       "note": "2049 bytes; whole-KID limit, no segment"
@@ -1146,15 +1606,15 @@
       "note": "length is checked before the stack"
     },
     {
-      "input": "KID:s:p-1:p-2:x",
+      "input": "KID:s:project-1:project-2:x",
       "code": "duplicate_entity",
-      "segment": "p-2",
+      "segment": "project-2",
       "note": "left to right: duplicate before the bad segment"
     },
     {
-      "input": "KID:s:p-abc:p-2",
+      "input": "KID:s:project-abc:project-2",
       "code": "bad_value",
-      "segment": "p-abc",
+      "segment": "project-abc",
       "note": "first failing segment wins"
     },
     {
@@ -1164,35 +1624,379 @@
       "note": "prefix before anything else"
     },
     {
-      "input": "KID:s:x:p-1:p-1",
+      "input": "KID:s:x:project-1:project-1",
       "code": "bad_segment",
       "segment": "x"
     },
     {
-      "input": "KID:s:p-1:config-%2a:q",
+      "input": "KID:s:project-1:config-%2a:q",
       "code": "non_canonical_encoding",
       "segment": "config-%2a"
     },
     {
-      "input": "KID:s:p-1:config-%2a%FF",
+      "input": "KID:s:project-1:config-%2a%FF",
       "code": "non_canonical_encoding",
       "segment": "config-%2a%FF",
       "note": "4e before 4f"
     },
     {
-      "input": "KID:s:p-1:config-%FFaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "input": "KID:s:project-1:config-%FFaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
       "code": "bad_utf8",
       "segment": "config-%FFaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
       "note": "4f before 4g"
     },
     {
-      "input": "KID:s:p-1:config-my config:",
+      "input": "KID:s:project-1:config-my config:",
       "code": "bad_value",
       "segment": "config-my config",
       "note": "value error before the trailing empty segment"
+    },
+    {
+      "input": "KID:s:constructor-x:constructor-y",
+      "code": "duplicate_entity",
+      "segment": "constructor-y"
+    },
+    {
+      "input": "KID:s\n",
+      "code": "bad_stack",
+      "segment": null
+    },
+    {
+      "input": "KID:s:project-1\n",
+      "code": "bad_value",
+      "segment": "project-1\n"
+    },
+    {
+      "input": "KID:s:config-x\n",
+      "code": "bad_value",
+      "segment": "config-x\n"
+    },
+    {
+      "input": "KID:s:config\n-x",
+      "code": "bad_segment",
+      "segment": "config\n-x"
+    },
+    {
+      "input": "KID:s\r",
+      "code": "bad_stack",
+      "segment": null
+    },
+    {
+      "input": "KID:s:project-1\r",
+      "code": "bad_value",
+      "segment": "project-1\r"
+    },
+    {
+      "input": "KID:s:config-x\r",
+      "code": "bad_value",
+      "segment": "config-x\r"
+    },
+    {
+      "input": "KID:s:config\r-x",
+      "code": "bad_segment",
+      "segment": "config\r-x"
+    },
+    {
+      "input": "KID:s ",
+      "code": "bad_stack",
+      "segment": null
+    },
+    {
+      "input": "KID:s:project-1 ",
+      "code": "bad_value",
+      "segment": "project-1 "
+    },
+    {
+      "input": "KID:s:config-x ",
+      "code": "bad_value",
+      "segment": "config-x "
+    },
+    {
+      "input": "KID:s:config -x",
+      "code": "bad_segment",
+      "segment": "config -x"
+    },
+    {
+      "input": "KID:s:a-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:c-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:d-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:e-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:f-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:g-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:h-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:z-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:branch-default",
+      "code": "too_long",
+      "segment": null
+    },
+    {
+      "input": "KID:s:maintainer-abc",
+      "code": "bad_value",
+      "segment": "maintainer-abc"
+    },
+    {
+      "input": "KID:s:maintainer-%31",
+      "code": "bad_value",
+      "segment": "maintainer-%31"
+    },
+    {
+      "input": "KID:s:maintainer-%2A",
+      "code": "bad_value",
+      "segment": "maintainer-%2A"
+    },
+    {
+      "input": "KID:s:maintainer-١",
+      "code": "bad_value",
+      "segment": "maintainer-١"
+    },
+    {
+      "input": "KID:s:maintainer-1.0",
+      "code": "bad_value",
+      "segment": "maintainer-1.0"
+    },
+    {
+      "input": "KID:s:maintainer--1",
+      "code": "bad_value",
+      "segment": "maintainer--1"
+    },
+    {
+      "input": "KID:s:maintainer-",
+      "code": "bad_value",
+      "segment": "maintainer-"
+    },
+    {
+      "input": "KID:s:maintainer-9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999",
+      "code": "too_long",
+      "segment": "maintainer-9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
+    },
+    {
+      "input": "KID:s:maintainer-1:maintainer-abc",
+      "code": "duplicate_entity",
+      "segment": "maintainer-abc"
+    },
+    {
+      "input": "KID:s:maintainer-dev",
+      "code": "bad_value",
+      "segment": "maintainer-dev"
+    },
+    {
+      "input": "KID:s:maintainer-default",
+      "code": "bad_value",
+      "segment": "maintainer-default"
+    },
+    {
+      "input": "KID:s:org-abc",
+      "code": "bad_value",
+      "segment": "org-abc"
+    },
+    {
+      "input": "KID:s:org-%31",
+      "code": "bad_value",
+      "segment": "org-%31"
+    },
+    {
+      "input": "KID:s:org-%2A",
+      "code": "bad_value",
+      "segment": "org-%2A"
+    },
+    {
+      "input": "KID:s:org-١",
+      "code": "bad_value",
+      "segment": "org-١"
+    },
+    {
+      "input": "KID:s:org-1.0",
+      "code": "bad_value",
+      "segment": "org-1.0"
+    },
+    {
+      "input": "KID:s:org--1",
+      "code": "bad_value",
+      "segment": "org--1"
+    },
+    {
+      "input": "KID:s:org-",
+      "code": "bad_value",
+      "segment": "org-"
+    },
+    {
+      "input": "KID:s:org-9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999",
+      "code": "too_long",
+      "segment": "org-9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
+    },
+    {
+      "input": "KID:s:org-1:org-abc",
+      "code": "duplicate_entity",
+      "segment": "org-abc"
+    },
+    {
+      "input": "KID:s:org-dev",
+      "code": "bad_value",
+      "segment": "org-dev"
+    },
+    {
+      "input": "KID:s:org-default",
+      "code": "bad_value",
+      "segment": "org-default"
+    },
+    {
+      "input": "KID:s:project-abc",
+      "code": "bad_value",
+      "segment": "project-abc"
+    },
+    {
+      "input": "KID:s:project-%31",
+      "code": "bad_value",
+      "segment": "project-%31"
+    },
+    {
+      "input": "KID:s:project-%2A",
+      "code": "bad_value",
+      "segment": "project-%2A"
+    },
+    {
+      "input": "KID:s:project-١",
+      "code": "bad_value",
+      "segment": "project-١"
+    },
+    {
+      "input": "KID:s:project-1.0",
+      "code": "bad_value",
+      "segment": "project-1.0"
+    },
+    {
+      "input": "KID:s:project--1",
+      "code": "bad_value",
+      "segment": "project--1"
+    },
+    {
+      "input": "KID:s:project-",
+      "code": "bad_value",
+      "segment": "project-"
+    },
+    {
+      "input": "KID:s:project-9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999",
+      "code": "too_long",
+      "segment": "project-9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
+    },
+    {
+      "input": "KID:s:project-1:project-abc",
+      "code": "duplicate_entity",
+      "segment": "project-abc"
+    },
+    {
+      "input": "KID:s:project-dev",
+      "code": "bad_value",
+      "segment": "project-dev"
+    },
+    {
+      "input": "KID:s:project-default",
+      "code": "bad_value",
+      "segment": "project-default"
+    },
+    {
+      "input": "KID:s:branch-abc",
+      "code": "bad_value",
+      "segment": "branch-abc"
+    },
+    {
+      "input": "KID:s:branch-%31",
+      "code": "bad_value",
+      "segment": "branch-%31"
+    },
+    {
+      "input": "KID:s:branch-%2A",
+      "code": "bad_value",
+      "segment": "branch-%2A"
+    },
+    {
+      "input": "KID:s:branch-١",
+      "code": "bad_value",
+      "segment": "branch-١"
+    },
+    {
+      "input": "KID:s:branch-1.0",
+      "code": "bad_value",
+      "segment": "branch-1.0"
+    },
+    {
+      "input": "KID:s:branch--1",
+      "code": "bad_value",
+      "segment": "branch--1"
+    },
+    {
+      "input": "KID:s:branch-",
+      "code": "bad_value",
+      "segment": "branch-"
+    },
+    {
+      "input": "KID:s:branch-9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999",
+      "code": "too_long",
+      "segment": "branch-9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
+    },
+    {
+      "input": "KID:s:branch-1:branch-abc",
+      "code": "duplicate_entity",
+      "segment": "branch-abc"
+    },
+    {
+      "input": "KID:s:maintainer-1:org-2:project-3:branch-4:extra0-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra1-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra2-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra3-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra4-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra5-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra6-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:tail-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "code": "too_long",
+      "segment": null
+    },
+    {
+      "input": "KID:s:stack-x",
+      "code": "bad_segment",
+      "segment": "stack-x",
+      "note": "stack is reserved; name validation precedes value validation"
+    },
+    {
+      "input": "KID:s:stack-",
+      "code": "bad_segment",
+      "segment": "stack-",
+      "note": "stack is reserved; name validation precedes value validation"
+    },
+    {
+      "input": "KID:s:stack-%FF",
+      "code": "bad_segment",
+      "segment": "stack-%FF",
+      "note": "stack is reserved; name validation precedes value validation"
+    },
+    {
+      "input": "KID:s:maintainer-001",
+      "code": "bad_value",
+      "segment": "maintainer-001",
+      "note": "leading zero in a numeric ID would alias another identity"
+    },
+    {
+      "input": "KID:s:org-001",
+      "code": "bad_value",
+      "segment": "org-001",
+      "note": "leading zero in a numeric ID would alias another identity"
+    },
+    {
+      "input": "KID:s:project-001",
+      "code": "bad_value",
+      "segment": "project-001",
+      "note": "leading zero in a numeric ID would alias another identity"
+    },
+    {
+      "input": "KID:s:branch-001",
+      "code": "bad_value",
+      "segment": "branch-001",
+      "note": "leading zero in a numeric ID would alias another identity"
     }
   ],
   "create": [
+    {
+      "stack": "s",
+      "entities": {
+        "entities": "y"
+      },
+      "canonical": "KID:s:entities-y",
+      "note": "entities is a valid open entity name"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "project": 9876,
+        "org": 0
+      },
+      "canonical": "KID:s:org-0:project-9876",
+      "note": "integer values are converted to their decimal string form before validation"
+    },
     {
       "stack": "kbc-eu-central-1",
       "entities": {},
@@ -1201,129 +2005,129 @@
     {
       "stack": "kbc-eu-central-1",
       "entities": {
-        "p": "9876",
+        "project": "9876",
         "bucket": "in.c-main",
         "table": "orders"
       },
-      "canonical": "KID:kbc-eu-central-1:p-9876:bucket-in.c-main:table-orders"
+      "canonical": "KID:kbc-eu-central-1:bucket-in.c-main:project-9876:table-orders"
     },
     {
       "stack": "kbc-eu-central-1",
       "entities": {
         "table": "orders",
         "bucket": "in.c-main",
-        "o": "42",
-        "p": "9876"
+        "org": "42",
+        "project": "9876"
       },
-      "canonical": "KID:kbc-eu-central-1:o-42:p-9876:bucket-in.c-main:table-orders",
+      "canonical": "KID:kbc-eu-central-1:bucket-in.c-main:org-42:project-9876:table-orders",
       "note": "non-canonical input order"
     },
     {
       "stack": "kbc-eu-central-1",
       "entities": {
-        "p": "9876",
-        "b": "default"
+        "project": "9876",
+        "branch": "default"
       },
-      "canonical": "KID:kbc-eu-central-1:p-9876",
-      "note": "b-default dropped"
+      "canonical": "KID:kbc-eu-central-1:project-9876",
+      "note": "branch-default dropped"
     },
     {
       "stack": "kbc-eu-central-1",
       "entities": {
-        "p": "9876",
-        "b": "555"
+        "project": "9876",
+        "branch": "555"
       },
-      "canonical": "KID:kbc-eu-central-1:p-9876:b-555"
+      "canonical": "KID:kbc-eu-central-1:branch-555:project-9876"
     },
     {
       "stack": "kbc-eu-central-1",
       "entities": {
-        "p": "9876",
-        "b": "dev"
+        "project": "9876",
+        "branch": "dev"
       },
-      "canonical": "KID:kbc-eu-central-1:p-9876:b-dev"
+      "canonical": "KID:kbc-eu-central-1:branch-dev:project-9876"
     },
     {
       "stack": "kbc-eu-central-1",
       "entities": {
-        "p": "*"
+        "project": "*"
       },
-      "canonical": "KID:kbc-eu-central-1:p-*",
+      "canonical": "KID:kbc-eu-central-1:project-*",
       "note": "* is always the wildcard"
     },
     {
       "stack": "kbc-eu-central-1",
       "entities": {
-        "p": "9876",
+        "project": "9876",
         "config": "*"
       },
-      "canonical": "KID:kbc-eu-central-1:p-9876:config-*"
+      "canonical": "KID:kbc-eu-central-1:config-*:project-9876"
     },
     {
       "stack": "kbc-eu-central-1",
       "entities": {
-        "p": "9876",
+        "project": "9876",
         "config": "my config"
       },
-      "canonical": "KID:kbc-eu-central-1:p-9876:config-my%20config"
+      "canonical": "KID:kbc-eu-central-1:config-my%20config:project-9876"
     },
     {
       "stack": "kbc-eu-central-1",
       "entities": {
-        "p": "9876",
+        "project": "9876",
         "config": "a*b"
       },
-      "canonical": "KID:kbc-eu-central-1:p-9876:config-a%2Ab",
+      "canonical": "KID:kbc-eu-central-1:config-a%2Ab:project-9876",
       "note": "star inside a value is a literal"
     },
     {
       "stack": "kbc-eu-central-1",
       "entities": {
-        "p": "9876",
+        "project": "9876",
         "config": "a~b+c:d/e%f!g(h)i'j"
       },
-      "canonical": "KID:kbc-eu-central-1:p-9876:config-a%7Eb%2Bc%3Ad%2Fe%25f%21g%28h%29i%27j"
+      "canonical": "KID:kbc-eu-central-1:config-a%7Eb%2Bc%3Ad%2Fe%25f%21g%28h%29i%27j:project-9876"
     },
     {
       "stack": "kbc-eu-central-1",
       "entities": {
-        "p": "9876",
+        "project": "9876",
         "config": "řeší"
       },
-      "canonical": "KID:kbc-eu-central-1:p-9876:config-%C5%99e%C5%A1%C3%AD"
+      "canonical": "KID:kbc-eu-central-1:config-%C5%99e%C5%A1%C3%AD:project-9876"
     },
     {
       "stack": "kbc-eu-central-1",
       "entities": {
-        "p": "9876",
+        "project": "9876",
         "config": "😀"
       },
-      "canonical": "KID:kbc-eu-central-1:p-9876:config-%F0%9F%98%80"
+      "canonical": "KID:kbc-eu-central-1:config-%F0%9F%98%80:project-9876"
     },
     {
       "stack": "kbc-eu-central-1",
       "entities": {
-        "p": "9876",
+        "project": "9876",
         "config": "A-Za_z0.9"
       },
-      "canonical": "KID:kbc-eu-central-1:p-9876:config-A-Za_z0.9"
+      "canonical": "KID:kbc-eu-central-1:config-A-Za_z0.9:project-9876"
     },
     {
       "stack": "kbc-eu-central-1",
       "entities": {
-        "p": "9876",
+        "project": "9876",
         "config": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
       },
-      "canonical": "KID:kbc-eu-central-1:p-9876:config-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "canonical": "KID:kbc-eu-central-1:config-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:project-9876",
       "note": "255 raw bytes"
     },
     {
       "stack": "kbc-eu-central-1",
       "entities": {
-        "p": "9876",
-        "config": "řřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřř"
+        "project": "9876",
+        "config": "€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€"
       },
-      "canonical": "KID:kbc-eu-central-1:p-9876:config-%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99%C5%99",
+      "canonical": "KID:kbc-eu-central-1:config-%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC:project-9876",
       "note": "255 raw bytes multibyte"
     },
     {
@@ -1338,16 +2142,228 @@
     {
       "stack": "a",
       "entities": {
-        "p": "1"
+        "project": "1"
       },
-      "canonical": "KID:a:p-1"
+      "canonical": "KID:a:project-1"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "config": "﻿x"
+      },
+      "canonical": "KID:s:config-%EF%BB%BFx"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "config": "﻿"
+      },
+      "canonical": "KID:s:config-%EF%BB%BF"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "config": "\u0000"
+      },
+      "canonical": "KID:s:config-%00"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "config": "\r\n"
+      },
+      "canonical": "KID:s:config-%0D%0A"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "config": "é"
+      },
+      "canonical": "KID:s:config-%C3%A9"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "config": "é"
+      },
+      "canonical": "KID:s:config-e%CC%81"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "config": "�"
+      },
+      "canonical": "KID:s:config-%EF%BF%BD"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "constructor": "x"
+      },
+      "canonical": "KID:s:constructor-x"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "a": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "c": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "d": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "e": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "f": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "g": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "h": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "z": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "branch": "default"
+      },
+      "canonical": "KID:s:a-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:c-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:d-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:e-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:f-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:g-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:h-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:z-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "zeta": "9",
+        "branch": "555",
+        "project": "3",
+        "org": "2",
+        "maintainer": "1",
+        "alpha": "x"
+      },
+      "canonical": "KID:s:alpha-x:branch-555:maintainer-1:org-2:project-3:zeta-9"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "maintainer": "0"
+      },
+      "canonical": "KID:s:maintainer-0"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "maintainer": "999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
+      },
+      "canonical": "KID:s:maintainer-999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "maintainer": "*"
+      },
+      "canonical": "KID:s:maintainer-*"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "org": "0"
+      },
+      "canonical": "KID:s:org-0"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "org": "999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
+      },
+      "canonical": "KID:s:org-999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "org": "*"
+      },
+      "canonical": "KID:s:org-*"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "project": "0"
+      },
+      "canonical": "KID:s:project-0"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "project": "999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
+      },
+      "canonical": "KID:s:project-999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "project": "*"
+      },
+      "canonical": "KID:s:project-*"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "branch": "0"
+      },
+      "canonical": "KID:s:branch-0"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "branch": "999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
+      },
+      "canonical": "KID:s:branch-999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "branch": "*"
+      },
+      "canonical": "KID:s:branch-*"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "maintainer": "1",
+        "org": "2",
+        "project": "3",
+        "branch": "4",
+        "extra0": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "extra1": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "extra2": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "extra3": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "extra4": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "extra5": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "extra6": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "tail": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      },
+      "canonical": "KID:s:branch-4:extra0-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra1-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra2-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra3-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra4-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra5-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra6-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:maintainer-1:org-2:project-3:tail-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
     }
   ],
   "createInvalid": [
     {
+      "stack": "s",
+      "entities": {
+        "project": -1
+      },
+      "code": "bad_value",
+      "segment": "project--1",
+      "note": "a negative integer converts to a string with a minus sign, which the numeric entity set rejects"
+    },
+    {
+      "stack": "s",
+      "entitiesHex": {
+        "config": "ff"
+      },
+      "code": "bad_utf8",
+      "segmentHex": "636f6e6669672dff",
+      "note": "create rejects an invalid raw UTF-8 byte"
+    },
+    {
+      "stack": "s",
+      "entitiesHex": {
+        "config": "eda080"
+      },
+      "code": "bad_utf8",
+      "segmentHex": "636f6e6669672deda080",
+      "note": "create rejects a UTF-8 encoded surrogate"
+    },
+    {
       "stack": "AWS",
       "entities": {
-        "p": "1"
+        "project": "1"
       },
       "code": "bad_stack",
       "segment": null
@@ -1355,7 +2371,7 @@
     {
       "stack": "",
       "entities": {
-        "p": "1"
+        "project": "1"
       },
       "code": "bad_stack",
       "segment": null
@@ -1369,18 +2385,18 @@
     {
       "stack": "kbc-eu-central-1",
       "entities": {
-        "p": "abc"
+        "project": "abc"
       },
       "code": "bad_value",
-      "segment": "p-abc"
+      "segment": "project-abc"
     },
     {
       "stack": "kbc-eu-central-1",
       "entities": {
-        "p": ""
+        "project": ""
       },
       "code": "bad_value",
-      "segment": "p-"
+      "segment": "project-"
     },
     {
       "stack": "kbc-eu-central-1",
@@ -1393,18 +2409,18 @@
     {
       "stack": "kbc-eu-central-1",
       "entities": {
-        "b": "main"
+        "branch": "main"
       },
       "code": "bad_value",
-      "segment": "b-main"
+      "segment": "branch-main"
     },
     {
       "stack": "kbc-eu-central-1",
       "entities": {
-        "p": "*1"
+        "project": "*1"
       },
       "code": "bad_value",
-      "segment": "p-*1"
+      "segment": "project-*1"
     },
     {
       "stack": "kbc-eu-central-1",
@@ -1442,39 +2458,27 @@
     {
       "stack": "kbc-eu-central-1",
       "entities": {
-        "config": "řřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřř"
+        "config": "€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€"
       },
       "code": "too_long",
-      "segment": "config-řřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřřř",
+      "segment": "config-€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€",
       "note": "258 raw bytes; segment carries the raw value"
     },
     {
       "stack": "s",
       "entities": {
         "a": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-        "b": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         "c": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         "d": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         "e": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         "f": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         "g": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "h": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         "z": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
       },
       "code": "too_long",
       "segment": null,
       "note": "canonical output would be 2049 bytes"
-    },
-    {
-      "stack": "kbc-eu-central-1",
-      "entities": {
-        "p": 9876
-      },
-      "code": "bad_value",
-      "segment": null,
-      "note": "non-string value is rejected, not coerced; segment not applicable",
-      "skip": [
-        "go"
-      ]
     },
     {
       "stack": "kbc-eu-central-1",
@@ -1491,7 +2495,7 @@
     {
       "stack": "kbc-eu-central-1",
       "entities": {
-        "p": true
+        "project": true
       },
       "code": "bad_value",
       "segment": null,
@@ -1499,6 +2503,345 @@
       "skip": [
         "go"
       ]
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "maintainer": "abc"
+      },
+      "code": "bad_value",
+      "segment": "maintainer-abc"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "maintainer": "%31"
+      },
+      "code": "bad_value",
+      "segment": "maintainer-%31"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "maintainer": "%2A"
+      },
+      "code": "bad_value",
+      "segment": "maintainer-%2A"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "maintainer": "١"
+      },
+      "code": "bad_value",
+      "segment": "maintainer-١"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "maintainer": "1.0"
+      },
+      "code": "bad_value",
+      "segment": "maintainer-1.0"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "maintainer": "-1"
+      },
+      "code": "bad_value",
+      "segment": "maintainer--1"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "maintainer": ""
+      },
+      "code": "bad_value",
+      "segment": "maintainer-"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "maintainer": "9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
+      },
+      "code": "too_long",
+      "segment": "maintainer-9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "org": "abc"
+      },
+      "code": "bad_value",
+      "segment": "org-abc"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "org": "%31"
+      },
+      "code": "bad_value",
+      "segment": "org-%31"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "org": "%2A"
+      },
+      "code": "bad_value",
+      "segment": "org-%2A"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "org": "١"
+      },
+      "code": "bad_value",
+      "segment": "org-١"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "org": "1.0"
+      },
+      "code": "bad_value",
+      "segment": "org-1.0"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "org": "-1"
+      },
+      "code": "bad_value",
+      "segment": "org--1"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "org": ""
+      },
+      "code": "bad_value",
+      "segment": "org-"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "org": "9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
+      },
+      "code": "too_long",
+      "segment": "org-9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "project": "abc"
+      },
+      "code": "bad_value",
+      "segment": "project-abc"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "project": "%31"
+      },
+      "code": "bad_value",
+      "segment": "project-%31"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "project": "%2A"
+      },
+      "code": "bad_value",
+      "segment": "project-%2A"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "project": "١"
+      },
+      "code": "bad_value",
+      "segment": "project-١"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "project": "1.0"
+      },
+      "code": "bad_value",
+      "segment": "project-1.0"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "project": "-1"
+      },
+      "code": "bad_value",
+      "segment": "project--1"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "project": ""
+      },
+      "code": "bad_value",
+      "segment": "project-"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "project": "9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
+      },
+      "code": "too_long",
+      "segment": "project-9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "branch": "abc"
+      },
+      "code": "bad_value",
+      "segment": "branch-abc"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "branch": "%31"
+      },
+      "code": "bad_value",
+      "segment": "branch-%31"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "branch": "%2A"
+      },
+      "code": "bad_value",
+      "segment": "branch-%2A"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "branch": "١"
+      },
+      "code": "bad_value",
+      "segment": "branch-١"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "branch": "1.0"
+      },
+      "code": "bad_value",
+      "segment": "branch-1.0"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "branch": "-1"
+      },
+      "code": "bad_value",
+      "segment": "branch--1"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "branch": ""
+      },
+      "code": "bad_value",
+      "segment": "branch-"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "branch": "9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
+      },
+      "code": "too_long",
+      "segment": "branch-9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "maintainer": "1",
+        "org": "2",
+        "project": "3",
+        "branch": "4",
+        "extra0": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "extra1": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "extra2": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "extra3": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "extra4": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "extra5": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "extra6": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "tail": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      },
+      "code": "too_long",
+      "segment": null
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "stack": "x"
+      },
+      "code": "bad_segment",
+      "segment": "stack-x",
+      "note": "create rejects the reserved stack entity before validating its value"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "stack": ""
+      },
+      "code": "bad_segment",
+      "segment": "stack-",
+      "note": "create rejects the reserved stack entity before validating its value"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "stack": null
+      },
+      "code": "bad_segment",
+      "segment": null,
+      "note": "create rejects the reserved stack entity before validating its value"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "maintainer": "001"
+      },
+      "code": "bad_value",
+      "segment": "maintainer-001",
+      "note": "leading zero in a numeric ID is rejected, not normalized"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "org": "001"
+      },
+      "code": "bad_value",
+      "segment": "org-001",
+      "note": "leading zero in a numeric ID is rejected, not normalized"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "project": "001"
+      },
+      "code": "bad_value",
+      "segment": "project-001",
+      "note": "leading zero in a numeric ID is rejected, not normalized"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "branch": "001"
+      },
+      "code": "bad_value",
+      "segment": "branch-001",
+      "note": "leading zero in a numeric ID is rejected, not normalized"
     }
-  ]
+  ],
+  "canonicalOrder": "ascii"
 }
