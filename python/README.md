@@ -4,6 +4,9 @@ Python 3.11+, no runtime dependencies. Distribution: `keboola-identifier`;
 import: `keboola_identifier`. Implements [SPEC.md](../SPEC.md), including full
 hierarchy names, uniform ASCII entity ordering and the default-branch fallback.
 
+The package ships a PEP 561 `py.typed` marker, so mypy and pyright use its
+annotations.
+
 ## Install from this checkout
 
 From `python/`:
