@@ -19,7 +19,7 @@ From `go/`:
 go vet ./...
 go test -race -cover ./...
 go run ./examples/usage
-go test -fuzz=FuzzRoundTrip -fuzztime=10s
+go test -fuzz=FuzzRoundTrip -fuzztime=10s ./kid
 ```
 
 ## Usage
@@ -72,15 +72,17 @@ When a KID carries no `branch`, every reader falls back to the default branch:
 identity does not change. Go maps are unordered; `String()` is the only ordered
 representation. Parsing validates segments **left to right**. `New` checks entities
 in ascending name order (byte order), so the reported error for a map with several
-invalid entries is deterministic; PHP, Python and JavaScript check in map insertion
-order instead. Canonical output always sorts all entity names by ASCII bytes and
+invalid entries is deterministic; PHP and Python check in insertion order and
+JavaScript in property enumeration order instead. Canonical output always sorts all entity names by ASCII bytes and
 omits `branch-default`.
 
-`Kid` implements `encoding.TextMarshaler` and `encoding.TextUnmarshaler`, so
-`encoding/json` (and any text-based encoder) writes a `Kid` as its canonical string,
-also as a map key, and reads one back through `Parse`, rejecting invalid or
-non-canonical payloads with the usual error. Marshalling the zero value is an error
-rather than a silent `""`.
+`Kid` implements `encoding.TextMarshaler`/`TextUnmarshaler` and
+`encoding.BinaryMarshaler`/`BinaryUnmarshaler`, so `encoding/json`, `encoding/gob`
+and other encoders write a `Kid` as its canonical string, also as a map key, and
+read one back through `Parse`, rejecting invalid or non-canonical payloads with the
+usual error. Marshalling the zero value is an error rather than a silent `""`, so an
+optional field must be a `*kid.Kid` (with `omitempty`) or use `json:",omitzero"`
+(Go 1.24+).
 
 Errors are `*InvalidKidError{Code, Segment}` and support `errors.As`:
 

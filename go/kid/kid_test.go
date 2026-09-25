@@ -2,6 +2,7 @@ package kid_test
 
 import (
 	"bytes"
+	"encoding/gob"
 	"encoding/hex"
 	"encoding/json"
 	"errors"
@@ -362,6 +363,20 @@ func TestJSONRoundTripsThroughCanonicalForm(t *testing.T) {
 	}
 	if _, err := json.Marshal(kid.Kid{}); err == nil {
 		t.Fatal("zero value must not marshal silently")
+	}
+	optional, err := json.Marshal(struct {
+		Kid *kid.Kid `json:",omitempty"`
+	}{})
+	if err != nil || string(optional) != "{}" {
+		t.Fatal("optional pointer field", err, string(optional))
+	}
+	var buffer bytes.Buffer
+	if err := gob.NewEncoder(&buffer).Encode(value); err != nil {
+		t.Fatal("gob encode", err)
+	}
+	var viaGob kid.Kid
+	if err := gob.NewDecoder(&buffer).Decode(&viaGob); err != nil || viaGob != value {
+		t.Fatal("gob decode", err, viaGob)
 	}
 }
 

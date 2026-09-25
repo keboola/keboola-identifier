@@ -12,6 +12,7 @@ import (
 	"unicode/utf8"
 )
 
+// Entity names of the launch catalog (SPEC §4.3); any other syntactically valid name is an open entity.
 const (
 	EntityMaintainer = "maintainer"
 	EntityOrg        = "org"
@@ -202,7 +203,10 @@ func New(stack string, entities map[string]string) (Kid, error) {
 	return Kid{canonical}, nil
 }
 
+// Validate reports whether Parse would succeed.
 func Validate(text string) bool { _, err := Parse(text); return err == nil }
+
+// Canonicalize returns Parse(text).String(), with the same error as Parse.
 func Canonicalize(text string) (string, error) {
 	k, err := Parse(text)
 	if err != nil {
@@ -210,11 +214,17 @@ func Canonicalize(text string) (string, error) {
 	}
 	return k.String(), nil
 }
+
+// IsCanonical reports whether text is valid and equal to its canonical form; false, never an error, for invalid text.
 func IsCanonical(text string) bool {
 	canonical, err := Canonicalize(text)
 	return err == nil && canonical == text
 }
+
+// String returns the canonical form; every serialization of a Kid emits exactly this string.
 func (k Kid) String() string { return k.canonical }
+
+// Stack returns the stack identifier.
 func (k Kid) Stack() string {
 	if k.canonical == "" {
 		return ""
@@ -238,6 +248,8 @@ func (k Kid) encoded() map[string]string {
 	}
 	return entities
 }
+
+// Get returns the decoded value of an entity; a whole "*" is the wildcard (see IsWildcard).
 func (k Kid) Get(entity string) (string, bool) {
 	value, ok := k.encoded()[entity]
 	if !ok {
@@ -246,6 +258,8 @@ func (k Kid) Get(entity string) (string, bool) {
 	raw, _ := decode(value, "")
 	return raw, true
 }
+
+// Has reports whether the entity is present; always true for "branch" on a valid Kid.
 func (k Kid) Has(entity string) bool { _, ok := k.encoded()[entity]; return ok }
 
 // Entities returns a decoded copy with branch reported as DefaultBranch when absent.
@@ -266,13 +280,24 @@ func (k Kid) ToMap() map[string]string {
 	values["stack"] = k.Stack()
 	return values
 }
-func (k Kid) Maintainer() (string, bool)   { return k.Get(EntityMaintainer) }
-func (k Kid) Organization() (string, bool) { return k.Get(EntityOrg) }
-func (k Kid) Project() (string, bool)      { return k.Get(EntityProject) }
 
-// Branch is never absent: a KID without a branch is on the default branch (SPEC §4.2).
-func (k Kid) Branch() string                { value, _ := k.Get(EntityBranch); return value }
+// Maintainer returns the decoded "maintainer" value.
+func (k Kid) Maintainer() (string, bool) { return k.Get(EntityMaintainer) }
+
+// Organization returns the decoded "org" value.
+func (k Kid) Organization() (string, bool) { return k.Get(EntityOrg) }
+
+// Project returns the decoded "project" value.
+func (k Kid) Project() (string, bool) { return k.Get(EntityProject) }
+
+// Branch is never absent on a valid Kid: a KID without a branch is on the default
+// branch (SPEC §4.2). Only the invalid zero value reports "".
+func (k Kid) Branch() string { value, _ := k.Get(EntityBranch); return value }
+
+// IsWildcard reports whether the entity's value is the wildcard, as opposed to a decoded literal "*".
 func (k Kid) IsWildcard(entity string) bool { return k.encoded()[entity] == "*" }
+
+// IsPattern reports whether any entity is a wildcard or the branch is "dev".
 func (k Kid) IsPattern() bool {
 	for name, value := range k.encoded() {
 		if value == "*" || (name == EntityBranch && value == "dev") {
@@ -281,11 +306,20 @@ func (k Kid) IsPattern() bool {
 	}
 	return false
 }
+
+// Equals reports canonical equality; it is the same as ==.
 func (k Kid) Equals(other Kid) bool { return k == other }
+
+// MarshalBinary is MarshalText, so encoding/gob also carries the canonical string.
+func (k Kid) MarshalBinary() ([]byte, error) { return k.MarshalText() }
+
+// UnmarshalBinary is UnmarshalText.
+func (k *Kid) UnmarshalBinary(data []byte) error { return k.UnmarshalText(data) }
 
 // MarshalText emits the canonical string, so encoding/json and other text-based
 // encoders serialize a Kid as that string (SPEC §9). The zero value is not
-// serializable and yields an error rather than silently producing "".
+// serializable and yields an error rather than silently producing ""; an optional
+// field should be *Kid or use `json:",omitzero"`.
 func (k Kid) MarshalText() ([]byte, error) {
 	if k.canonical == "" {
 		return nil, invalid("bad_prefix", "")
