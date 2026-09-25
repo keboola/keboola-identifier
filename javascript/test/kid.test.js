@@ -62,7 +62,7 @@ for (const [index, c] of vectors.create.entries()) {
 }
 for (const [index, c] of vectors.createInvalid.entries()) {
   const skip = c.skip?.includes('javascript') ? 'Fixture marked as unrepresentable in JavaScript'
-    : c.entitiesHex ? 'Raw invalid UTF-8 bytes are not JavaScript strings; lone surrogates tested separately' : false;
+    : c.entitiesHex ? 'Byte-string fixture; raw 0xFF has no JS string form and the encoded surrogate is covered by the lone-surrogate test' : false;
   test(`createInvalid #${index}`, { skip }, () => {
     assert.throws(() => Kid.create(c.stack, c.entities), errorIs(c.code, c.segment));
   });

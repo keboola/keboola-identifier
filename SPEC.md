@@ -320,15 +320,23 @@ installation and usage examples.
 - JavaScript uses `equals()` for canonical equality; `==` compares references.
 - The default-branch fallback (§4.2) applies in every language: `Branch()`/`branch`
   never reports an absent value, and `Get("branch")`/`get("branch")` succeeds.
+- Serialization: Go `MarshalText`/`MarshalBinary` (JSON, gob), JavaScript `toJSON()`,
+  Python `pickle`/`copy` emit or re-validate the canonical string. Generic object
+  walkers (`structuredClone` in JavaScript, `dataclasses.asdict` in Python) do not
+  see the private state and are not serializations of a KID; use `toString()`.
 - Integer values in `create()`: Python accepts `int` (not `bool`, which is an `int`
-  subclass); JavaScript accepts safe integers and `bigint`; Go's `map[string]string`
-  has no integer values, so the caller converts with `strconv.Itoa`.
+  subclass); JavaScript accepts safe integers and `bigint`, and since a JavaScript
+  number has no integer type, `1.0` and `1e2` are the integers `1` and `100` there
+  while PHP and Python reject floats; Go's `map[string]string` has no integer values,
+  so the caller converts with `strconv.Itoa`.
 - Go maps are unordered, so `Entities()` and `ToMap()` carry no order; `String()` is
   the only ordered representation. Parsing still validates segments left to right.
   Creation checks entities in ascending name order, so the reported error is
-  deterministic but may differ from the insertion-ordered check in PHP, Python and
-  JavaScript when several entries are invalid. Canonical serialization is always
-  ordered as specified in §6.
+  deterministic but may differ from the insertion-ordered check in PHP and Python
+  when several entries are invalid. JavaScript checks in property enumeration order,
+  which lists integer-like keys first; such keys are always `bad_segment`, so only
+  the reported error can differ, never the canonical form. Canonical serialization
+  is always ordered as specified in §6.
 - Python and JavaScript creation APIs accept Unicode strings, not byte arrays.
   Unpaired surrogates are `bad_utf8`. Raw length is checked first: Python counts
   UTF-8 with `surrogatepass`, JavaScript counts `TextEncoder` bytes (three bytes

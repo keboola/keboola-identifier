@@ -45,6 +45,8 @@ console.log(Kid.parse('KID:s:project-1').toObject()); // { stack: 's', branch: '
   Use `equals()` for canonical equality rather than JavaScript reference equality.
 - Serialization: `toJSON()` returns the canonical string, so `JSON.stringify(kid)`
   yields `"KID:…"` rather than `{}`; read it back with `Kid.parse()`.
+  `structuredClone(kid)` cannot see the private state and yields `{}`; clone the
+  string instead.
 - `Entity` is a frozen constants object: `MAINTAINER`, `ORG`, `PROJECT`, `BRANCH`,
   `BUCKET`, `TABLE`, `COMPONENT`, `CONFIG`, `ROW`, `WORKSPACE`, `USER`, `APP`, `STREAM`.
   Unknown entity names are accepted as plain strings. `DEFAULT_BRANCH` is `'default'`.
@@ -61,8 +63,9 @@ instead of being read as empty. Only own enumerable string keys are considered.
 
 `create()` accepts decoded string values and integers, which it converts to their
 decimal string form: safe integers (`{ project: 9876 }` equals `{ project: '9876' }`)
-and `bigint` values for IDs beyond `Number.MAX_SAFE_INTEGER`. A negative integer
-becomes `'-1'` and fails the numeric entity sets. Non-integer numbers, unsafe
+and `bigint` values for IDs beyond `Number.MAX_SAFE_INTEGER`. A JavaScript number
+has no integer type, so `1.0` and `1e2` are the integers `1` and `100`. A negative
+integer becomes `'-1'` and fails the numeric entity sets. Non-integer numbers, unsafe
 integers, booleans, `null`, wrapper objects and containers raise `bad_value`.
 Numeric IDs of `maintainer`, `org`, `project` and `branch` must not have leading
 zeros (`bad_value`); `0` is accepted. Open-catalog values keep their characters.
@@ -75,8 +78,9 @@ UTF-16 code units. Lone surrogates are rejected as `bad_utf8` rather than silent
 replaced. During creation, length is checked first using `TextEncoder` byte length
 (three bytes per unpaired surrogate), then Unicode validity. BOMs are preserved.
 
-The two shared raw-invalid-byte creation fixtures cannot be represented as JS
-strings and are explicitly skipped, as is any fixture marked `skip: ["javascript"]`.
+The two shared byte-string creation fixtures are skipped: raw `0xFF` has no JS
+string form, and the encoded surrogate is exercised by the lone-surrogate test
+instead. Any fixture marked `skip: ["javascript"]` is skipped as well.
 Separate tests verify lone-surrogate rejection, length precedence, surrogate pairs,
 integer conversion and rejection of byte arrays. Every encoded invalid-UTF-8 parsing
 vector runs unchanged.
