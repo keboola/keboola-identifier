@@ -33,20 +33,22 @@ value, err := kid.New("kbc-eu-central-1", map[string]string{
 if err != nil { return err }
 fmt.Println(value)             // KID:kbc-eu-central-1:config-my%20config:project-9876
 project, ok := value.Project() // "9876", true
+other, _ := kid.Parse("KID:kbc-eu-central-1:project-9876:config-my%20config")
+fmt.Println(value == other)    // true: Kid is a comparable value type
 fmt.Println(value.Branch())    // default
 fmt.Println(value.ToMap())     // map[branch:default config:my config project:9876 stack:kbc-eu-central-1]
 ```
 
 ## API
 
-- `Validate(text) bool`, `Parse(text) (*Kid, error)`, `New(stack, map[string]string) (*Kid, error)`,
+- `Validate(text) bool`, `Parse(text) (Kid, error)`, `New(stack, map[string]string) (Kid, error)`,
   `Canonicalize(text) (string, error)`, `IsCanonical(text) bool`.
   `Parse` is the only way from text to a `Kid`; it validates fully and returns the
   canonical identity.
 - `Stack() string`; `Maintainer()`, `Organization()`, `Project()` and `Get(entity)`
   return `(string, bool)` — `("", false)` when absent. `Branch() string` is never
   absent: a KID without a branch is on the default branch and reports `"default"`.
-- `Has(entity)`, `IsWildcard(entity)`, `IsPattern()`, `Equals(other *Kid)`;
+- `Has(entity)`, `IsWildcard(entity)`, `IsPattern()`, `Equals(other Kid)` (the same as `==`);
   `String()` returns canonical text; `Entities()` returns a decoded map copy;
   `ToMap()` returns `stack` plus the decoded entities as one flat map (SPEC `toArray()`).
 - Constants: `EntityMaintainer`, `EntityOrg`, `EntityProject`, `EntityBranch`,
@@ -54,8 +56,10 @@ fmt.Println(value.ToMap())     // map[branch:default config:my config project:98
   `EntityWorkspace`, `EntityUser`, `EntityApp`, `EntityStream`, `DefaultBranch`.
   Ordinary strings support the open catalog.
 
-`Kid` has no exported mutable state; factories validate and canonicalize. Its zero
-value is not a valid identifier. Input and output maps do not alias internal state.
+`Kid` is a comparable value type with no exported state: factories validate and
+canonicalize, `==` compares canonical strings and a `Kid` works as a map key. Its
+zero value is not a valid identifier: `String()` is `""`, `Has` is false for every
+entity and `Parse` rejects it. Input and output maps do not alias internal state.
 
 `New` takes `map[string]string`, so numeric IDs are passed as their decimal strings
 (`strconv.Itoa(9876)`); this is the Go counterpart of the integer conversion in

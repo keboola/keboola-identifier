@@ -140,7 +140,7 @@ func TestSharedVectors(t *testing.T) {
 						t.Fatal("pattern mismatch")
 					}
 					roundTrip, err := kid.Parse(value.String())
-					if err != nil || !value.Equals(roundTrip) || *value != *roundTrip {
+					if err != nil || !value.Equals(roundTrip) || value != roundTrip {
 						t.Fatal("equality mismatch")
 					}
 					fields := value.ToMap()
@@ -301,6 +301,28 @@ func TestAllPermutations(t *testing.T) {
 	}
 }
 
+func TestValueSemantics(t *testing.T) {
+	value, err := kid.Parse("KID:s:project-1")
+	if err != nil {
+		t.Fatal(err)
+	}
+	same, _ := kid.New("s", map[string]string{"project": "1"})
+	if value != same || fmt.Sprint(value) != "KID:s:project-1" || fmt.Sprintf("%v", []kid.Kid{value}) != "[KID:s:project-1]" {
+		t.Fatal("value equality or formatting", value, same)
+	}
+	var zero kid.Kid
+	if zero.String() != "" || zero.Stack() != "" || zero.Has("branch") || zero.Branch() != "" || kid.Validate(zero.String()) {
+		t.Fatal("zero value must not look like a valid identifier")
+	}
+	if _, err := kid.Parse(zero.String()); err == nil {
+		t.Fatal("zero value round-tripped")
+	}
+	keyed := map[kid.Kid]int{value: 1}
+	if keyed[same] != 1 {
+		t.Fatal("map key")
+	}
+}
+
 func TestCopiesAndLiteralStar(t *testing.T) {
 	entities := map[string]string{kid.EntityProject: "1"}
 	value, err := kid.New("s", entities)
@@ -319,7 +341,7 @@ func TestCopiesAndLiteralStar(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if literal.Equals(wildcard) || literal.IsPattern() || !wildcard.IsPattern() || literal.Equals(nil) {
+	if literal.Equals(wildcard) || literal.IsPattern() || !wildcard.IsPattern() || literal.Equals(kid.Kid{}) {
 		t.Fatal("literal/wildcard equality")
 	}
 }
