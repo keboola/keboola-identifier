@@ -267,7 +267,7 @@ In text parsing, UTF-8 validity precedes the decoded-value length check as liste
 | `isWildcard(entity)` | value is the wildcard (distinguishes it from a decoded literal `*`) |
 | `isPattern()` | any wildcard or `branch-dev` |
 | `equals(other)` | canonical strings equal |
-| `toString()` | canonical form |
+| `toString()` | canonical form; any other serialization the library offers (JSON, language-native) emits exactly this string |
 
 In the PHP API, absent values are returned as `null`.
 Objects are immutable; there is no `with()`/`without()`.

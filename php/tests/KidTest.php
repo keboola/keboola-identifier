@@ -153,6 +153,13 @@ final class KidTest extends TestCase
         }
     }
 
+    public function testJsonEncodesAsCanonicalString(): void
+    {
+        $kid = Kid::parse('KID:s:project-1:branch-default:config-my%20config');
+        self::assertSame('"KID:s:config-my%20config:project-1"', json_encode($kid));
+        self::assertSame('{"kid":"KID:s:config-my%20config:project-1"}', json_encode(['kid' => $kid]));
+    }
+
     public function testUnicodeIsNotNormalized(): void
     {
         self::assertFalse(Kid::create('s', ['config' => 'é'])->equals(Kid::create('s', ['config' => "e\u{0301}"])));

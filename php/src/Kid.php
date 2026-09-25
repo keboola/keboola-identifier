@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Keboola\Identifier;
 
 /** Immutable, syntactically validated KID 1.0 identity or pattern. */
-final readonly class Kid implements \Stringable
+final readonly class Kid implements \Stringable, \JsonSerializable
 {
     private const UNENCODED = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789._-';
 
@@ -175,6 +175,11 @@ final readonly class Kid implements \Stringable
     }
 
     public function __toString(): string
+    {
+        return $this->canonical;
+    }
+
+    public function jsonSerialize(): string
     {
         return $this->canonical;
     }

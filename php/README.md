@@ -119,7 +119,9 @@ Objects are final and readonly, with only the canonical string as instance state
   `project(): ?string`, `branch(): string`, `get(string): ?string`,
   `has(string): bool`, `entities(): array`, `toArray(): array`.
 - Inspection: `isWildcard(string): bool`, `isPattern(): bool`, `equals(Kid): bool`.
-- Serialization: `toString(): string`, `__toString(): string`.
+- Serialization: `toString(): string`, `__toString(): string`, `jsonSerialize(): string`
+  (`json_encode($kid)` yields the canonical string), PHP `serialize()`/`unserialize()`
+  round-trips through the canonical string and re-validates on `unserialize()`.
 - Entity names are strings such as `'project'`, `'branch'`, `'bucket'` and `'config'`.
   Any syntactically valid lowercase entity name is accepted, including `constructor`.
 
