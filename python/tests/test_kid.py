@@ -111,9 +111,12 @@ class PythonTest(ErrorAssertions):
         self.assert_error(lambda: Kid.create("s", {"project": -1}), "bad_value", "project--1")
         self.assertEqual("KID:s:config--1", str(Kid.create("s", {"config": -1})))
         self.assertEqual("KID:s:project-3", str(Kid.create("s", {"project": enum.IntEnum("Ids", {"X": 3}).X})))
-        # An integer too large for CPython's int-to-str conversion is too_long, not a stray ValueError.
-        self.assert_error(lambda: Kid.create("s", {"config": 10 ** 5000}), "too_long", None)
+        # An integer beyond CPython's int-to-str digit limit still goes through the §8 checks in order.
+        self.assert_error(lambda: Kid.create("s", {"config": 10 ** 5000}), "too_long", "config-1" + "0" * 5000)
+        self.assert_error(lambda: Kid.create("s", {"Bad": 10 ** 5000}), "bad_segment", "Bad-1" + "0" * 5000)
+        self.assert_error(lambda: Kid.create("s", {"project": -(10 ** 5000)}), "bad_value", "project--1" + "0" * 5000)
         self.assert_error(lambda: Kid.create("s", {"config": 10 ** 300}), "too_long", "config-1" + "0" * 300)
+        self.assert_error(lambda: Kid.create("s", {"config": 10 ** 8000 + 7}), "too_long", "config-1" + "0" * 7999 + "7")
         # bool is an int subclass in Python but is not an integer value here.
         self.assert_error(lambda: Kid.create("s", {"project": True}), "bad_value", None)
 

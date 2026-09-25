@@ -45,6 +45,19 @@ def _bytes(value: str) -> bytes:
     return value.encode("utf-8", "surrogatepass")
 
 
+def _decimal(value: int) -> str:
+    try:
+        return str(value)
+    except ValueError:
+        # Beyond CPython's int-to-str digit limit (4300 by default): render in chunks so the
+        # usual checks still run in SPEC §8 order and report the full segment.
+        magnitude, chunks = abs(value), []
+        while magnitude:
+            magnitude, chunk = divmod(magnitude, 10**4000)
+            chunks.append(str(chunk))
+        return ("-" if value < 0 else "") + chunks[-1] + "".join(chunk.zfill(4000) for chunk in reversed(chunks[:-1]))
+
+
 def _stack(stack: str) -> None:
     if not isinstance(stack, str) or len(stack) > 64 or not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", stack):
         raise InvalidKidError("bad_stack")
@@ -166,11 +179,7 @@ class Kid:
         for entity, value in entities.items():
             # Integers become their decimal string form; bool is an int subclass but not accepted.
             if isinstance(value, int) and not isinstance(value, bool):
-                try:
-                    value = str(int(value))
-                except ValueError:
-                    # Beyond CPython's int-to-str digit limit (4300 digits by default); far past 255 bytes anyway.
-                    raise InvalidKidError("too_long") from None
+                value = _decimal(int(value))
             segment = f"{entity}-{value}" if isinstance(value, str) else None
             _entity(entity, segment)
             if not isinstance(value, str):

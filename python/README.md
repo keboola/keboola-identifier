@@ -64,8 +64,9 @@ decimal string form (`{"project": 9876}` equals `{"project": "9876"}`; `-1` beco
 `"-1"` and fails the numeric entity sets). `bool` is an `int` subclass in Python but
 is rejected like floats, bytes, `None` and containers (`bad_value`). Numeric IDs of
 `maintainer`, `org`, `project` and `branch` must not have leading zeros (`bad_value`);
-`0` is accepted. Open-catalog values keep their characters as given. An integer too
-large for CPython's int-to-str conversion is `too_long`. `dataclasses.asdict()` is
+`0` is accepted. Open-catalog values keep their characters as given. An integer
+beyond CPython's int-to-str digit limit is rendered anyway and fails the usual
+checks in order, ending in `too_long`. `dataclasses.asdict()` is
 not a serialization of a `Kid`; use `str(value)`.
 
 When the KID carries no branch, every reader falls back to the default branch:
