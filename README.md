@@ -67,6 +67,10 @@ strings.
 See [PHP documentation](php/README.md) for installation, the complete public API,
 errors, wildcard edge cases and packaging.
 
+The other packages expose the same operations under language-idiomatic names
+(`toArray()` is `ToMap()` in Go, `to_dict()` in Python and `toObject()` in
+JavaScript); SPEC §9.2 maps them and lists the per-language differences.
+
 ## Development
 
 From `php/`:

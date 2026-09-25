@@ -306,16 +306,28 @@ See the [Go](go/README.md#api), [Python](python/README.md#api) and
 [JavaScript/TypeScript](javascript/README.md#api) documentation for signatures,
 installation and usage examples.
 
+| §9 operation | Go | Python | JavaScript |
+|---|---|---|---|
+| `parse(text)` | `Parse(text) (*Kid, error)` | `parse(text)`, `Kid.parse(text)`, `Kid(text)` | `Kid.parse(text)` |
+| `create(stack, entities)` | `New(stack, map[string]string)` | `Kid.create(stack, dict)` | `Kid.create(stack, object)` |
+| `toArray()` | `ToMap() map[string]string` | `to_dict()` | `toObject()` |
+| `branch()` | `Branch() string` | `branch` property | `branch()` |
+| `toString()` | `String()` | `str(kid)` | `toString()` |
+
 - Go has no exceptions; constructors return `error`. `Validate` stays a boolean.
 - Python `__eq__` returns `NotImplemented` for foreign types; `__hash__` hashes the
   canonical string, so a `Kid` works as a dict key.
 - JavaScript uses `equals()` for canonical equality; `==` compares references.
-- Go `Branch()` returns `("", false)` for the default branch, consistent with `Get("branch")`.
-- Go `Parsed` is a flat `map[string]string`; unlike PHP/Python/JavaScript maps,
-  its iteration order is unspecified. Parsing still validates segments left to
-  right. Creation checks entities in Go map iteration order, so the first failure
-  among multiple invalid map entries is unspecified. Canonical serialization is
-  always ordered as specified in §6.
+- The default-branch fallback (§4.2) applies in every language: `Branch()`/`branch`
+  never reports an absent value, and `Get("branch")`/`get("branch")` succeeds.
+- Integer values in `create()`: Python accepts `int` (not `bool`, which is an `int`
+  subclass); JavaScript accepts safe integers and `bigint`; Go's `map[string]string`
+  has no integer values, so the caller converts with `strconv.Itoa`.
+- Go maps are unordered, so `Entities()` and `ToMap()` carry no order; `String()` is
+  the only ordered representation. Parsing still validates segments left to right.
+  Creation checks entities in Go map iteration order, so the first failure among
+  multiple invalid map entries is unspecified. Canonical serialization is always
+  ordered as specified in §6.
 - Python and JavaScript creation APIs accept Unicode strings, not byte arrays.
   Unpaired surrogates are `bad_utf8`. Raw length is checked first: Python counts
   UTF-8 with `surrogatepass`, JavaScript counts `TextEncoder` bytes (three bytes
@@ -352,11 +364,14 @@ For example, `entitiesHex: {"config": "ff"}` means a raw one-byte string `0xFF`,
 not the two-character string `"ff"`; the expected code is `bad_utf8` and
 `segmentHex` is `"636f6e6669672dff"` (`config-` followed by `0xFF`).
 
-Language test loaders explicitly skip creation fixtures that cannot be represented
-by their API types: non-string map values in Go, arbitrary invalid UTF-8 bytes in
-Python/JavaScript. Python can load encoded surrogates with `surrogatepass`.
-Unicode-string implementations additionally test malformed native strings and
-byte-array rejection. All encoded text-parsing vectors apply to every language.
+A creation fixture may carry `skip`, a list of language names whose API types cannot
+represent its input (`"go"` for null and boolean map values); those loaders skip it.
+Integer fixture values are loaded as integers where `create()` accepts them and as
+their decimal strings in Go. Python and JavaScript loaders additionally skip
+`entitiesHex` fixtures whose bytes are not valid Unicode text; Python can load
+encoded surrogates with `surrogatepass`. Unicode-string implementations test
+malformed native strings and byte-array rejection separately. All encoded
+text-parsing vectors apply to every language.
 
 ## 11. Scope and compatibility
 
