@@ -1,6 +1,7 @@
 package kid_test
 
 import (
+	"bytes"
 	"encoding/hex"
 	"encoding/json"
 	"errors"
@@ -16,13 +17,13 @@ import (
 
 type vector struct {
 	Input, Canonical, Code string
-	Stack                  string
+	Stack, Branch          string
 	Segment                *string
 	SegmentHex             string
-	Parse                  kid.Parsed
+	Array                  map[string]string
 	Entities               map[string]any
 	EntitiesHex            map[string]string
-	Wildcards              []string
+	Wildcards, Skip        []string
 	IsCanonical, IsPattern bool
 }
 
@@ -37,15 +38,20 @@ func checkError(t *testing.T, err error, code, segment string) {
 	}
 }
 
+// stringEntities maps fixture values to New's map[string]string. JSON integers become their
+// decimal strings, which is what a Go caller does with strconv.Itoa (SPEC §9.2).
 func stringEntities(t *testing.T, c vector) map[string]string {
 	t.Helper()
 	values := map[string]string{}
 	for name, raw := range c.Entities {
-		value, ok := raw.(string)
-		if !ok {
-			t.Skip("Non-string values cannot be passed to map[string]string")
+		switch value := raw.(type) {
+		case string:
+			values[name] = value
+		case json.Number:
+			values[name] = value.String()
+		default:
+			t.Fatalf("unrepresentable fixture value %v for %s; expected a skip marker", raw, name)
 		}
-		values[name] = value
 	}
 	for name, raw := range c.EntitiesHex {
 		value, err := hex.DecodeString(raw)
@@ -68,11 +74,16 @@ func TestSharedVectors(t *testing.T) {
 	}
 	for _, group := range []string{"valid", "invalid", "create", "createInvalid"} {
 		var cases []vector
-		if err := json.Unmarshal(groups[group], &cases); err != nil {
+		decoder := json.NewDecoder(bytes.NewReader(groups[group]))
+		decoder.UseNumber()
+		if err := decoder.Decode(&cases); err != nil {
 			t.Fatal(err)
 		}
 		for index, c := range cases {
 			t.Run(fmt.Sprintf("%s/%d", group, index), func(t *testing.T) {
+				if slices.Contains(c.Skip, "go") {
+					t.Skip("Fixture marked as unrepresentable in Go")
+				}
 				segment := ""
 				if c.Segment != nil {
 					segment = *c.Segment
@@ -86,13 +97,9 @@ func TestSharedVectors(t *testing.T) {
 				}
 				switch group {
 				case "valid":
-					value, err := kid.FromString(c.Input)
+					value, err := kid.Parse(c.Input)
 					if err != nil {
 						t.Fatal(err)
-					}
-					parsed, err := kid.Parse(c.Input)
-					if err != nil || !reflect.DeepEqual(parsed, c.Parse) {
-						t.Fatalf("parse: %v, %v", parsed, err)
 					}
 					canonical, err := kid.Canonicalize(c.Input)
 					if err != nil || canonical != c.Canonical || value.String() != c.Canonical {
@@ -102,11 +109,14 @@ func TestSharedVectors(t *testing.T) {
 						t.Fatal("validation mismatch")
 					}
 					expected := stringEntities(t, c)
-					if value.Stack() != c.Parse["stack"] || !reflect.DeepEqual(value.Entities(), expected) {
-						t.Fatal("fields mismatch")
+					if value.Stack() != c.Array["stack"] || !reflect.DeepEqual(value.Entities(), expected) {
+						t.Fatal("fields mismatch", value.Entities())
+					}
+					if !reflect.DeepEqual(value.ToMap(), c.Array) {
+						t.Fatal("map mismatch", value.ToMap())
 					}
 					names := []string{"missing", "constructor", "stack"}
-					for name := range c.Parse {
+					for name := range c.Array {
 						names = append(names, name)
 					}
 					for _, name := range names {
@@ -116,21 +126,41 @@ func TestSharedVectors(t *testing.T) {
 							t.Fatalf("accessor mismatch for %s", name)
 						}
 					}
-					for name, accessor := range map[string]func() (string, bool){"maintainer": value.Maintainer, "org": value.Organization, "project": value.Project, "branch": value.Branch} {
+					for name, accessor := range map[string]func() (string, bool){"maintainer": value.Maintainer, "org": value.Organization, "project": value.Project} {
 						got, ok := accessor()
 						want, exists := expected[name]
 						if got != want || ok != exists {
 							t.Fatal("typed accessor mismatch", name)
 						}
 					}
+					if value.Branch() != c.Branch {
+						t.Fatalf("branch %q, want %q", value.Branch(), c.Branch)
+					}
 					if value.IsPattern() != c.IsPattern {
 						t.Fatal("pattern mismatch")
 					}
-					roundTrip, err := kid.FromString(value.String())
+					roundTrip, err := kid.Parse(value.String())
 					if err != nil || !value.Equals(roundTrip) || *value != *roundTrip {
 						t.Fatal("equality mismatch")
 					}
+					fields := value.ToMap()
+					delete(fields, "stack")
+					rebuilt, err := kid.New(value.Stack(), fields)
+					if err != nil {
+						t.Fatal(err)
+					}
+					// A decoded literal "*" (%2A) becomes a wildcard in New; that round trip is documented as lossy.
+					literalStar := false
+					for name, raw := range fields {
+						if raw == "*" && !slices.Contains(c.Wildcards, name) {
+							literalStar = true
+						}
+					}
+					if value.Equals(rebuilt) == literalStar {
+						t.Fatal("ToMap round trip", rebuilt)
+					}
 					value.Entities()["config"] = "changed"
+					value.ToMap()["stack"] = "changed"
 					if value.String() != c.Canonical {
 						t.Fatal("mutable entities")
 					}
@@ -139,8 +169,6 @@ func TestSharedVectors(t *testing.T) {
 						t.Fatal("invalid predicates")
 					}
 					_, err := kid.Parse(c.Input)
-					checkError(t, err, c.Code, segment)
-					_, err = kid.FromString(c.Input)
 					checkError(t, err, c.Code, segment)
 					_, err = kid.Canonicalize(c.Input)
 					checkError(t, err, c.Code, segment)
@@ -161,12 +189,57 @@ func TestSharedVectors(t *testing.T) {
 	}
 }
 
+func TestDefaultBranchFallsBackInEveryReader(t *testing.T) {
+	value, err := kid.Parse("KID:s:project-1:branch-default:config-my%20config")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if value.String() != "KID:s:config-my%20config:project-1" {
+		t.Fatal(value)
+	}
+	want := map[string]string{"stack": "s", "branch": "default", "config": "my config", "project": "1"}
+	if !reflect.DeepEqual(value.ToMap(), want) {
+		t.Fatal(value.ToMap())
+	}
+	branch, ok := value.Get("branch")
+	if value.Branch() != "default" || branch != "default" || !ok || !value.Has("branch") {
+		t.Fatal("branch fallback")
+	}
+	if value.IsWildcard("branch") || value.IsPattern() {
+		t.Fatal("default branch is not a pattern")
+	}
+	explicit, _ := kid.Parse("KID:s:branch-555")
+	dev, _ := kid.Parse("KID:s:branch-dev")
+	star, _ := kid.Parse("KID:s:branch-*")
+	if explicit.Branch() != "555" || dev.ToMap()["branch"] != "dev" || star.Branch() != "*" {
+		t.Fatal("explicit branch replaced by fallback")
+	}
+}
+
+func TestLeadingZerosAreRejectedNotNormalized(t *testing.T) {
+	_, err := kid.New("s", map[string]string{"project": "001"})
+	checkError(t, err, "bad_value", "project-001")
+	_, err = kid.Parse("KID:s:project-01")
+	checkError(t, err, "bad_value", "project-01")
+	_, err = kid.New("s", map[string]string{"branch": "007"})
+	checkError(t, err, "bad_value", "branch-007")
+	zero, err := kid.New("s", map[string]string{"project": "0"})
+	if project, ok := zero.Project(); err != nil || !ok || project != "0" {
+		t.Fatal("zero is a valid ID", err)
+	}
+	// Open-catalog entities keep their value bytes as given.
+	open, err := kid.New("s", map[string]string{"config": "007"})
+	if config, _ := open.Get("config"); err != nil || config != "007" {
+		t.Fatal("open entity normalized", err)
+	}
+}
+
 func TestByteAndErrorPrecedence(t *testing.T) {
 	raw := strings.Repeat("x", 255) + "\xff"
 	_, err := kid.New("s", map[string]string{"config": raw})
 	checkError(t, err, "too_long", "config-"+raw)
 	segment := "config-" + strings.Repeat("x", 255) + "%FF"
-	_, err = kid.FromString("KID:s:" + segment)
+	_, err = kid.Parse("KID:s:" + segment)
 	checkError(t, err, "bad_utf8", segment)
 	_, err = kid.New("Bad", map[string]string{"Bad": ""})
 	checkError(t, err, "bad_stack", "")
@@ -192,7 +265,7 @@ func TestByteAndErrorPrecedence(t *testing.T) {
 
 func TestAllPermutations(t *testing.T) {
 	segments := []string{"project-1", "org-2", "branch-default", "maintainer-3", "constructor-x", "bucket-in.c-main"}
-	expected, err := kid.FromString("KID:s:" + strings.Join(segments, ":"))
+	expected, err := kid.Parse("KID:s:" + strings.Join(segments, ":"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -201,7 +274,7 @@ func TestAllPermutations(t *testing.T) {
 	visit = func(index int) {
 		if index == len(segments) {
 			count++
-			value, err := kid.FromString("KID:s:" + strings.Join(segments, ":"))
+			value, err := kid.Parse("KID:s:" + strings.Join(segments, ":"))
 			if err != nil || !expected.Equals(value) {
 				t.Fatal("order changes identity", err)
 			}
@@ -238,7 +311,7 @@ func TestCopiesAndLiteralStar(t *testing.T) {
 	if project, ok := value.Project(); !ok || project != "1" {
 		t.Fatal("retained input map")
 	}
-	literal, err := kid.FromString("KID:s:config-%2A")
+	literal, err := kid.Parse("KID:s:config-%2A")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -252,20 +325,25 @@ func TestCopiesAndLiteralStar(t *testing.T) {
 }
 
 func FuzzRoundTrip(f *testing.F) {
-	for _, text := range []string{"KID:s", "KID:s:config-%2A", "KID:s:branch-default:project-1", "KID:s:config-%FF"} {
+	for _, text := range []string{"KID:s", "KID:s:config-%2A", "KID:s:branch-default:project-1", "KID:s:config-%FF", "KID:s:project-007"} {
 		f.Add(text)
 	}
 	f.Fuzz(func(t *testing.T, text string) {
-		value, err := kid.FromString(text)
+		value, err := kid.Parse(text)
 		if err != nil {
 			if kid.Validate(text) || kid.IsCanonical(text) {
 				t.Fatal("invalid predicates")
 			}
 			return
 		}
-		roundTrip, err := kid.FromString(value.String())
+		roundTrip, err := kid.Parse(value.String())
 		if err != nil || !value.Equals(roundTrip) || !kid.IsCanonical(value.String()) {
 			t.Fatal("round trip failed")
+		}
+		fields := value.ToMap()
+		delete(fields, "stack")
+		if _, err := kid.New(value.Stack(), fields); err != nil {
+			t.Fatal("ToMap is not a valid New input", err)
 		}
 	})
 }

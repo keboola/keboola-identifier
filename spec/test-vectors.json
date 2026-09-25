@@ -2804,7 +2804,10 @@
       },
       "code": "bad_segment",
       "segment": null,
-      "note": "create rejects the reserved stack entity before validating its value"
+      "note": "create rejects the reserved stack entity before validating its value",
+      "skip": [
+        "go"
+      ]
     },
     {
       "stack": "s",

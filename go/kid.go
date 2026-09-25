@@ -24,13 +24,16 @@ const (
 	EntityUser       = "user"
 	EntityApp        = "app"
 	EntityStream     = "stream"
-	unencoded        = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789._-"
+	// DefaultBranch is what Branch, Get and Entities report when a KID carries no branch (SPEC §4.2).
+	DefaultBranch = "default"
+	unencoded     = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789._-"
 )
 
 var (
 	stackPattern  = regexp.MustCompile(`^[a-z0-9]+(-[a-z0-9]+)*$`)
 	entityPattern = regexp.MustCompile(`^[a-z][a-z0-9]*$`)
-	numberPattern = regexp.MustCompile(`^[0-9]+$`)
+	// No leading zeros: project-007 would be a second identity for project 7 (SPEC §4.1).
+	numberPattern = regexp.MustCompile(`^(0|[1-9][0-9]*)$`)
 	valuePattern  = regexp.MustCompile(`^[A-Za-z0-9._%\-]+$`)
 	hexPattern    = regexp.MustCompile(`^[0-9A-F]{2}$`)
 )
@@ -42,11 +45,7 @@ type InvalidKidError struct{ Code, Segment string }
 func (e *InvalidKidError) Error() string { return e.Code }
 func invalid(code, segment string) error { return &InvalidKidError{code, segment} }
 
-// Parsed is a flat map of the stack and encoded entities, including branch-default.
-// Like all Go maps, its iteration order is unspecified.
-type Parsed map[string]string
-
-// Kid stores only its canonical representation. Obtain one with New or FromString.
+// Kid stores only its canonical representation. Obtain one with New or Parse.
 // The zero value is not a valid identifier.
 type Kid struct{ canonical string }
 
@@ -66,7 +65,7 @@ func checkValue(entity, value, segment string) error {
 	valid := value != ""
 	switch entity {
 	case EntityMaintainer, EntityOrg, EntityProject, EntityBranch:
-		valid = value == "*" || numberPattern.MatchString(value) || (entity == EntityBranch && (value == "dev" || value == "default"))
+		valid = value == "*" || numberPattern.MatchString(value) || (entity == EntityBranch && (value == "dev" || value == DefaultBranch))
 	}
 	if !valid {
 		return invalid("bad_value", segment)
@@ -101,7 +100,7 @@ func decode(value, segment string) (string, error) {
 func serialize(stack string, entities map[string]string) string {
 	names := make([]string, 0, len(entities))
 	for name, value := range entities {
-		if name != EntityBranch || value != "default" {
+		if name != EntityBranch || value != DefaultBranch {
 			names = append(names, name)
 		}
 	}
@@ -114,8 +113,9 @@ func serialize(stack string, entities map[string]string) string {
 	return text.String()
 }
 
-// Parse validates text and returns its encoded fields without canonicalizing.
-func Parse(text string) (Parsed, error) {
+// Parse runs the full validation sequence on text and returns its canonical identity.
+// It is the only way from text to a Kid.
+func Parse(text string) (*Kid, error) {
 	if !strings.HasPrefix(text, "KID:") {
 		return nil, invalid("bad_prefix", "")
 	}
@@ -126,7 +126,7 @@ func Parse(text string) (Parsed, error) {
 	if err := checkStack(parts[0]); err != nil {
 		return nil, err
 	}
-	parsed := Parsed{"stack": parts[0]}
+	entities := make(map[string]string, len(parts)-1)
 	for _, segment := range parts[1:] {
 		if segment == "" {
 			return nil, invalid("empty_segment", segment)
@@ -138,7 +138,7 @@ func Parse(text string) (Parsed, error) {
 		if err := checkEntity(entity, segment); err != nil {
 			return nil, err
 		}
-		if _, exists := parsed[entity]; exists {
+		if _, exists := entities[entity]; exists {
 			return nil, invalid("duplicate_entity", segment)
 		}
 		if err := checkValue(entity, value, segment); err != nil {
@@ -150,22 +150,13 @@ func Parse(text string) (Parsed, error) {
 		if _, err := decode(value, segment); err != nil {
 			return nil, err
 		}
-		parsed[entity] = value
+		entities[entity] = value
 	}
-	return parsed, nil
-}
-
-func FromString(text string) (*Kid, error) {
-	parsed, err := Parse(text)
-	if err != nil {
-		return nil, err
-	}
-	stack := parsed["stack"]
-	delete(parsed, "stack")
-	return &Kid{serialize(stack, parsed)}, nil
+	return &Kid{serialize(parts[0], entities)}, nil
 }
 
 // New accepts raw UTF-8 values. A whole "*" denotes a wildcard.
+// Go has no mixed-type map, so numeric IDs are passed as their decimal strings (strconv.Itoa).
 // Entity checks run in Go map iteration order; use text for ordered error precedence.
 func New(stack string, entities map[string]string) (*Kid, error) {
 	if err := checkStack(stack); err != nil {
@@ -209,7 +200,7 @@ func New(stack string, entities map[string]string) (*Kid, error) {
 
 func Validate(text string) bool { _, err := Parse(text); return err == nil }
 func Canonicalize(text string) (string, error) {
-	k, err := FromString(text)
+	k, err := Parse(text)
 	if err != nil {
 		return "", err
 	}
@@ -226,15 +217,20 @@ func (k *Kid) Stack() string {
 	}
 	return strings.SplitN(k.canonical, ":", 3)[1]
 }
+
+// encoded returns the canonical segments; an absent branch reads as DefaultBranch (SPEC §4.2).
 func (k *Kid) encoded() map[string]string {
 	entities := map[string]string{}
 	parts := strings.Split(k.canonical, ":")
-	if len(parts) < 3 {
+	if len(parts) < 2 {
 		return entities
 	}
 	for _, segment := range parts[2:] {
 		name, value, _ := strings.Cut(segment, "-")
 		entities[name] = value
+	}
+	if _, ok := entities[EntityBranch]; !ok {
+		entities[EntityBranch] = DefaultBranch
 	}
 	return entities
 }
@@ -247,6 +243,9 @@ func (k *Kid) Get(entity string) (string, bool) {
 	return raw, true
 }
 func (k *Kid) Has(entity string) bool { _, ok := k.encoded()[entity]; return ok }
+
+// Entities returns a decoded copy with branch reported as DefaultBranch when absent.
+// Go maps are unordered; String is the only ordered representation.
 func (k *Kid) Entities() map[string]string {
 	values := k.encoded()
 	for name, value := range values {
@@ -254,10 +253,21 @@ func (k *Kid) Entities() map[string]string {
 	}
 	return values
 }
-func (k *Kid) Maintainer() (string, bool)    { return k.Get(EntityMaintainer) }
-func (k *Kid) Organization() (string, bool)  { return k.Get(EntityOrg) }
-func (k *Kid) Project() (string, bool)       { return k.Get(EntityProject) }
-func (k *Kid) Branch() (string, bool)        { return k.Get(EntityBranch) }
+
+// ToMap returns "stack" and the decoded entities as one flat map (SPEC toArray()).
+// New(m["stack"], m without "stack") rebuilds the same Kid, except that a decoded
+// literal "*" becomes a wildcard.
+func (k *Kid) ToMap() map[string]string {
+	values := k.Entities()
+	values["stack"] = k.Stack()
+	return values
+}
+func (k *Kid) Maintainer() (string, bool)   { return k.Get(EntityMaintainer) }
+func (k *Kid) Organization() (string, bool) { return k.Get(EntityOrg) }
+func (k *Kid) Project() (string, bool)      { return k.Get(EntityProject) }
+
+// Branch is never absent: a KID without a branch is on the default branch (SPEC §4.2).
+func (k *Kid) Branch() string                { value, _ := k.Get(EntityBranch); return value }
 func (k *Kid) IsWildcard(entity string) bool { return k.encoded()[entity] == "*" }
 func (k *Kid) IsPattern() bool {
 	for name, value := range k.encoded() {
