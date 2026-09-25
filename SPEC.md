@@ -94,7 +94,9 @@ and canonical serialization sorts every entity by its name using ASCII byte orde
 | `branch-*` | any branch | pattern |
 
 - `branch-default` is accepted on input and **removed by canonicalization**. It never appears in
-  a canonical KID.
+  a canonical KID. Readers fall back to it: when a KID carries no `branch`, `branch()`,
+  `get("branch")`, `entities()` and `toArray()` all report `default` and `has("branch")` is true.
+  The canonical string is unaffected, so identity does not change.
 - Producers must never write the default branch's numeric id (`branch-4321` where 4321 is the
   default branch). The library cannot recognize a numeric ID as the default branch,
   so it treats that KID as a different identity.
@@ -190,9 +192,9 @@ Lengths are measured in **bytes**, not characters or UTF-16 code units. The valu
 limit applies before encoding; the total KID limit applies to encoded text.
 
 - A raw value is at most **255 bytes** before encoding, hence at most 765 bytes encoded.
-  A longer value is `too_long` (in `create()` on the raw value, in `fromString()` on the
+  A longer value is `too_long` (in `create()` on the raw value, in `parse()` on the
   decoded value).
-- A KID is at most **2048 bytes**. `fromString()` checks the input text; because
+- A KID is at most **2048 bytes**. `parse()` checks the input text; because
   canonicalization only reorders segments and drops `branch-default`, a canonical form is never
   longer than its valid input, so the canonical form is within the limit whenever the
   input is. `create()` checks the canonical string it produces.
@@ -251,17 +253,17 @@ In text parsing, UTF-8 validity precedes the decoded-value length check as liste
 
 | Operation | Behaviour |
 |---|---|
-| `validate(text) -> bool` | true iff `fromString` would succeed |
-| `parse(text) -> {stack, ...entities}` | runs the **full** check sequence 1–4g of §8 and throws on the first failure, exactly like `fromString`; returns a flat map with `stack` first and entities at the same level, all values strings **as written** (encoded), `*` as `*`, `branch-default` kept, entity input order kept |
-| `fromString(text) -> Kid` | parses, validates, canonicalizes; throws |
+| `validate(text) -> bool` | true iff `parse` would succeed |
+| `parse(text) -> Kid` | runs the **full** check sequence 1–4g of §8 and throws on the first failure; returns the canonical identity. It is the only way from text to a `Kid` |
 | `create(stack, entities) -> Kid` | raw (decoded) string values, or integers converted to decimal strings; `*` means wildcard; throws |
-| `canonicalize(text) -> text` | `fromString(text).toString()`; throws the same error as `fromString` |
+| `canonicalize(text) -> text` | `parse(text).toString()`; throws the same error as `parse` |
 | `isCanonical(text) -> bool` | true iff the text is valid **and** equal to its canonical form; **false, never an error**, for invalid input |
 | `stack()` | stack |
-| `maintainer()`, `organization()`, `project()`, `branch()` | decoded value of `maintainer`, `org`, `project`, `branch`, or absent; `branch()` is absent for the default branch |
-| `get(entity)` | decoded value or absent; entity name as written (`get("project")`) |
-| `has(entity)` | presence |
-| `entities()` | map entity → decoded value, wildcard as `*`. **Iteration order is not part of the contract**; the only ordered representation is `toString()`. **Lossy**: a decoded literal `*` (`%2A`) and the wildcard are indistinguishable here, and `create(stack, kid.entities())` turns such a literal into a wildcard. The lossless round trip is `parse(kid.toString())` (encoded values) or `fromString(kid.toString())`. |
+| `maintainer()`, `organization()`, `project()`, `branch()` | decoded value of `maintainer`, `org`, `project`, `branch`, or absent; `branch()` returns `default` for the default branch (§4.2) |
+| `get(entity)` | decoded value or absent; entity name as written (`get("project")`); `get("branch")` falls back to `default` |
+| `has(entity)` | presence; always true for `branch` |
+| `entities()` | map entity → decoded value in canonical order, wildcard as `*`, `branch` as `default` when absent from the canonical form. **Lossy**: a decoded literal `*` (`%2A`) and the wildcard are indistinguishable here, and `create(stack, kid.entities())` turns such a literal into a wildcard. The lossless round trip is `parse(kid.toString())`. |
+| `toArray()` | `stack` first, then `entities()`; the whole identity as one flat map of decoded strings. `create(array.stack, array without stack)` rebuilds the same KID, with the same literal-`*` caveat as `entities()` |
 | `isWildcard(entity)` | value is the wildcard (distinguishes it from a decoded literal `*`) |
 | `isPattern()` | any wildcard or `branch-dev` |
 | `equals(other)` | canonical strings equal |
@@ -270,13 +272,13 @@ In text parsing, UTF-8 validity precedes the decoded-value length check as liste
 In the PHP API, absent values are returned as `null`.
 Objects are immutable; there is no `with()`/`without()`.
 
-`parse()` returns a flat map. For example, `KID:eu-central:project-1` parses as
-`{stack: "eu-central", project: "1"}`. Numeric values remain strings; no aliases
-or numeric conversions are performed. The name `stack` is reserved so an entity
+`toArray()` returns a flat map. For example, `parse("KID:eu-central:project-1").toArray()` is
+`{stack: "eu-central", branch: "default", project: "1"}`. Numeric values remain strings; no
+aliases or numeric conversions are performed. The name `stack` is reserved so an entity
 cannot overwrite it. The name `entities` remains an ordinary open entity name.
 
 A literal `*` cannot be produced through `create()` (its `*` always means wildcard); such
-a KID can be read via `fromString()`.
+a KID can be read via `parse()`.
 
 ### 9.1 PHP API
 
@@ -296,7 +298,7 @@ installation and usage examples.
 
 [`spec/test-vectors.json`](spec/test-vectors.json) contains shared cases for:
 
-- valid canonical KIDs with the expected `parse()` output and decoded `entities()`;
+- valid canonical KIDs with the expected `toArray()` output (`array`) and decoded `entities()`, both with the `branch` fallback applied;
 - valid non-canonical inputs with the expected canonical form (shuffled order,
   `branch-default`, both together);
 - invalid inputs with the expected error code, including: each error code at least once,

@@ -9,72 +9,83 @@
     {
       "input": "KID:s:entities-y",
       "canonical": "KID:s:entities-y",
-      "parse": {
+      "array": {
         "stack": "s",
+        "branch": "default",
         "entities": "y"
       },
       "entities": {
+        "branch": "default",
         "entities": "y"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
-      "branch": null,
-      "note": "entities is an ordinary open entity in the flat parse map"
+      "branch": "default",
+      "note": "entities is an ordinary open entity in the flat toArray() map"
     },
     {
       "input": "KID:kbc-eu-central-1",
       "canonical": "KID:kbc-eu-central-1",
-      "parse": {
-        "stack": "kbc-eu-central-1"
+      "array": {
+        "stack": "kbc-eu-central-1",
+        "branch": "default"
       },
-      "entities": {},
+      "entities": {
+        "branch": "default"
+      },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
-      "branch": null,
+      "branch": "default",
       "note": "bare stack = identity of the stack"
     },
     {
       "input": "KID:kbc-eu-central-1:maintainer-123",
       "canonical": "KID:kbc-eu-central-1:maintainer-123",
-      "parse": {
+      "array": {
         "stack": "kbc-eu-central-1",
+        "branch": "default",
         "maintainer": "123"
       },
       "entities": {
+        "branch": "default",
         "maintainer": "123"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
-      "branch": null
+      "branch": "default"
     },
     {
       "input": "KID:kbc-eu-central-1:org-42",
       "canonical": "KID:kbc-eu-central-1:org-42",
-      "parse": {
+      "array": {
         "stack": "kbc-eu-central-1",
+        "branch": "default",
         "org": "42"
       },
       "entities": {
+        "branch": "default",
         "org": "42"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
-      "branch": null
+      "branch": "default"
     },
     {
       "input": "KID:kbc-eu-central-1:maintainer-123:org-42:project-9876",
       "canonical": "KID:kbc-eu-central-1:maintainer-123:org-42:project-9876",
-      "parse": {
+      "array": {
         "stack": "kbc-eu-central-1",
+        "branch": "default",
         "maintainer": "123",
         "org": "42",
         "project": "9876"
       },
       "entities": {
+        "branch": "default",
         "maintainer": "123",
         "org": "42",
         "project": "9876"
@@ -82,19 +93,19 @@
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
-      "branch": null
+      "branch": "default"
     },
     {
       "input": "KID:kbc-eu-central-1:project-9876:branch-555",
       "canonical": "KID:kbc-eu-central-1:branch-555:project-9876",
-      "parse": {
+      "array": {
         "stack": "kbc-eu-central-1",
-        "project": "9876",
-        "branch": "555"
+        "branch": "555",
+        "project": "9876"
       },
       "entities": {
-        "project": "9876",
-        "branch": "555"
+        "branch": "555",
+        "project": "9876"
       },
       "wildcards": [],
       "isPattern": false,
@@ -104,37 +115,39 @@
     {
       "input": "KID:kbc-eu-central-1:project-9876:bucket-in.c-main:table-orders",
       "canonical": "KID:kbc-eu-central-1:bucket-in.c-main:project-9876:table-orders",
-      "parse": {
+      "array": {
         "stack": "kbc-eu-central-1",
-        "project": "9876",
+        "branch": "default",
         "bucket": "in.c-main",
+        "project": "9876",
         "table": "orders"
       },
       "entities": {
-        "project": "9876",
+        "branch": "default",
         "bucket": "in.c-main",
+        "project": "9876",
         "table": "orders"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": false,
-      "branch": null,
+      "branch": "default",
       "note": "hyphen inside a value; split on the first hyphen only"
     },
     {
       "input": "KID:kbc-eu-central-1:project-9876:branch-555:bucket-in.c-main:table-orders",
       "canonical": "KID:kbc-eu-central-1:branch-555:bucket-in.c-main:project-9876:table-orders",
-      "parse": {
+      "array": {
         "stack": "kbc-eu-central-1",
-        "project": "9876",
         "branch": "555",
         "bucket": "in.c-main",
+        "project": "9876",
         "table": "orders"
       },
       "entities": {
-        "project": "9876",
         "branch": "555",
         "bucket": "in.c-main",
+        "project": "9876",
         "table": "orders"
       },
       "wildcards": [],
@@ -145,151 +158,170 @@
     {
       "input": "KID:kbc-eu-central-1:project-9876:component-keboola.ex-db-snowflake:config-1234:row-7",
       "canonical": "KID:kbc-eu-central-1:component-keboola.ex-db-snowflake:config-1234:project-9876:row-7",
-      "parse": {
+      "array": {
         "stack": "kbc-eu-central-1",
-        "project": "9876",
+        "branch": "default",
         "component": "keboola.ex-db-snowflake",
         "config": "1234",
+        "project": "9876",
         "row": "7"
       },
       "entities": {
-        "project": "9876",
+        "branch": "default",
         "component": "keboola.ex-db-snowflake",
         "config": "1234",
+        "project": "9876",
         "row": "7"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": false,
-      "branch": null
+      "branch": "default"
     },
     {
       "input": "KID:kbc-eu-central-1:project-9876:component-keboola.ex-db-snowflake:config-my%20config",
       "canonical": "KID:kbc-eu-central-1:component-keboola.ex-db-snowflake:config-my%20config:project-9876",
-      "parse": {
+      "array": {
         "stack": "kbc-eu-central-1",
-        "project": "9876",
+        "branch": "default",
         "component": "keboola.ex-db-snowflake",
-        "config": "my%20config"
+        "config": "my config",
+        "project": "9876"
       },
       "entities": {
-        "project": "9876",
+        "branch": "default",
         "component": "keboola.ex-db-snowflake",
-        "config": "my config"
+        "config": "my config",
+        "project": "9876"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": false,
-      "branch": null,
-      "note": "parse() keeps the encoded value, entities()/get() decode"
+      "branch": "default",
+      "note": "toArray(), entities() and get() return the decoded value"
     },
     {
       "input": "KID:kbc-eu-central-1:user-555",
       "canonical": "KID:kbc-eu-central-1:user-555",
-      "parse": {
+      "array": {
         "stack": "kbc-eu-central-1",
+        "branch": "default",
         "user": "555"
       },
       "entities": {
+        "branch": "default",
         "user": "555"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
-      "branch": null
+      "branch": "default"
     },
     {
       "input": "KID:kbc-eu-central-1:project-9876:workspace-8812",
       "canonical": "KID:kbc-eu-central-1:project-9876:workspace-8812",
-      "parse": {
+      "array": {
         "stack": "kbc-eu-central-1",
+        "branch": "default",
         "project": "9876",
         "workspace": "8812"
       },
       "entities": {
+        "branch": "default",
         "project": "9876",
         "workspace": "8812"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
-      "branch": null
+      "branch": "default"
     },
     {
       "input": "KID:kbc-eu-central-1:project-9876:dashboard-abc-42",
       "canonical": "KID:kbc-eu-central-1:dashboard-abc-42:project-9876",
-      "parse": {
+      "array": {
         "stack": "kbc-eu-central-1",
-        "project": "9876",
-        "dashboard": "abc-42"
+        "branch": "default",
+        "dashboard": "abc-42",
+        "project": "9876"
       },
       "entities": {
-        "project": "9876",
-        "dashboard": "abc-42"
+        "branch": "default",
+        "dashboard": "abc-42",
+        "project": "9876"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": false,
-      "branch": null,
+      "branch": "default",
       "note": "unknown entity passes, value opaque"
     },
     {
       "input": "KID:kbc-us-east-1:project-1",
       "canonical": "KID:kbc-us-east-1:project-1",
-      "parse": {
+      "array": {
         "stack": "kbc-us-east-1",
+        "branch": "default",
         "project": "1"
       },
       "entities": {
+        "branch": "default",
         "project": "1"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
-      "branch": null
+      "branch": "default"
     },
     {
       "input": "KID:a:project-1",
       "canonical": "KID:a:project-1",
-      "parse": {
+      "array": {
         "stack": "a",
+        "branch": "default",
         "project": "1"
       },
       "entities": {
+        "branch": "default",
         "project": "1"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
-      "branch": null,
+      "branch": "default",
       "note": "one-character stack"
     },
     {
       "input": "KID:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
       "canonical": "KID:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-      "parse": {
-        "stack": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      "array": {
+        "stack": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "branch": "default"
       },
-      "entities": {},
+      "entities": {
+        "branch": "default"
+      },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
-      "branch": null,
+      "branch": "default",
       "note": "stack at 64 chars"
     },
     {
       "input": "KID:kbc-eu-central-1:org-42:project-*:bucket-*",
       "canonical": "KID:kbc-eu-central-1:bucket-*:org-42:project-*",
-      "parse": {
+      "array": {
         "stack": "kbc-eu-central-1",
+        "branch": "default",
+        "bucket": "*",
         "org": "42",
-        "project": "*",
-        "bucket": "*"
+        "project": "*"
       },
       "entities": {
+        "branch": "default",
+        "bucket": "*",
         "org": "42",
-        "project": "*",
-        "bucket": "*"
+        "project": "*"
       },
       "wildcards": [
         "project",
@@ -297,23 +329,23 @@
       ],
       "isPattern": true,
       "isCanonical": false,
-      "branch": null
+      "branch": "default"
     },
     {
       "input": "KID:kbc-eu-central-1:project-9876:branch-dev:component-keboola.wr-db:config-*",
       "canonical": "KID:kbc-eu-central-1:branch-dev:component-keboola.wr-db:config-*:project-9876",
-      "parse": {
+      "array": {
         "stack": "kbc-eu-central-1",
-        "project": "9876",
         "branch": "dev",
         "component": "keboola.wr-db",
-        "config": "*"
+        "config": "*",
+        "project": "9876"
       },
       "entities": {
-        "project": "9876",
         "branch": "dev",
         "component": "keboola.wr-db",
-        "config": "*"
+        "config": "*",
+        "project": "9876"
       },
       "wildcards": [
         "config"
@@ -326,16 +358,16 @@
     {
       "input": "KID:kbc-eu-central-1:project-9876:branch-*:bucket-in.c-main",
       "canonical": "KID:kbc-eu-central-1:branch-*:bucket-in.c-main:project-9876",
-      "parse": {
+      "array": {
         "stack": "kbc-eu-central-1",
-        "project": "9876",
         "branch": "*",
-        "bucket": "in.c-main"
+        "bucket": "in.c-main",
+        "project": "9876"
       },
       "entities": {
-        "project": "9876",
         "branch": "*",
-        "bucket": "in.c-main"
+        "bucket": "in.c-main",
+        "project": "9876"
       },
       "wildcards": [
         "branch"
@@ -347,11 +379,13 @@
     {
       "input": "KID:kbc-eu-central-1:project-*",
       "canonical": "KID:kbc-eu-central-1:project-*",
-      "parse": {
+      "array": {
         "stack": "kbc-eu-central-1",
+        "branch": "default",
         "project": "*"
       },
       "entities": {
+        "branch": "default",
         "project": "*"
       },
       "wildcards": [
@@ -359,23 +393,23 @@
       ],
       "isPattern": true,
       "isCanonical": true,
-      "branch": null
+      "branch": "default"
     },
     {
       "input": "KID:kbc-eu-central-1:maintainer-*:org-*:project-*:branch-*",
       "canonical": "KID:kbc-eu-central-1:branch-*:maintainer-*:org-*:project-*",
-      "parse": {
+      "array": {
         "stack": "kbc-eu-central-1",
+        "branch": "*",
         "maintainer": "*",
         "org": "*",
-        "project": "*",
-        "branch": "*"
+        "project": "*"
       },
       "entities": {
+        "branch": "*",
         "maintainer": "*",
         "org": "*",
-        "project": "*",
-        "branch": "*"
+        "project": "*"
       },
       "wildcards": [
         "maintainer",
@@ -390,239 +424,261 @@
     {
       "input": "KID:kbc-eu-central-1:project-9876:component-x:config-%2A",
       "canonical": "KID:kbc-eu-central-1:component-x:config-%2A:project-9876",
-      "parse": {
+      "array": {
         "stack": "kbc-eu-central-1",
-        "project": "9876",
+        "branch": "default",
         "component": "x",
-        "config": "%2A"
+        "config": "*",
+        "project": "9876"
       },
       "entities": {
-        "project": "9876",
+        "branch": "default",
         "component": "x",
-        "config": "*"
+        "config": "*",
+        "project": "9876"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": false,
-      "branch": null,
+      "branch": "default",
       "note": "decoded literal * looks like a wildcard in entities(); isWildcard(config) is false"
     },
     {
       "input": "KID:kbc-eu-central-1:project-9876:config-a%2Ab",
       "canonical": "KID:kbc-eu-central-1:config-a%2Ab:project-9876",
-      "parse": {
+      "array": {
         "stack": "kbc-eu-central-1",
-        "project": "9876",
-        "config": "a%2Ab"
+        "branch": "default",
+        "config": "a*b",
+        "project": "9876"
       },
       "entities": {
-        "project": "9876",
-        "config": "a*b"
+        "branch": "default",
+        "config": "a*b",
+        "project": "9876"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": false,
-      "branch": null
+      "branch": "default"
     },
     {
       "input": "KID:kbc-eu-central-1:project-9876:config-%C5%99e%C5%A1%C3%AD",
       "canonical": "KID:kbc-eu-central-1:config-%C5%99e%C5%A1%C3%AD:project-9876",
-      "parse": {
+      "array": {
         "stack": "kbc-eu-central-1",
-        "project": "9876",
-        "config": "%C5%99e%C5%A1%C3%AD"
+        "branch": "default",
+        "config": "řeší",
+        "project": "9876"
       },
       "entities": {
-        "project": "9876",
-        "config": "řeší"
+        "branch": "default",
+        "config": "řeší",
+        "project": "9876"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": false,
-      "branch": null,
+      "branch": "default",
       "note": "multibyte UTF-8"
     },
     {
       "input": "KID:kbc-eu-central-1:project-9876:config-a%7Eb%2Bc%21d%28e%29f%27g%2Fh%3Ai%25j",
       "canonical": "KID:kbc-eu-central-1:config-a%7Eb%2Bc%21d%28e%29f%27g%2Fh%3Ai%25j:project-9876",
-      "parse": {
+      "array": {
         "stack": "kbc-eu-central-1",
-        "project": "9876",
-        "config": "a%7Eb%2Bc%21d%28e%29f%27g%2Fh%3Ai%25j"
+        "branch": "default",
+        "config": "a~b+c!d(e)f'g/h:i%j",
+        "project": "9876"
       },
       "entities": {
-        "project": "9876",
-        "config": "a~b+c!d(e)f'g/h:i%j"
+        "branch": "default",
+        "config": "a~b+c!d(e)f'g/h:i%j",
+        "project": "9876"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": false,
-      "branch": null,
+      "branch": "default",
       "note": "~ + ! ( ) ' / : % are all encoded; stdlib helpers disagree on several of these"
     },
     {
       "input": "KID:kbc-eu-central-1:project-9876:config-A-Za_z0.9",
       "canonical": "KID:kbc-eu-central-1:config-A-Za_z0.9:project-9876",
-      "parse": {
+      "array": {
         "stack": "kbc-eu-central-1",
-        "project": "9876",
-        "config": "A-Za_z0.9"
+        "branch": "default",
+        "config": "A-Za_z0.9",
+        "project": "9876"
       },
       "entities": {
-        "project": "9876",
-        "config": "A-Za_z0.9"
+        "branch": "default",
+        "config": "A-Za_z0.9",
+        "project": "9876"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": false,
-      "branch": null,
+      "branch": "default",
       "note": "every unencoded byte class, case preserved"
     },
     {
       "input": "KID:kbc-eu-central-1:project-9876:config-%F0%9F%98%80",
       "canonical": "KID:kbc-eu-central-1:config-%F0%9F%98%80:project-9876",
-      "parse": {
+      "array": {
         "stack": "kbc-eu-central-1",
-        "project": "9876",
-        "config": "%F0%9F%98%80"
+        "branch": "default",
+        "config": "😀",
+        "project": "9876"
       },
       "entities": {
-        "project": "9876",
-        "config": "😀"
+        "branch": "default",
+        "config": "😀",
+        "project": "9876"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": false,
-      "branch": null,
+      "branch": "default",
       "note": "4-byte UTF-8"
     },
     {
       "input": "KID:kbc-eu-central-1:project-9876:config-%CC%81",
       "canonical": "KID:kbc-eu-central-1:config-%CC%81:project-9876",
-      "parse": {
+      "array": {
         "stack": "kbc-eu-central-1",
-        "project": "9876",
-        "config": "%CC%81"
+        "branch": "default",
+        "config": "́",
+        "project": "9876"
       },
       "entities": {
-        "project": "9876",
-        "config": "́"
+        "branch": "default",
+        "config": "́",
+        "project": "9876"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": false,
-      "branch": null,
+      "branch": "default",
       "note": "combining mark alone; no normalization, byte-wise identity"
     },
     {
       "input": "KID:kbc-eu-central-1:project-9876:branch-default:bucket-in.c-main",
       "canonical": "KID:kbc-eu-central-1:bucket-in.c-main:project-9876",
-      "parse": {
+      "array": {
         "stack": "kbc-eu-central-1",
-        "project": "9876",
         "branch": "default",
-        "bucket": "in.c-main"
+        "bucket": "in.c-main",
+        "project": "9876"
       },
       "entities": {
-        "project": "9876",
-        "bucket": "in.c-main"
+        "branch": "default",
+        "bucket": "in.c-main",
+        "project": "9876"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": false,
-      "branch": null,
-      "note": "branch-default is kept by parse(), dropped by canonicalization; branch() absent"
+      "branch": "default",
+      "note": "branch-default is dropped by canonicalization; readers fall back to default"
     },
     {
       "input": "KID:kbc-eu-central-1:branch-default",
       "canonical": "KID:kbc-eu-central-1",
-      "parse": {
+      "array": {
         "stack": "kbc-eu-central-1",
         "branch": "default"
       },
-      "entities": {},
+      "entities": {
+        "branch": "default"
+      },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": false,
-      "branch": null
+      "branch": "default"
     },
     {
       "input": "KID:kbc-eu-central-1:table-orders:project-9876:bucket-in.c-main:org-42",
       "canonical": "KID:kbc-eu-central-1:bucket-in.c-main:org-42:project-9876:table-orders",
-      "parse": {
+      "array": {
         "stack": "kbc-eu-central-1",
-        "table": "orders",
-        "project": "9876",
+        "branch": "default",
         "bucket": "in.c-main",
-        "org": "42"
-      },
-      "entities": {
         "org": "42",
         "project": "9876",
+        "table": "orders"
+      },
+      "entities": {
+        "branch": "default",
         "bucket": "in.c-main",
+        "org": "42",
+        "project": "9876",
         "table": "orders"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": false,
-      "branch": null,
-      "note": "shuffled input; parse() keeps input order, canonical reorders"
+      "branch": "default",
+      "note": "shuffled input; canonical and toArray() reorder"
     },
     {
       "input": "KID:kbc-eu-central-1:zeta-1:branch-default:alpha-2:maintainer-5",
       "canonical": "KID:kbc-eu-central-1:alpha-2:maintainer-5:zeta-1",
-      "parse": {
+      "array": {
         "stack": "kbc-eu-central-1",
-        "zeta": "1",
-        "branch": "default",
         "alpha": "2",
-        "maintainer": "5"
+        "branch": "default",
+        "maintainer": "5",
+        "zeta": "1"
       },
       "entities": {
-        "maintainer": "5",
         "alpha": "2",
+        "branch": "default",
+        "maintainer": "5",
         "zeta": "1"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": false,
-      "branch": null
+      "branch": "default"
     },
     {
       "input": "KID:kbc-eu-central-1:ab-z:a1-x:a-y",
       "canonical": "KID:kbc-eu-central-1:a-y:a1-x:ab-z",
-      "parse": {
+      "array": {
         "stack": "kbc-eu-central-1",
-        "ab": "z",
+        "a": "y",
         "a1": "x",
-        "a": "y"
+        "ab": "z",
+        "branch": "default"
       },
       "entities": {
         "a": "y",
         "a1": "x",
-        "ab": "z"
+        "ab": "z",
+        "branch": "default"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": false,
-      "branch": null,
+      "branch": "default",
       "note": "byte order: a < a1 < ab because 0x31 < 0x62; no locale collation"
     },
     {
       "input": "KID:kbc-eu-central-1:branch-555:project-9876:org-42:maintainer-1",
       "canonical": "KID:kbc-eu-central-1:branch-555:maintainer-1:org-42:project-9876",
-      "parse": {
+      "array": {
         "stack": "kbc-eu-central-1",
         "branch": "555",
-        "project": "9876",
-        "org": "42",
-        "maintainer": "1"
-      },
-      "entities": {
         "maintainer": "1",
         "org": "42",
-        "project": "9876",
-        "branch": "555"
+        "project": "9876"
+      },
+      "entities": {
+        "branch": "555",
+        "maintainer": "1",
+        "org": "42",
+        "project": "9876"
       },
       "wildcards": [],
       "isPattern": false,
@@ -633,18 +689,18 @@
     {
       "input": "KID:kbc-eu-central-1:branch-*:project-9876:b2-x:a-1",
       "canonical": "KID:kbc-eu-central-1:a-1:b2-x:branch-*:project-9876",
-      "parse": {
+      "array": {
         "stack": "kbc-eu-central-1",
-        "branch": "*",
-        "project": "9876",
+        "a": "1",
         "b2": "x",
-        "a": "1"
+        "branch": "*",
+        "project": "9876"
       },
       "entities": {
-        "project": "9876",
-        "branch": "*",
         "a": "1",
-        "b2": "x"
+        "b2": "x",
+        "branch": "*",
+        "project": "9876"
       },
       "wildcards": [
         "branch"
@@ -657,45 +713,50 @@
     {
       "input": "KID:kbc-eu-central-1:project-9876:config-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
       "canonical": "KID:kbc-eu-central-1:config-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:project-9876",
-      "parse": {
+      "array": {
         "stack": "kbc-eu-central-1",
-        "project": "9876",
-        "config": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        "branch": "default",
+        "config": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "project": "9876"
       },
       "entities": {
-        "project": "9876",
-        "config": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        "branch": "default",
+        "config": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "project": "9876"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": false,
-      "branch": null,
+      "branch": "default",
       "note": "raw value at 255 bytes"
     },
     {
       "input": "KID:kbc-eu-central-1:project-9876:config-%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC",
       "canonical": "KID:kbc-eu-central-1:config-%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC:project-9876",
-      "parse": {
+      "array": {
         "stack": "kbc-eu-central-1",
-        "project": "9876",
-        "config": "%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC"
+        "branch": "default",
+        "config": "€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€",
+        "project": "9876"
       },
       "entities": {
-        "project": "9876",
-        "config": "€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€"
+        "branch": "default",
+        "config": "€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€",
+        "project": "9876"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": false,
-      "branch": null,
+      "branch": "default",
       "note": "255 raw bytes of multibyte text = 765 encoded bytes; the cap is on raw bytes"
     },
     {
       "input": "KID:s:a-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:c-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:d-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:e-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:f-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:g-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:h-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:z-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
       "canonical": "KID:s:a-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:c-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:d-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:e-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:f-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:g-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:h-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:z-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-      "parse": {
+      "array": {
         "stack": "s",
         "a": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "branch": "default",
         "c": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         "d": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         "e": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
@@ -706,6 +767,7 @@
       },
       "entities": {
         "a": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "branch": "default",
         "c": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         "d": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         "e": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
@@ -717,155 +779,171 @@
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
-      "branch": null,
+      "branch": "default",
       "note": "exactly 2048 bytes"
     },
     {
       "input": "KID:s:config-%EF%BB%BFx",
       "canonical": "KID:s:config-%EF%BB%BFx",
-      "parse": {
+      "array": {
         "stack": "s",
-        "config": "%EF%BB%BFx"
+        "branch": "default",
+        "config": "﻿x"
       },
       "entities": {
+        "branch": "default",
         "config": "﻿x"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
-      "branch": null,
+      "branch": "default",
       "note": "opaque Unicode/control value preserved exactly"
     },
     {
       "input": "KID:s:config-%EF%BB%BF",
       "canonical": "KID:s:config-%EF%BB%BF",
-      "parse": {
+      "array": {
         "stack": "s",
-        "config": "%EF%BB%BF"
+        "branch": "default",
+        "config": "﻿"
       },
       "entities": {
+        "branch": "default",
         "config": "﻿"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
-      "branch": null,
+      "branch": "default",
       "note": "opaque Unicode/control value preserved exactly"
     },
     {
       "input": "KID:s:config-%00",
       "canonical": "KID:s:config-%00",
-      "parse": {
+      "array": {
         "stack": "s",
-        "config": "%00"
+        "branch": "default",
+        "config": "\u0000"
       },
       "entities": {
+        "branch": "default",
         "config": "\u0000"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
-      "branch": null,
+      "branch": "default",
       "note": "opaque Unicode/control value preserved exactly"
     },
     {
       "input": "KID:s:config-%0D%0A",
       "canonical": "KID:s:config-%0D%0A",
-      "parse": {
+      "array": {
         "stack": "s",
-        "config": "%0D%0A"
+        "branch": "default",
+        "config": "\r\n"
       },
       "entities": {
+        "branch": "default",
         "config": "\r\n"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
-      "branch": null,
+      "branch": "default",
       "note": "opaque Unicode/control value preserved exactly"
     },
     {
       "input": "KID:s:config-%C3%A9",
       "canonical": "KID:s:config-%C3%A9",
-      "parse": {
+      "array": {
         "stack": "s",
-        "config": "%C3%A9"
+        "branch": "default",
+        "config": "é"
       },
       "entities": {
+        "branch": "default",
         "config": "é"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
-      "branch": null,
+      "branch": "default",
       "note": "opaque Unicode/control value preserved exactly"
     },
     {
       "input": "KID:s:config-e%CC%81",
       "canonical": "KID:s:config-e%CC%81",
-      "parse": {
+      "array": {
         "stack": "s",
-        "config": "e%CC%81"
+        "branch": "default",
+        "config": "é"
       },
       "entities": {
+        "branch": "default",
         "config": "é"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
-      "branch": null,
+      "branch": "default",
       "note": "opaque Unicode/control value preserved exactly"
     },
     {
       "input": "KID:s:config-%EF%BF%BD",
       "canonical": "KID:s:config-%EF%BF%BD",
-      "parse": {
+      "array": {
         "stack": "s",
-        "config": "%EF%BF%BD"
+        "branch": "default",
+        "config": "�"
       },
       "entities": {
+        "branch": "default",
         "config": "�"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
-      "branch": null,
+      "branch": "default",
       "note": "opaque Unicode/control value preserved exactly"
     },
     {
       "input": "KID:s:constructor-x",
       "canonical": "KID:s:constructor-x",
-      "parse": {
+      "array": {
         "stack": "s",
+        "branch": "default",
         "constructor": "x"
       },
       "entities": {
+        "branch": "default",
         "constructor": "x"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
-      "branch": null,
+      "branch": "default",
       "note": "constructor is a valid open entity"
     },
     {
       "input": "KID:s:zeta-9:branch-555:project-3:org-2:maintainer-1:alpha-x",
       "canonical": "KID:s:alpha-x:branch-555:maintainer-1:org-2:project-3:zeta-9",
-      "parse": {
+      "array": {
         "stack": "s",
-        "zeta": "9",
+        "alpha": "x",
         "branch": "555",
-        "project": "3",
-        "org": "2",
         "maintainer": "1",
-        "alpha": "x"
+        "org": "2",
+        "project": "3",
+        "zeta": "9"
       },
       "entities": {
+        "alpha": "x",
+        "branch": "555",
         "maintainer": "1",
         "org": "2",
         "project": "3",
-        "branch": "555",
-        "alpha": "x",
         "zeta": "9"
       },
       "wildcards": [],
@@ -877,59 +955,67 @@
     {
       "input": "KID:s:maintainer-0",
       "canonical": "KID:s:maintainer-0",
-      "parse": {
+      "array": {
         "stack": "s",
+        "branch": "default",
         "maintainer": "0"
       },
       "entities": {
+        "branch": "default",
         "maintainer": "0"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
-      "branch": null,
+      "branch": "default",
       "note": ""
     },
     {
       "input": "KID:s:maintainer-001",
       "canonical": "KID:s:maintainer-001",
-      "parse": {
+      "array": {
         "stack": "s",
+        "branch": "default",
         "maintainer": "001"
       },
       "entities": {
+        "branch": "default",
         "maintainer": "001"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
-      "branch": null,
+      "branch": "default",
       "note": ""
     },
     {
       "input": "KID:s:maintainer-999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999",
       "canonical": "KID:s:maintainer-999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999",
-      "parse": {
+      "array": {
         "stack": "s",
+        "branch": "default",
         "maintainer": "999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
       },
       "entities": {
+        "branch": "default",
         "maintainer": "999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
-      "branch": null,
+      "branch": "default",
       "note": ""
     },
     {
       "input": "KID:s:maintainer-*",
       "canonical": "KID:s:maintainer-*",
-      "parse": {
+      "array": {
         "stack": "s",
+        "branch": "default",
         "maintainer": "*"
       },
       "entities": {
+        "branch": "default",
         "maintainer": "*"
       },
       "wildcards": [
@@ -937,65 +1023,73 @@
       ],
       "isPattern": true,
       "isCanonical": true,
-      "branch": null,
+      "branch": "default",
       "note": ""
     },
     {
       "input": "KID:s:org-0",
       "canonical": "KID:s:org-0",
-      "parse": {
+      "array": {
         "stack": "s",
+        "branch": "default",
         "org": "0"
       },
       "entities": {
+        "branch": "default",
         "org": "0"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
-      "branch": null,
+      "branch": "default",
       "note": ""
     },
     {
       "input": "KID:s:org-001",
       "canonical": "KID:s:org-001",
-      "parse": {
+      "array": {
         "stack": "s",
+        "branch": "default",
         "org": "001"
       },
       "entities": {
+        "branch": "default",
         "org": "001"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
-      "branch": null,
+      "branch": "default",
       "note": ""
     },
     {
       "input": "KID:s:org-999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999",
       "canonical": "KID:s:org-999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999",
-      "parse": {
+      "array": {
         "stack": "s",
+        "branch": "default",
         "org": "999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
       },
       "entities": {
+        "branch": "default",
         "org": "999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
-      "branch": null,
+      "branch": "default",
       "note": ""
     },
     {
       "input": "KID:s:org-*",
       "canonical": "KID:s:org-*",
-      "parse": {
+      "array": {
         "stack": "s",
+        "branch": "default",
         "org": "*"
       },
       "entities": {
+        "branch": "default",
         "org": "*"
       },
       "wildcards": [
@@ -1003,65 +1097,73 @@
       ],
       "isPattern": true,
       "isCanonical": true,
-      "branch": null,
+      "branch": "default",
       "note": ""
     },
     {
       "input": "KID:s:project-0",
       "canonical": "KID:s:project-0",
-      "parse": {
+      "array": {
         "stack": "s",
+        "branch": "default",
         "project": "0"
       },
       "entities": {
+        "branch": "default",
         "project": "0"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
-      "branch": null,
+      "branch": "default",
       "note": ""
     },
     {
       "input": "KID:s:project-001",
       "canonical": "KID:s:project-001",
-      "parse": {
+      "array": {
         "stack": "s",
+        "branch": "default",
         "project": "001"
       },
       "entities": {
+        "branch": "default",
         "project": "001"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
-      "branch": null,
+      "branch": "default",
       "note": ""
     },
     {
       "input": "KID:s:project-999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999",
       "canonical": "KID:s:project-999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999",
-      "parse": {
+      "array": {
         "stack": "s",
+        "branch": "default",
         "project": "999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
       },
       "entities": {
+        "branch": "default",
         "project": "999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
-      "branch": null,
+      "branch": "default",
       "note": ""
     },
     {
       "input": "KID:s:project-*",
       "canonical": "KID:s:project-*",
-      "parse": {
+      "array": {
         "stack": "s",
+        "branch": "default",
         "project": "*"
       },
       "entities": {
+        "branch": "default",
         "project": "*"
       },
       "wildcards": [
@@ -1069,13 +1171,13 @@
       ],
       "isPattern": true,
       "isCanonical": true,
-      "branch": null,
+      "branch": "default",
       "note": ""
     },
     {
       "input": "KID:s:branch-0",
       "canonical": "KID:s:branch-0",
-      "parse": {
+      "array": {
         "stack": "s",
         "branch": "0"
       },
@@ -1091,7 +1193,7 @@
     {
       "input": "KID:s:branch-001",
       "canonical": "KID:s:branch-001",
-      "parse": {
+      "array": {
         "stack": "s",
         "branch": "001"
       },
@@ -1107,7 +1209,7 @@
     {
       "input": "KID:s:branch-999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999",
       "canonical": "KID:s:branch-999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999",
-      "parse": {
+      "array": {
         "stack": "s",
         "branch": "999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
       },
@@ -1123,7 +1225,7 @@
     {
       "input": "KID:s:branch-*",
       "canonical": "KID:s:branch-*",
-      "parse": {
+      "array": {
         "stack": "s",
         "branch": "*"
       },
@@ -1141,7 +1243,7 @@
     {
       "input": "KID:s:branch-dev",
       "canonical": "KID:s:branch-dev",
-      "parse": {
+      "array": {
         "stack": "s",
         "branch": "dev"
       },
@@ -1157,11 +1259,8 @@
     {
       "input": "KID:s:maintainer-1:org-2:project-3:branch-4:extra0-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra1-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra2-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra3-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra4-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra5-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra6-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:tail-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
       "canonical": "KID:s:branch-4:extra0-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra1-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra2-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra3-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra4-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra5-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra6-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:maintainer-1:org-2:project-3:tail-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-      "parse": {
+      "array": {
         "stack": "s",
-        "maintainer": "1",
-        "org": "2",
-        "project": "3",
         "branch": "4",
         "extra0": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
         "extra1": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
@@ -1170,12 +1269,12 @@
         "extra4": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
         "extra5": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
         "extra6": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "maintainer": "1",
+        "org": "2",
+        "project": "3",
         "tail": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
       },
       "entities": {
-        "maintainer": "1",
-        "org": "2",
-        "project": "3",
         "branch": "4",
         "extra0": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
         "extra1": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
@@ -1184,6 +1283,9 @@
         "extra4": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
         "extra5": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
         "extra6": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "maintainer": "1",
+        "org": "2",
+        "project": "3",
         "tail": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
       },
       "wildcards": [],
@@ -1195,18 +1297,20 @@
     {
       "input": "KID:eu-central:project-1",
       "canonical": "KID:eu-central:project-1",
-      "parse": {
+      "array": {
         "stack": "eu-central",
+        "branch": "default",
         "project": "1"
       },
       "entities": {
+        "branch": "default",
         "project": "1"
       },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
-      "branch": null,
-      "note": "flat parse result with string-valued numeric project ID"
+      "branch": "default",
+      "note": "flat toArray() result with string-valued numeric project ID"
     }
   ],
   "invalid": [
@@ -1663,24 +1767,24 @@
       "segment": "config\r-x"
     },
     {
-      "input": "KID:s\u2028",
+      "input": "KID:s ",
       "code": "bad_stack",
       "segment": null
     },
     {
-      "input": "KID:s:project-1\u2028",
+      "input": "KID:s:project-1 ",
       "code": "bad_value",
-      "segment": "project-1\u2028"
+      "segment": "project-1 "
     },
     {
-      "input": "KID:s:config-x\u2028",
+      "input": "KID:s:config-x ",
       "code": "bad_value",
-      "segment": "config-x\u2028"
+      "segment": "config-x "
     },
     {
-      "input": "KID:s:config\u2028-x",
+      "input": "KID:s:config -x",
       "code": "bad_segment",
-      "segment": "config\u2028-x"
+      "segment": "config -x"
     },
     {
       "input": "KID:s:a-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:c-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:d-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:e-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:f-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:g-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:h-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:z-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:branch-default",

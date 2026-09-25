@@ -39,11 +39,13 @@ implements this contract and is tested against the shared test vectors.
 ```php
 use Keboola\Identifier\Kid;
 
-$kid = Kid::fromString('KID:kbc-eu-central-1:project-9876:config-my%20config');
+$kid = Kid::parse('KID:kbc-eu-central-1:project-9876:config-my%20config');
 echo $kid->project();     // 9876
 echo $kid->get('config'); // my config
+echo $kid->branch();      // default
 Kid::validate('KID:s:project-1'); // true
-Kid::parse('KID:eu-central:project-1'); // ['stack' => 'eu-central', 'project' => '1']
+Kid::parse('KID:eu-central:project-1')->toArray();
+// ['stack' => 'eu-central', 'branch' => 'default', 'project' => '1']
 ```
 
 PHP uses a single `Kid` class: static methods provide validation, parsing and

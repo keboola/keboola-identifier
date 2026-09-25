@@ -75,11 +75,11 @@ final class KidTest extends TestCase
         $raw = str_repeat("\xFF", 256);
         yield 'create length before UTF-8' => ['create', ['s', ['config' => $raw]], 'too_long', 'config-' . $raw];
         $segment = 'config-%FF' . str_repeat('x', 256);
-        yield 'parse UTF-8 before value length' => ['fromString', ['KID:s:' . $segment], 'bad_utf8', $segment];
-        yield 'prefix before total length' => ['fromString', ['kid:' . str_repeat('x', 2048)], 'bad_prefix', null];
-        yield 'encoding before UTF-8' => ['fromString', ['KID:s:config-%FF%2a'], 'non_canonical_encoding', 'config-%FF%2a'];
-        yield 'structure before encoding' => ['fromString', ['KID:s:config-%2a!'], 'bad_value', 'config-%2a!'];
-        yield 'duplicate before value' => ['fromString', ['KID:s:project-1:project-abc'], 'duplicate_entity', 'project-abc'];
+        yield 'parse UTF-8 before value length' => ['parse', ['KID:s:' . $segment], 'bad_utf8', $segment];
+        yield 'prefix before total length' => ['parse', ['kid:' . str_repeat('x', 2048)], 'bad_prefix', null];
+        yield 'encoding before UTF-8' => ['parse', ['KID:s:config-%FF%2a'], 'non_canonical_encoding', 'config-%FF%2a'];
+        yield 'structure before encoding' => ['parse', ['KID:s:config-%2a!'], 'bad_value', 'config-%2a!'];
+        yield 'duplicate before value' => ['parse', ['KID:s:project-1:project-abc'], 'duplicate_entity', 'project-abc'];
         yield 'stack before entity' => ['create', ['S', ['Bad' => null]], 'bad_stack', null];
         yield 'entity before value type' => ['create', ['s', ['Bad' => null]], 'bad_segment', null];
         yield 'first entity before next entity' => ['create', ['s', ['project' => 'abc', 'Bad' => 'x']], 'bad_value', 'project-abc'];
@@ -87,9 +87,34 @@ final class KidTest extends TestCase
 
     public function testBranchDevIsPatternButNotWildcard(): void
     {
-        $kid = Kid::fromString('KID:s:branch-dev');
+        $kid = Kid::parse('KID:s:branch-dev');
         self::assertTrue($kid->isPattern());
         self::assertFalse($kid->isWildcard('branch'));
+    }
+
+    public function testDefaultBranchFallsBackToDefaultInEveryReader(): void
+    {
+        $kid = Kid::parse('KID:s:project-1:branch-default:config-my%20config');
+        self::assertSame('KID:s:config-my%20config:project-1', $kid->toString());
+        self::assertSame(
+            ['stack' => 's', 'branch' => 'default', 'config' => 'my config', 'project' => '1'],
+            $kid->toArray(),
+        );
+        self::assertSame(['branch' => 'default', 'config' => 'my config', 'project' => '1'], $kid->entities());
+        self::assertSame('default', $kid->branch());
+        self::assertSame('default', $kid->get('branch'));
+        self::assertTrue($kid->has('branch'));
+        self::assertFalse($kid->isWildcard('branch'));
+        self::assertFalse($kid->isPattern());
+        self::assertTrue($kid->equals(Kid::parse('KID:s:config-my%20config:project-1')));
+        self::assertTrue($kid->equals(Kid::create('s', $kid->entities())));
+    }
+
+    public function testExplicitBranchIsNotReplacedByFallback(): void
+    {
+        self::assertSame('555', Kid::parse('KID:s:branch-555')->branch());
+        self::assertSame('dev', Kid::parse('KID:s:branch-dev')->toArray()['branch']);
+        self::assertSame('*', Kid::parse('KID:s:branch-*')->get('branch'));
     }
 
     public function testUnicodeIsNotNormalized(): void
@@ -99,7 +124,7 @@ final class KidTest extends TestCase
 
     public function testDecodedLiteralStarRoundTripIsLossy(): void
     {
-        $literal = Kid::fromString('KID:s:config-%2A');
+        $literal = Kid::parse('KID:s:config-%2A');
         $wildcard = Kid::create('s', $literal->entities());
         self::assertFalse($literal->equals($wildcard));
         self::assertFalse($literal == $wildcard);
@@ -108,7 +133,7 @@ final class KidTest extends TestCase
 
     public function testDifferentStacksAreNotEqual(): void
     {
-        self::assertFalse(Kid::fromString('KID:s')->equals(Kid::fromString('KID:t')));
+        self::assertFalse(Kid::parse('KID:s')->equals(Kid::parse('KID:t')));
     }
 
     public function testNumericValuesAreNotNormalized(): void
@@ -131,10 +156,12 @@ final class KidTest extends TestCase
         foreach ($entities as $name => $value) {
             $text .= ':' . $name . '-' . $value;
         }
-        self::assertSame(['stack' => 's'] + $entities, Kid::parse($text), 'Stack first, then original entity order');
-        self::assertSame($canonical, Kid::fromString($text)->toString());
+        self::assertSame($canonical, Kid::parse($text)->toString());
+        $sorted = $entities;
+        ksort($sorted, SORT_STRING);
+        self::assertSame(['stack' => 's'] + $sorted, Kid::parse($text)->toArray(), 'Stack first, then canonical entity order');
         self::assertSame($canonical, Kid::create('s', $entities)->toString());
-        self::assertTrue(Kid::fromString($text)->equals(Kid::fromString($canonical)));
+        self::assertTrue(Kid::parse($text)->equals(Kid::parse($canonical)));
     }
 
     public static function entityPermutations(): iterable
@@ -165,7 +192,7 @@ final class KidTest extends TestCase
     {
         $text = 'KID:s:config-x' . $encoded;
         self::assertSame($text, (string) Kid::create('s', ['config' => 'x' . $raw]));
-        self::assertSame('x' . $raw, Kid::fromString($text)->get('config'));
+        self::assertSame('x' . $raw, Kid::parse($text)->get('config'));
     }
 
     public static function asciiBytes(): iterable

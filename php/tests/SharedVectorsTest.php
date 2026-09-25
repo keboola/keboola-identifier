@@ -14,21 +14,21 @@ final class SharedVectorsTest extends TestCase
     #[DataProvider('validCases')]
     public function testValidIdentifier(array $case): void
     {
-        $kid = Kid::fromString($case['input']);
+        $kid = Kid::parse($case['input']);
         self::assertTrue(Kid::validate($case['input']));
-        self::assertSame($case['parse'], Kid::parse($case['input']), 'Encoded values and input order');
+        self::assertSame($case['array'], $kid->toArray(), 'Stack, then decoded entities in canonical order');
         self::assertSame($case['canonical'], $kid->toString());
         self::assertSame($case['canonical'], (string) $kid);
         self::assertSame($case['canonical'], Kid::canonicalize($case['input']));
         self::assertSame($case['isCanonical'], Kid::isCanonical($case['input']));
-        self::assertSame($case['parse']['stack'], $kid->stack());
+        self::assertSame($case['array']['stack'], $kid->stack());
 
         $actual = $kid->entities();
         $expected = $case['entities'];
         ksort($actual);
         ksort($expected);
         self::assertSame($expected, $actual, 'Decoded entities');
-        foreach (array_unique([...array_keys($case['parse']), 'missing', 'constructor']) as $entity) {
+        foreach (array_unique([...array_keys($case['array']), 'missing', 'constructor']) as $entity) {
             self::assertSame($case['entities'][$entity] ?? null, $kid->get($entity), 'get ' . $entity);
             self::assertSame(array_key_exists($entity, $case['entities']), $kid->has($entity), 'has ' . $entity);
             self::assertSame(in_array($entity, $case['wildcards'], true), $kid->isWildcard($entity), 'wildcard ' . $entity);
@@ -38,9 +38,14 @@ final class SharedVectorsTest extends TestCase
         }
         self::assertSame($case['branch'], $kid->branch());
         self::assertSame($case['isPattern'], $kid->isPattern());
-        $roundTrip = Kid::fromString($kid->toString());
+        $roundTrip = Kid::parse($kid->toString());
         self::assertTrue($kid->equals($roundTrip));
         self::assertTrue($kid == $roundTrip, 'PHP structural equality');
+        $array = $kid->toArray();
+        unset($array['stack']);
+        // A decoded literal `*` (%2A) becomes a wildcard in create(); that round trip is documented as lossy.
+        $hasLiteralStar = array_diff(array_keys($array, '*', true), $case['wildcards']) !== [];
+        self::assertSame(!$hasLiteralStar, $kid->equals(Kid::create($kid->stack(), $array)), 'toArray round trip');
         $copy = $kid->entities();
         $copy['config'] = 'changed';
         self::assertSame($case['canonical'], $kid->toString(), 'Defensive entities copy');
@@ -102,7 +107,7 @@ final class SharedVectorsTest extends TestCase
     public static function invalidEntryPointCases(): iterable
     {
         foreach (self::vectors('invalid') as $label => [$case]) {
-            foreach (['parse', 'fromString', 'canonicalize'] as $method) {
+            foreach (['parse', 'canonicalize'] as $method) {
                 yield $method . ' ' . $label => [$method, $case];
             }
         }

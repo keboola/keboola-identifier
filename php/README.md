@@ -36,7 +36,7 @@ $kid = Kid::create('kbc-eu-central-1', [
 echo $kid; // KID:kbc-eu-central-1:config-my%20config:project-9876
 $kid->stack();        // 'kbc-eu-central-1'
 $kid->project();      // '9876', always a string
-$kid->branch();       // null (default branch)
+$kid->branch();       // 'default' (no branch segment in the KID)
 $kid->get('config');  // 'my config'
 $kid->has('config');  // true
 $kid->get('missing'); // null
@@ -64,58 +64,60 @@ $text = 'KID:s:config-my%20config:branch-default:project-1';
 Kid::validate($text);      // true
 Kid::isCanonical($text);   // false; also false for invalid text
 Kid::canonicalize($text);  // 'KID:s:config-my%20config:project-1'
-Kid::parse($text);         // ['stack' => 's', 'config' => 'my%20config',
-                          //   'branch' => 'default', 'project' => '1']
-$kid = Kid::fromString($text);
-$kid->entities();          // ['config' => 'my config', 'project' => '1']
-$kid->equals(Kid::fromString('KID:s:project-1:config-my%20config')); // true
+$kid = Kid::parse($text);
+$kid->toArray();           // ['stack' => 's', 'branch' => 'default',
+                          //   'config' => 'my config', 'project' => '1']
+$kid->entities();          // ['branch' => 'default', 'config' => 'my config', 'project' => '1']
+$kid->equals(Kid::parse('KID:s:project-1:config-my%20config')); // true
 ```
 
-`parse()` performs full validation but retains encoded values, input order and
-`branch-default`. `fromString()` checks the 2048-byte **input** limit before parsing;
+`parse()` is the only way from text to a `Kid`. It validates fully, checks the
+2048-byte **input** limit before parsing and returns the canonical identity;
 `create()` checks the canonical **output** after removing `branch-default`.
 Both enforce the 255-byte decoded value limit. Lowercase hex, escapes for unencoded
 bytes, raw spaces, raw `+` and raw `~` are rejected, not repaired.
 
-`parse()` returns a flat map, with `stack` first and entity names at the same level:
-`Kid::parse('KID:eu-central:project-1')` returns
-`['stack' => 'eu-central', 'project' => '1']`. Values remain strings, including
-numeric IDs. `stack` is reserved and cannot be used as an entity name (`bad_segment`),
-so an input such as `KID:s:stack-x` cannot overwrite the actual stack.
+`toArray()` returns a flat map with `stack` first and decoded entities in canonical
+order. When the KID carries no branch, every reader falls back to the default branch:
+`branch()`, `get('branch')`, `entities()` and `toArray()` report `'default'` and
+`has('branch')` is `true`. The canonical string stays without `branch-default`.
+Values remain strings, including numeric IDs. `stack` is reserved and cannot be used
+as an entity name (`bad_segment`), so an input such as `KID:s:stack-x` cannot
+overwrite the actual stack.
 
 ## Wildcards and immutable objects
 
 ```php
-$literal = Kid::fromString('KID:s:config-%2A');
+$literal = Kid::parse('KID:s:config-%2A');
 $literal->get('config');        // '*'
 $literal->isWildcard('config'); // false
 $literal->isPattern();         // false
 $pattern = Kid::create('s', ['config' => '*']);
 $pattern->isWildcard('config'); // true
 $pattern->isPattern();         // true
-$dev = Kid::fromString('KID:s:branch-dev');
+$dev = Kid::parse('KID:s:branch-dev');
 $dev->isPattern();             // true
 $dev->isWildcard('branch');     // false
 ```
 
-`create()` cannot represent a whole literal `*`; read `%2A` using `fromString()`.
+`create()` cannot represent a whole literal `*`; read `%2A` using `parse()`.
 A star within a longer raw string, such as `a*b`, is encoded normally.
 `entities()` is a decoded copy and therefore loses the whole-star distinction:
 recreating a literal-star identifier from that map turns it into a wildcard.
-Use `Kid::fromString($kid->toString())` for a lossless round trip.
+Use `Kid::parse($kid->toString())` for a lossless round trip.
 
 Objects are final and readonly, with only the canonical string as instance state.
-`equals()` and PHP `==` compare canonical representations. There are no mutators;
-map iteration order is not an API guarantee except for `parse()`.
+`equals()` and PHP `==` compare canonical representations. There are no mutators.
+`entities()` and `toArray()` iterate in canonical order.
 
 ## Public API
 
-- Static methods on `Kid`: `validate(string): bool`, `parse(string): array`,
-  `fromString(string): Kid`, `create(mixed, array): Kid` (stack must
-  be a string), `canonicalize(string): string`, `isCanonical(string): bool`.
+- Static methods on `Kid`: `validate(string): bool`, `parse(string): Kid`,
+  `create(mixed, array): Kid` (stack must be a string),
+  `canonicalize(string): string`, `isCanonical(string): bool`.
 - Accessors: `stack(): string`, `maintainer(): ?string`, `organization(): ?string`,
-  `project(): ?string`, `branch(): ?string`, `get(string): ?string`,
-  `has(string): bool`, `entities(): array`.
+  `project(): ?string`, `branch(): string`, `get(string): ?string`,
+  `has(string): bool`, `entities(): array`, `toArray(): array`.
 - Inspection: `isWildcard(string): bool`, `isPattern(): bool`, `equals(Kid): bool`.
 - Serialization: `toString(): string`, `__toString(): string`.
 - Entity names are strings such as `'project'`, `'branch'`, `'bucket'` and `'config'`.
@@ -135,7 +137,7 @@ automatic aliasing of unknown entity names.
 use Keboola\Identifier\InvalidKidException;
 
 try {
-    Kid::fromString('KID:s:project-abc');
+    Kid::parse('KID:s:project-abc');
 } catch (InvalidKidException $error) {
     echo $error->code;    // bad_value (also returned by getCode())
     echo $error->segment; // project-abc

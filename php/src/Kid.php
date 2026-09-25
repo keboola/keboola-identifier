@@ -24,8 +24,8 @@ final readonly class Kid implements \Stringable
         }
     }
 
-    /** @return array<string, string> Stack first, then encoded entity values in input order. */
-    public static function parse(string $text): array
+    /** Full validation of text input; returns the canonical identity. */
+    public static function parse(string $text): self
     {
         if (!str_starts_with($text, 'KID:')) {
             throw new InvalidKidException('bad_prefix');
@@ -58,15 +58,7 @@ final readonly class Kid implements \Stringable
             self::checkValueLength($raw, $segment);
             $entities[$entity] = $value;
         }
-        return ['stack' => $stack] + $entities;
-    }
-
-    public static function fromString(string $text): self
-    {
-        $parsed = self::parse($text);
-        $stack = $parsed['stack'];
-        unset($parsed['stack']);
-        return new self(self::serialize($stack, $parsed));
+        return new self(self::serialize($stack, $entities));
     }
 
     /** @param array<string, string|int> $entities Decoded values; a whole '*' means wildcard. */
@@ -100,7 +92,7 @@ final readonly class Kid implements \Stringable
 
     public static function canonicalize(string $text): string
     {
-        return self::fromString($text)->toString();
+        return self::parse($text)->toString();
     }
 
     public static function isCanonical(string $text): bool
@@ -132,9 +124,10 @@ final readonly class Kid implements \Stringable
         return $this->get('project');
     }
 
-    public function branch(): ?string
+    /** Never null: an absent branch means the default branch (§4.2). */
+    public function branch(): string
     {
-        return $this->get('branch');
+        return $this->get('branch') ?? 'default';
     }
 
     public function get(string $entity): ?string
@@ -152,6 +145,12 @@ final readonly class Kid implements \Stringable
     public function entities(): array
     {
         return array_map(static fn(string $value): string => self::decode($value, null), $this->encodedEntities());
+    }
+
+    /** @return array<string, string> Stack first, then decoded entities in canonical order. */
+    public function toArray(): array
+    {
+        return ['stack' => $this->stack()] + $this->entities();
     }
 
     public function isWildcard(string $entity): bool
@@ -180,13 +179,17 @@ final readonly class Kid implements \Stringable
         return $this->canonical;
     }
 
-    /** @return array<string, string> */
+    /** @return array<string, string> Canonical order; an absent branch reads as `default` (§4.2). */
     private function encodedEntities(): array
     {
         $entities = [];
         foreach (array_slice(explode(':', $this->canonical), 2) as $segment) {
             [$entity, $value] = explode('-', $segment, 2);
             $entities[$entity] = $value;
+        }
+        if (!array_key_exists('branch', $entities)) {
+            $entities['branch'] = 'default';
+            ksort($entities, SORT_STRING);
         }
         return $entities;
     }
