@@ -71,10 +71,10 @@ When a KID carries no `branch`, every reader falls back to the default branch:
 `Has("branch")` is true. The canonical string stays without `branch-default`, so
 identity does not change. Go maps are unordered; `String()` is the only ordered
 representation. Parsing validates segments **left to right**. `New` checks entities
-in Go map iteration order, so the first reported error among multiple invalid
-entities is unspecified; use text parsing when ordered cross-entity error precedence
-matters. Canonical output always sorts all entity names by ASCII bytes and omits
-`branch-default`.
+in ascending name order (byte order), so the reported error for a map with several
+invalid entries is deterministic; PHP, Python and JavaScript check in map insertion
+order instead. Canonical output always sorts all entity names by ASCII bytes and
+omits `branch-default`.
 
 Errors are `*InvalidKidError{Code, Segment}` and support `errors.As`:
 

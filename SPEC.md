@@ -325,8 +325,9 @@ installation and usage examples.
   has no integer values, so the caller converts with `strconv.Itoa`.
 - Go maps are unordered, so `Entities()` and `ToMap()` carry no order; `String()` is
   the only ordered representation. Parsing still validates segments left to right.
-  Creation checks entities in Go map iteration order, so the first failure among
-  multiple invalid map entries is unspecified. Canonical serialization is always
+  Creation checks entities in ascending name order, so the reported error is
+  deterministic but may differ from the insertion-ordered check in PHP, Python and
+  JavaScript when several entries are invalid. Canonical serialization is always
   ordered as specified in §6.
 - Python and JavaScript creation APIs accept Unicode strings, not byte arrays.
   Unpaired surrogates are `bad_utf8`. Raw length is checked first: Python counts

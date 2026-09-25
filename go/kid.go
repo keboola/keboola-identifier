@@ -3,7 +3,9 @@ package kid
 
 import (
 	"fmt"
+	"maps"
 	"regexp"
+	"slices"
 	"sort"
 	"strconv"
 	"strings"
@@ -158,13 +160,14 @@ func Parse(text string) (Kid, error) {
 
 // New accepts raw UTF-8 values. A whole "*" denotes a wildcard.
 // Go has no mixed-type map, so numeric IDs are passed as their decimal strings (strconv.Itoa).
-// Entity checks run in Go map iteration order; use text for ordered error precedence.
+// Entities are checked in ascending name order, so the reported error is deterministic.
 func New(stack string, entities map[string]string) (Kid, error) {
 	if err := checkStack(stack); err != nil {
 		return Kid{}, err
 	}
 	encoded := make(map[string]string, len(entities))
-	for entity, value := range entities {
+	for _, entity := range slices.Sorted(maps.Keys(entities)) {
+		value := entities[entity]
 		segment := entity + "-" + value
 		if err := checkEntity(entity, segment); err != nil {
 			return Kid{}, err

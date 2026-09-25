@@ -234,6 +234,16 @@ func TestLeadingZerosAreRejectedNotNormalized(t *testing.T) {
 	}
 }
 
+func TestNewChecksEntitiesInNameOrder(t *testing.T) {
+	entities := map[string]string{"zeta": "", "project": "abc", "Bad": "x", "alpha": ""}
+	for i := 0; i < 50; i++ {
+		_, err := kid.New("s", entities)
+		checkError(t, err, "bad_segment", "Bad-x")
+	}
+	_, err := kid.New("s", map[string]string{"zeta": "", "project": "abc", "alpha": ""})
+	checkError(t, err, "bad_value", "alpha-")
+}
+
 func TestByteAndErrorPrecedence(t *testing.T) {
 	raw := strings.Repeat("x", 255) + "\xff"
 	_, err := kid.New("s", map[string]string{"config": raw})
