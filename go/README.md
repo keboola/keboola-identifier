@@ -82,7 +82,8 @@ and other encoders write a `Kid` as its canonical string, also as a map key, and
 read one back through `Parse`, rejecting invalid or non-canonical payloads with the
 usual error. Marshalling the zero value is an error rather than a silent `""`, so an
 optional field must be a `*kid.Kid` (with `omitempty`) or use `json:",omitzero"`
-(Go 1.24+).
+(Go 1.24+). Decoding JSON `null` or any other non-string into a `kid.Kid` is a
+`*json.UnmarshalTypeError`; only a `*kid.Kid` field decodes `null` (as `nil`).
 
 Errors are `*InvalidKidError{Code, Segment}` and support `errors.As`:
 

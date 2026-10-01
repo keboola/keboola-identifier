@@ -2,8 +2,10 @@
 package kid
 
 import (
+	"encoding/json"
 	"fmt"
 	"maps"
+	"reflect"
 	"regexp"
 	"slices"
 	"sort"
@@ -325,6 +327,38 @@ func (k Kid) MarshalText() ([]byte, error) {
 		return nil, invalid("bad_prefix", "")
 	}
 	return []byte(k.canonical), nil
+}
+
+// UnmarshalJSON accepts only a JSON string and runs it through Parse. encoding/json
+// skips UnmarshalText for null, which would leave a value-typed Kid unvalidated;
+// null and other non-strings are an *json.UnmarshalTypeError instead. An optional
+// *Kid field still decodes null as nil, since encoding/json never calls this then.
+func (k *Kid) UnmarshalJSON(data []byte) error {
+	var text string
+	if len(data) == 0 || data[0] != '"' {
+		return &json.UnmarshalTypeError{Value: jsonKind(data), Type: reflect.TypeFor[Kid]()}
+	}
+	if err := json.Unmarshal(data, &text); err != nil {
+		return err
+	}
+	return k.UnmarshalText([]byte(text))
+}
+
+// jsonKind names a non-string JSON value the way encoding/json does in its errors.
+func jsonKind(data []byte) string {
+	switch {
+	case len(data) == 0:
+		return "empty"
+	case data[0] == 'n':
+		return "null"
+	case data[0] == 't' || data[0] == 'f':
+		return "bool"
+	case data[0] == '{':
+		return "object"
+	case data[0] == '[':
+		return "array"
+	}
+	return "number"
 }
 
 // UnmarshalText runs Parse, so a decoded Kid is always validated and canonical.

@@ -380,6 +380,31 @@ func TestJSONRoundTripsThroughCanonicalForm(t *testing.T) {
 	}
 }
 
+func TestJSONRejectsNullAndNonStrings(t *testing.T) {
+	existing, _ := kid.Parse("KID:s:project-1")
+	for _, input := range []string{`null`, `1`, `true`, `{}`, `[]`} {
+		direct := existing
+		var typeError *json.UnmarshalTypeError
+		if err := json.Unmarshal([]byte(input), &direct); !errors.As(err, &typeError) || direct != existing {
+			t.Fatalf("direct %s: err %v, value %v", input, err, direct)
+		}
+		var nested struct{ Kid kid.Kid }
+		if err := json.Unmarshal([]byte(`{"Kid":`+input+`}`), &nested); !errors.As(err, &typeError) || nested.Kid != (kid.Kid{}) {
+			t.Fatalf("nested %s: err %v, value %v", input, err, nested.Kid)
+		}
+	}
+	var escaped struct{ Kid kid.Kid }
+	if err := json.Unmarshal([]byte(`{"Kid":"KID:s:project-1"}`), &escaped); err != nil || escaped.Kid != existing {
+		t.Fatal("escaped string", err, escaped.Kid)
+	}
+	var invalid struct{ Kid kid.Kid }
+	checkError(t, json.Unmarshal([]byte(`{"Kid":"KID:s:project-007"}`), &invalid), "bad_value", "project-007")
+	var optional struct{ Kid *kid.Kid }
+	if err := json.Unmarshal([]byte(`{"Kid":null}`), &optional); err != nil || optional.Kid != nil {
+		t.Fatal("optional pointer null", err, optional.Kid)
+	}
+}
+
 func TestCopiesAndLiteralStar(t *testing.T) {
 	entities := map[string]string{kid.EntityProject: "1"}
 	value, err := kid.New("s", entities)
