@@ -72,7 +72,9 @@ zeros (`bad_value`); `0` is accepted. Open-catalog values keep their characters.
 
 Failures raise `InvalidKidError extends Error`, with `code` and optional `segment`.
 See SPEC §8 for precedence. `validate()` and `isCanonical()` return false for invalid
-KID strings. Text entry points expect strings; `create()` rejects non-string stacks
+KID strings. Text entry points (`parse`, `validate`, `canonicalize`, `isCanonical`)
+throw `TypeError` for anything but a primitive string, including a boxed `String`;
+`create()` rejects non-string stacks
 without coercion. Limits are UTF-8 bytes (255 raw, 2048 serialized), not
 UTF-16 code units. Lone surrogates are rejected as `bad_utf8` rather than silently
 replaced. During creation, length is checked first using `TextEncoder` byte length

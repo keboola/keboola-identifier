@@ -75,6 +75,8 @@ function serialize(stack, entities) {
 }
 
 function canonicalize(text) {
+  // A boxed String or other object would otherwise be coerced by startsWith and TextEncoder.
+  if (typeof text !== 'string') throw new TypeError('KID text must be a primitive string');
   if (!text.startsWith('KID:')) throw new InvalidKidError('bad_prefix');
   if (encoder.encode(text).length > 2048) throw new InvalidKidError('too_long');
   const [stack, ...segments] = text.slice(4).split(':');

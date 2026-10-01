@@ -139,6 +139,12 @@ test('strict inputs, precedence and immutable state', () => {
   for (const entities of [new Map([['project', '1']]), [['project', '1']], null, undefined, 'project-1', new (class {})(), new Set()]) {
     assert.throws(() => Kid.create('s', entities), TypeError);
   }
+  // Text entry points take primitive strings only; a boxed String would otherwise be coerced.
+  for (const text of [new String('KID:s'), null, undefined, 1, { startsWith: () => true }]) {
+    for (const method of ['parse', 'validate', 'canonicalize', 'isCanonical']) {
+      assert.throws(() => Kid[method](text), TypeError);
+    }
+  }
   assert.equal(Kid.create('s', Object.assign(Object.create(null), { project: '1' })).toString(), 'KID:s:project-1');
   assert.equal(Kid.create('s', {}).toString(), 'KID:s');
   assert.throws(() => Kid.parse('KID:s:project-1\n'), errorIs('bad_value', 'project-1\n'));
