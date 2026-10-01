@@ -393,6 +393,15 @@ func TestJSONRejectsNullAndNonStrings(t *testing.T) {
 			t.Fatalf("nested %s: err %v, value %v", input, err, nested.Kid)
 		}
 	}
+	// encoding/json never passes empty or malformed data, but a direct call may.
+	var direct kid.Kid
+	var typeError *json.UnmarshalTypeError
+	if err := direct.UnmarshalJSON(nil); !errors.As(err, &typeError) || typeError.Value != "empty" {
+		t.Fatal("direct empty", err)
+	}
+	if err := direct.UnmarshalJSON([]byte(`"KID:s`)); err == nil || direct != (kid.Kid{}) {
+		t.Fatal("direct unterminated string", err, direct)
+	}
 	var escaped struct{ Kid kid.Kid }
 	if err := json.Unmarshal([]byte(`{"Kid":"KID:s:project-1"}`), &escaped); err != nil || escaped.Kid != existing {
 		t.Fatal("escaped string", err, escaped.Kid)
