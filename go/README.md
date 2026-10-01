@@ -79,8 +79,9 @@ omits `branch-default`.
 `Kid` implements `encoding.TextMarshaler`/`TextUnmarshaler` and
 `encoding.BinaryMarshaler`/`BinaryUnmarshaler`, so `encoding/json`, `encoding/gob`
 and other encoders write a `Kid` as its canonical string, also as a map key, and
-read one back through `Parse`, rejecting invalid or non-canonical payloads with the
-usual error. Marshalling the zero value is an error rather than a silent `""`, so an
+read one back through `Parse`, rejecting invalid payloads with the usual error and
+canonicalizing valid non-canonical ones (`KID:s:project-1:branch-default` decodes as
+`KID:s:project-1`). Marshalling the zero value is an error rather than a silent `""`, so an
 optional field must be a `*kid.Kid` (with `omitempty`) or use `json:",omitzero"`
 (Go 1.24+). Decoding JSON `null` or any other non-string into a `kid.Kid` is a
 `*json.UnmarshalTypeError`; only a `*kid.Kid` field decodes `null` (as `nil`).
