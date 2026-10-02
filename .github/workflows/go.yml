@@ -1,0 +1,26 @@
+name: Go
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  go:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go: ['1.23.x', '1.24.x', '1.25.x', '1.26.x', '1.27.x']
+    defaults:
+      run:
+        working-directory: go
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: ${{ matrix.go }}
+          cache: false
+      - run: test -z "$(gofmt -l .)"
+      - run: go vet ./...
+      - run: go test -race -cover ./...
+      - run: go run ./examples/usage

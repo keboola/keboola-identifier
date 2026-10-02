@@ -7,7 +7,9 @@ canonicalization, validation and library operations. The
 [shared test vectors](spec/test-vectors.json) are part of the specification and
 provide expected results for valid and invalid inputs.
 
-The repository provides a [PHP implementation](php/README.md).
+The repository provides implementations for [PHP](php/README.md),
+[Go](go/README.md), [Python](python/README.md) and
+[JavaScript/TypeScript](javascript/README.md).
 
 ## 1. Purpose
 
@@ -272,7 +274,8 @@ In text parsing, UTF-8 validity precedes the decoded-value length check as liste
 | `equals(other)` | canonical strings equal |
 | `toString()` | canonical form; any other serialization the library offers (JSON, language-native) emits exactly this string |
 
-In the PHP API, absent values are returned as `null`.
+Absent values are `null` (PHP), `undefined` (JavaScript/TypeScript), `None`
+(Python) or `("", false)` (Go).
 Objects are immutable; there is no `with()`/`without()`.
 
 `toArray()` returns a flat map. For example, `parse("KID:eu-central:project-1").toArray()` is
@@ -297,6 +300,48 @@ text instead of raising this exception.
 See the [PHP API documentation](php/README.md#public-api) for signatures,
 installation and usage examples.
 
+### 9.2 Go, Python and JavaScript APIs
+
+See the [Go](go/README.md#api), [Python](python/README.md#api) and
+[JavaScript/TypeScript](javascript/README.md#api) documentation for signatures,
+installation and usage examples.
+
+| §9 operation | Go | Python | JavaScript |
+|---|---|---|---|
+| `parse(text)` | `Parse(text) (Kid, error)` | `parse(text)`, `Kid.parse(text)`, `Kid(text)` | `Kid.parse(text)` |
+| `create(stack, entities)` | `New(stack, map[string]string)` | `Kid.create(stack, dict)` | `Kid.create(stack, object)` |
+| `toArray()` | `ToMap() map[string]string` | `to_dict()` | `toObject()` |
+| `branch()` | `Branch() string` | `branch` property | `branch()` |
+| `toString()` | `String()` | `str(kid)` | `toString()` |
+
+- Go has no exceptions; constructors return `error`. `Validate` stays a boolean.
+- Python `__eq__` returns `NotImplemented` for foreign types; `__hash__` hashes the
+  canonical string, so a `Kid` works as a dict key.
+- JavaScript uses `equals()` for canonical equality; `==` compares references.
+- The default-branch fallback (§4.2) applies in every language: `Branch()`/`branch`
+  never reports an absent value, and `Get("branch")`/`get("branch")` succeeds.
+- Serialization: Go `MarshalText`/`MarshalBinary` (JSON, gob), JavaScript `toJSON()`,
+  Python `pickle`/`copy` emit or re-validate the canonical string. Generic object
+  walkers (`structuredClone` in JavaScript, `dataclasses.asdict` in Python) do not
+  see the private state and are not serializations of a KID; use `toString()`.
+- Integer values in `create()`: Python accepts `int` (not `bool`, which is an `int`
+  subclass); JavaScript accepts safe integers and `bigint`, and since a JavaScript
+  number has no integer type, `1.0` and `1e2` are the integers `1` and `100` there
+  while PHP and Python reject floats; Go's `map[string]string` has no integer values,
+  so the caller converts with `strconv.Itoa`.
+- Go maps are unordered, so `Entities()` and `ToMap()` carry no order; `String()` is
+  the only ordered representation. Parsing still validates segments left to right.
+  Creation checks entities in ascending name order, so the reported error is
+  deterministic but may differ from the insertion-ordered check in PHP and Python
+  when several entries are invalid. JavaScript checks in property enumeration order,
+  which lists integer-like keys first; such keys are always `bad_segment`, so only
+  the reported error can differ, never the canonical form. Canonical serialization
+  is always ordered as specified in §6.
+- Python and JavaScript creation APIs accept Unicode strings, not byte arrays.
+  Unpaired surrogates are `bad_utf8`. Raw length is checked first: Python counts
+  UTF-8 with `surrogatepass`, JavaScript counts `TextEncoder` bytes (three bytes
+  per unpaired surrogate). Valid Unicode uses ordinary UTF-8 byte length.
+
 ## 10. Test vectors
 
 [`spec/test-vectors.json`](spec/test-vectors.json) contains shared cases for:
@@ -312,7 +357,7 @@ installation and usage examples.
 - `create()` cases: raw value → canonical, entities given in non-canonical order → canonical, `branch-default` dropped, integer values converted, other non-string input rejected, invalid UTF-8 rejected;
 - `entities()` on a `%2A` literal versus a `*` wildcard (both read back as `*`, `isWildcard` differs).
 
-The PHP test suite loads this file directly. PHP-specific cases are documented in
+Every language's test suite loads this file directly. PHP-specific cases are documented in
 the [testing instructions](php/README.md#development-and-distribution).
 
 ### 10.1 Byte-string fixtures
@@ -327,6 +372,15 @@ exception. They are fixture notation only, not an accepted API input format.
 For example, `entitiesHex: {"config": "ff"}` means a raw one-byte string `0xFF`,
 not the two-character string `"ff"`; the expected code is `bad_utf8` and
 `segmentHex` is `"636f6e6669672dff"` (`config-` followed by `0xFF`).
+
+A creation fixture may carry `skip`, a list of language names whose API types cannot
+represent its input (`"go"` for null and boolean map values); those loaders skip it.
+Integer fixture values are loaded as integers where `create()` accepts them and as
+their decimal strings in Go. Python and JavaScript loaders additionally skip
+`entitiesHex` fixtures whose bytes are not valid Unicode text; Python can load
+encoded surrogates with `surrogatepass`. Unicode-string implementations test
+malformed native strings and byte-array rejection separately. All encoded
+text-parsing vectors apply to every language.
 
 ## 11. Scope and compatibility
 
