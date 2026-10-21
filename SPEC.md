@@ -57,6 +57,20 @@ Examples: `kbc-eu-central-1`, `kbc-us-east-1`, `com-keboola-gcp-europe-west3`,
 The stack is a deployment identifier, not an API hostname. The library does not
 convert hostnames to stack identifiers.
 
+Producer rules:
+
+- Producers read the stack from the deployment's `KEBOOLA_STACK` value.
+- A producer **must** fail when the stack value is missing or empty and **must not**
+  substitute a default. The library rejects an empty stack (`bad_stack`), but a fallback
+  filled in before `create()` yields a valid KID for the wrong stack.
+- A non-production deployment (local, test) uses its own `KEBOOLA_STACK` value, the same
+  value in every producer of that deployment. No stack value is reserved for this; values
+  such as `localhost` or `connection` are syntactically valid stacks.
+
+Informative: a client outside the deployment can discover the stack from the `stack` field
+of Connection's `GET /v2/storage`. That this field equals `KEBOOLA_STACK` is a guarantee of
+Connection, not of this specification.
+
 ## 4. Entities
 
 - Entity regex: `^[a-z][a-z0-9]*$`. Lowercase, no hyphen, no underscore.
