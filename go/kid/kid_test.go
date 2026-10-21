@@ -23,7 +23,10 @@ type vector struct {
 	SegmentHex             string
 	Array                  map[string]string
 	Entities               map[string]any
+	EncodedEntities        map[string]string
 	EntitiesHex            map[string]string
+	Raw                    any
+	RawHex, Encoded        string
 	Wildcards, Skip        []string
 	IsCanonical, IsPattern bool
 }
@@ -64,6 +67,26 @@ func stringEntities(t *testing.T, c vector) map[string]string {
 	return values
 }
 
+// rawValue maps an encodeValue fixture to EncodeValue's string; JSON integers become decimal strings.
+func rawValue(t *testing.T, c vector) string {
+	t.Helper()
+	if c.RawHex != "" {
+		value, err := hex.DecodeString(c.RawHex)
+		if err != nil {
+			t.Fatal(err)
+		}
+		return string(value)
+	}
+	switch value := c.Raw.(type) {
+	case string:
+		return value
+	case json.Number:
+		return value.String()
+	}
+	t.Fatalf("unrepresentable fixture value %v; expected a skip marker", c.Raw)
+	return ""
+}
+
 func TestSharedVectors(t *testing.T) {
 	data, err := os.ReadFile("../../spec/test-vectors.json")
 	if err != nil {
@@ -73,7 +96,7 @@ func TestSharedVectors(t *testing.T) {
 	if err := json.Unmarshal(data, &groups); err != nil {
 		t.Fatal(err)
 	}
-	for _, group := range []string{"valid", "invalid", "create", "createInvalid"} {
+	for _, group := range []string{"valid", "invalid", "create", "createInvalid", "encodeValue", "encodeValueInvalid"} {
 		var cases []vector
 		decoder := json.NewDecoder(bytes.NewReader(groups[group]))
 		decoder.UseNumber()
@@ -115,6 +138,9 @@ func TestSharedVectors(t *testing.T) {
 					}
 					if !reflect.DeepEqual(value.ToMap(), c.Array) {
 						t.Fatal("map mismatch", value.ToMap())
+					}
+					if !reflect.DeepEqual(value.EncodedEntities(), c.EncodedEntities) {
+						t.Fatal("encoded entities mismatch", value.EncodedEntities())
 					}
 					names := []string{"missing", "constructor", "stack"}
 					for name := range c.Array {
@@ -183,6 +209,14 @@ func TestSharedVectors(t *testing.T) {
 					}
 				case "createInvalid":
 					_, err := kid.New(c.Stack, stringEntities(t, c))
+					checkError(t, err, c.Code, segment)
+				case "encodeValue":
+					encoded, err := kid.EncodeValue(rawValue(t, c))
+					if err != nil || encoded != c.Encoded {
+						t.Fatalf("encoded %q, %v, want %q", encoded, err, c.Encoded)
+					}
+				case "encodeValueInvalid":
+					_, err := kid.EncodeValue(rawValue(t, c))
 					checkError(t, err, c.Code, segment)
 				}
 			})
@@ -434,6 +468,39 @@ func TestCopiesAndLiteralStar(t *testing.T) {
 	}
 	if literal.Equals(wildcard) || literal.IsPattern() || !wildcard.IsPattern() || literal.Equals(kid.Kid{}) {
 		t.Fatal("literal/wildcard equality")
+	}
+	if literal.EncodedEntities()["config"] != "%2A" || wildcard.EncodedEntities()["config"] != "*" {
+		t.Fatal("encoded entities lose the literal star", literal.EncodedEntities(), wildcard.EncodedEntities())
+	}
+	star, err := kid.EncodeValue("*")
+	if err != nil {
+		t.Fatal(err)
+	}
+	rebuilt, err := kid.Parse("KID:s:config-" + star)
+	if err != nil || !rebuilt.Equals(literal) {
+		t.Fatal("EncodeValue round trip", rebuilt, err)
+	}
+	_, err = kid.Parse("KID:s:project-" + star)
+	checkError(t, err, "bad_value", "project-%2A")
+}
+
+func TestEncodedEntitiesHasNoDefaultBranchFallback(t *testing.T) {
+	value, err := kid.Parse("KID:s:branch-default:project-1")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !reflect.DeepEqual(value.EncodedEntities(), map[string]string{"project": "1"}) || !value.Has(kid.EntityBranch) {
+		t.Fatal("fallback leaked into EncodedEntities", value.EncodedEntities())
+	}
+	dev, err := kid.Parse("KID:s:project-1:branch-555")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !reflect.DeepEqual(dev.EncodedEntities(), map[string]string{"branch": "555", "project": "1"}) {
+		t.Fatal("explicit branch missing", dev.EncodedEntities())
+	}
+	if len(kid.Kid{}.EncodedEntities()) != 0 {
+		t.Fatal("zero value has entities")
 	}
 }
 

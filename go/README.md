@@ -42,7 +42,8 @@ fmt.Println(value.ToMap())     // map[branch:default config:my config project:98
 ## API
 
 - `Validate(text) bool`, `Parse(text) (Kid, error)`, `New(stack, map[string]string) (Kid, error)`,
-  `Canonicalize(text) (string, error)`, `IsCanonical(text) bool`.
+  `Canonicalize(text) (string, error)`, `IsCanonical(text) bool`,
+  `EncodeValue(raw) (string, error)`.
   `Parse` is the only way from text to a `Kid`; it validates fully and returns the
   canonical identity.
 - `Stack() string`; `Maintainer()`, `Organization()`, `Project()` and `Get(entity)`
@@ -50,6 +51,7 @@ fmt.Println(value.ToMap())     // map[branch:default config:my config project:98
   absent: a KID without a branch is on the default branch and reports `"default"`.
 - `Has(entity)`, `IsWildcard(entity)`, `IsPattern()`, `Equals(other Kid)` (the same as `==`);
   `String()` returns canonical text; `Entities()` returns a decoded map copy;
+  `EncodedEntities()` returns the encoded values of the canonical form (lossless);
   `ToMap()` returns `stack` plus the decoded entities as one flat map (SPEC `toArray()`).
 - Constants: `EntityMaintainer`, `EntityOrg`, `EntityProject`, `EntityBranch`,
   `EntityBucket`, `EntityTable`, `EntityComponent`, `EntityConfig`, `EntityRow`,
@@ -99,9 +101,9 @@ An empty `Segment` means not applicable (or an empty input segment). See SPEC §
 for validation precedence. Go strings may contain invalid UTF-8; these are rejected
 as `bad_utf8`, after the raw length check in `New` and before the decoded length
 check in parsing. Limits are bytes: 255 raw per value and 2048 per KID.
-Shared creation fixtures marked `skip: ["go"]` (null and boolean map values) cannot
-be passed to `map[string]string` and are skipped; integer fixture values are loaded
-as decimal strings and both raw-invalid-byte fixtures run unchanged.
+Shared creation and `EncodeValue` fixtures marked `skip: ["go"]` (null, boolean and
+float values) cannot be passed as a Go string and are skipped; integer fixture values
+are loaded as decimal strings and all raw-invalid-byte fixtures run unchanged.
 
 ## Patterns and round trips
 
@@ -109,6 +111,23 @@ A whole `*` passed to `New` is a wildcard; a literal star must be read from `%2A
 using `Parse`. `Entities()` and `ToMap()` decode both to `*`, so recreating from
 either map is lossy. Use `Parse(value.String())` for a lossless round trip.
 `IsWildcard` distinguishes the two; `branch-dev` is a pattern without being a wildcard.
+
+`EncodedEntities()` is the lossless view: it returns the values exactly as the
+canonical form carries them, so a literal `%2A` and the wildcard `*` stay distinct.
+It has no default-branch fallback (`branch` is present only when the canonical form
+carries it), unlike `Has("branch")` and `Get("branch")`. Its zero value is an empty map.
+
+`EncodeValue(raw)` encodes one raw value with the SPEC §5 table and the value checks
+`New` applies to an open entity: empty is `bad_value`, more than 255 bytes is
+`too_long`, invalid UTF-8 is `bad_utf8`, and the error `Segment` is empty. A whole
+`*` becomes `%2A`, so it builds a literal star:
+
+```go
+star, _ := kid.EncodeValue("*")             // "%2A"
+literal, err := kid.Parse("KID:s:config-" + star) // KID:s:config-%2A
+```
+
+`Parse` still validates the assembled text, so `project-%2A` is `bad_value`.
 
 `stack` is reserved as an entity; unknown names otherwise remain opaque.
 Producers omit default branches rather than writing their numeric IDs. The library

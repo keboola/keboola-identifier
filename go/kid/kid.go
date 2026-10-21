@@ -188,21 +188,41 @@ func New(stack string, entities map[string]string) (Kid, error) {
 			encoded[entity] = value
 			continue
 		}
-		var out strings.Builder
-		for i := 0; i < len(value); i++ {
-			if strings.IndexByte(unencoded, value[i]) >= 0 {
-				out.WriteByte(value[i])
-			} else {
-				fmt.Fprintf(&out, "%%%02X", value[i])
-			}
-		}
-		encoded[entity] = out.String()
+		encoded[entity] = encode(value)
 	}
 	canonical := serialize(stack, encoded)
 	if len(canonical) > 2048 {
 		return Kid{}, invalid("too_long", "")
 	}
 	return Kid{canonical}, nil
+}
+
+// encode applies the SPEC §5 byte table to a raw value.
+func encode(raw string) string {
+	var out strings.Builder
+	for i := 0; i < len(raw); i++ {
+		if strings.IndexByte(unencoded, raw[i]) >= 0 {
+			out.WriteByte(raw[i])
+		} else {
+			fmt.Fprintf(&out, "%%%02X", raw[i])
+		}
+	}
+	return out.String()
+}
+
+// EncodeValue returns the SPEC §5 encoding of one raw value, with the value checks New applies
+// to an open entity. A whole "*" is a literal ("%2A"), never the wildcard. Errors carry no segment.
+func EncodeValue(raw string) (string, error) {
+	if raw == "" {
+		return "", invalid("bad_value", "")
+	}
+	if len(raw) > 255 {
+		return "", invalid("too_long", "")
+	}
+	if !utf8.ValidString(raw) {
+		return "", invalid("bad_utf8", "")
+	}
+	return encode(raw), nil
 }
 
 // Validate reports whether Parse would succeed.
@@ -234,8 +254,11 @@ func (k Kid) Stack() string {
 	return strings.SplitN(k.canonical, ":", 3)[1]
 }
 
-// encoded returns the canonical segments; an absent branch reads as DefaultBranch (SPEC §4.2).
-func (k Kid) encoded() map[string]string {
+// EncodedEntities returns the encoded values exactly as the canonical form carries them, so a
+// literal "%2A" stays distinct from the wildcard "*". It is lossless and has no default-branch
+// fallback: "branch" is present only when the canonical form carries it. Go maps are unordered;
+// String is the only ordered representation.
+func (k Kid) EncodedEntities() map[string]string {
 	entities := map[string]string{}
 	parts := strings.Split(k.canonical, ":")
 	if len(parts) < 2 {
@@ -244,6 +267,15 @@ func (k Kid) encoded() map[string]string {
 	for _, segment := range parts[2:] {
 		name, value, _ := strings.Cut(segment, "-")
 		entities[name] = value
+	}
+	return entities
+}
+
+// encoded returns the canonical segments; an absent branch reads as DefaultBranch (SPEC §4.2).
+func (k Kid) encoded() map[string]string {
+	entities := k.EncodedEntities()
+	if k.canonical == "" {
+		return entities
 	}
 	if _, ok := entities[EntityBranch]; !ok {
 		entities[EntityBranch] = DefaultBranch
