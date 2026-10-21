@@ -39,7 +39,7 @@ assert kid.parse("KID:s:project-1").to_dict() == {"stack": "s", "branch": "defau
 ## API
 
 - Module functions: `validate(text)`, `parse(text)`, `canonicalize(text)`,
-  `is_canonical(text)`. Predicates return booleans for string inputs.
+  `is_canonical(text)`, `encode_value(raw)`. Predicates return booleans for string inputs.
 - `Kid.parse(text)` and `Kid.create(stack, entities)` produce immutable
   identifiers; `Kid(text)` is the same as `Kid.parse(text)`. `parse()` is the only
   way from text to a `Kid`: it validates fully and returns the canonical identity.
@@ -47,7 +47,7 @@ assert kid.parse("KID:s:project-1").to_dict() == {"stack": "s", "branch": "defau
   Missing entities return `None`; numeric values remain strings. `branch` is never
   `None`: a KID without a branch is on the default branch and reports `"default"`.
 - Methods: `get(entity)`, `has(entity)`, `entities()` (a decoded copy in canonical
-  order), `to_dict()` (`stack` first, then `entities()`; the counterpart of SPEC
+  order), `encoded_entities()` (the encoded values of the canonical form, lossless), `to_dict()` (`stack` first, then `entities()`; the counterpart of SPEC
   `toArray()`), `is_wildcard(entity)`, `is_pattern()`.
 - `str(value)` returns the canonical KID; equality and hashing use that string.
   Foreign-type equality returns `NotImplemented`. KIDs can be dictionary keys.
@@ -83,9 +83,9 @@ The stack must be a string, without coercion. Lengths are UTF-8 bytes:
 their surrogate-pass byte length is checked first during creation. Bytes objects
 are not strings and produce `bad_value`. Text entry points require `str`.
 
-The shared UTF-8 surrogate fixture is loaded with `surrogatepass`. The one raw
-`0xFF` creation fixture cannot exist in a Python `str` and is explicitly skipped, as
-is any fixture marked `skip: ["python"]`; tests separately verify bytes rejection,
+The shared UTF-8 surrogate fixtures are loaded with `surrogatepass`. The raw `0xFF`
+creation and `encode_value()` fixtures cannot exist in a Python `str` and are
+explicitly skipped, as is any fixture marked `skip: ["python"]`; tests separately verify bytes rejection,
 lone surrogates, and length precedence. All encoded invalid-UTF-8 parsing vectors run
 unchanged.
 
@@ -97,6 +97,24 @@ sets `is_wildcard()`. `branch-dev` sets `is_pattern()` without being a wildcard.
 Use `Kid.parse(str(value))` for a lossless round trip: rebuilding from
 `entities()` or `to_dict()` turns a literal star into a wildcard. No Unicode
 normalization occurs.
+
+`encoded_entities()` is the lossless view: it returns the values exactly as the
+canonical form carries them, in canonical order, so a literal `%2A` and the wildcard
+`*` stay distinct. It has no default-branch fallback (`branch` is present only when the
+canonical form carries it), unlike `has("branch")` and `get("branch")`.
+
+`encode_value(raw)` encodes one raw value with the SPEC §5 table and the value checks
+`create()` applies to an open entity: it accepts `str` or `int`, rejects an empty value
+(`bad_value`), more than 255 bytes (`too_long`) and lone surrogates (`bad_utf8`), and
+its errors carry `segment=None`. A whole `*` becomes `%2A`, so it builds a literal star:
+
+```python
+kid.encode_value("*")                                # "%2A"
+Kid.parse("KID:s:config-" + kid.encode_value("*"))   # KID:s:config-%2A
+Kid.parse("KID:s:config-%2A").encoded_entities()     # {"config": "%2A"}
+```
+
+`parse()` still validates the assembled text, so `project-%2A` is `bad_value`.
 
 Producers omit the default branch rather than writing its numeric ID. The library
 validates syntax offline; it does not match patterns or check object existence.
