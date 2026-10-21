@@ -57,6 +57,20 @@ Examples: `kbc-eu-central-1`, `kbc-us-east-1`, `com-keboola-gcp-europe-west3`,
 The stack is a deployment identifier, not an API hostname. The library does not
 convert hostnames to stack identifiers.
 
+Producer rules:
+
+- Producers read the stack from the deployment's `KEBOOLA_STACK` value.
+- A producer **must** fail when the stack value is missing or empty and **must not**
+  substitute a default. The library rejects an empty stack (`bad_stack`), but a fallback
+  filled in before `create()` yields a valid KID for the wrong stack.
+- A non-production deployment (local, test) uses its own `KEBOOLA_STACK` value, the same
+  value in every producer of that deployment. No stack value is reserved for this; values
+  such as `localhost` or `connection` are syntactically valid stacks.
+
+Informative: a client outside the deployment can discover the stack from the `stack` field
+of Connection's `GET /v2/storage`. That this field equals `KEBOOLA_STACK` is a guarantee of
+Connection, not of this specification.
+
 ## 4. Entities
 
 - Entity regex: `^[a-z][a-z0-9]*$`. Lowercase, no hyphen, no underscore.
@@ -134,17 +148,29 @@ by producers. The alphabetical canonical order preserves them for the known enti
 
 Because `maintainer` and `org` are optional and parents are not enforced, one object can be written
 in several valid ways. The library validates all of them and canonicalizes each one
-individually; it cannot know which ancestors are "redundant". To make identities
-comparable across services, producers **should** write identities in the minimal form:
+individually; it cannot know which ancestors are "redundant". To make stored identities
+comparable across services, producers **should** store and log identities in the minimal form:
 
 - stack-level objects: `stack` + the object entity (`KID:s:org-42`, `KID:s:user-5`);
 - project-scoped objects: `project` + the object entity chain, **without** `maintainer` and `org`
   (`KID:s:bucket-in.c-main:project-9876:table-orders`);
 - `branch` only for non-default branches.
 
-`maintainer` and `org` on project-scoped KIDs are for patterns (grants) and for human context, not for
-stored identities. This also avoids stale ancestors when a project moves between
-organizations.
+`maintainer` and `org` on project-scoped KIDs are for patterns (grants), for identities a
+consumer builds for its own purpose and for human context, not for stored identities. This also
+avoids stale ancestors when a project moves between organizations.
+
+The minimal form applies to **stored and logged** identities only:
+
+- A KID that carries ancestors, such as `KID:s:org-5:project-123`, is a fully conforming identity.
+- A consumer may require ancestors on identities it builds for its own purpose, such as
+  authorization requests and patterns that pin an organization.
+- Consumers must not "normalize" such identities by dropping ancestors. A pattern that pins
+  `org-5` matches only requests that carry `org-5`; dropping it silently changes what the
+  pattern matches.
+- A request identity with ancestors and a stored minimal identity are different KIDs under
+  §6, and `equals()` is false for them. Relating them is consumer-side matching, which the
+  library does not provide (§11).
 
 ## 5. Values and encoding
 
