@@ -174,6 +174,46 @@ final class KidTest extends TestCase
         self::assertTrue($wildcard->isWildcard('config'));
     }
 
+    public function testEncodedEntitiesAndEncodeValueRoundTripLiteralStar(): void
+    {
+        $literal = Kid::parse('KID:s:config-%2A:project-1');
+        $wildcard = Kid::parse('KID:s:config-*:project-1');
+        self::assertSame(['config' => '%2A', 'project' => '1'], $literal->encodedEntities());
+        self::assertSame(['config' => '*', 'project' => '1'], $wildcard->encodedEntities());
+        self::assertSame($literal->entities(), $wildcard->entities());
+
+        $text = 'KID:s';
+        foreach ($literal->encodedEntities() as $entity => $value) {
+            $text .= ':' . $entity . '-' . $value;
+        }
+        self::assertTrue($literal->equals(Kid::parse($text)));
+        self::assertTrue($literal->equals(Kid::parse('KID:s:project-1:config-' . Kid::encodeValue('*'))));
+        // A constrained entity still rejects the encoded star when the text is parsed.
+        $this->assertInvalid(static fn() => Kid::parse('KID:s:project-' . Kid::encodeValue('*')), 'bad_value', 'project-%2A');
+    }
+
+    public function testEncodedEntitiesHasNoDefaultBranchFallback(): void
+    {
+        $kid = Kid::parse('KID:s:branch-default:project-1');
+        self::assertSame(['project' => '1'], $kid->encodedEntities());
+        self::assertTrue($kid->has('branch'));
+        self::assertSame(['branch' => '555', 'project' => '1'], Kid::parse('KID:s:project-1:branch-555')->encodedEntities());
+    }
+
+    public function testEncodeValueRejectsNonStringsWithoutCoercion(): void
+    {
+        // This file runs in coercive mode, so a string parameter would stringify these.
+        $stringable = new class {
+            public function __toString(): string
+            {
+                return 'x';
+            }
+        };
+        foreach ([1.5, true, null, ['x'], $stringable] as $raw) {
+            $this->assertInvalid(static fn() => Kid::encodeValue($raw), 'bad_value', null);
+        }
+    }
+
     public function testDifferentStacksAreNotEqual(): void
     {
         self::assertFalse(Kid::parse('KID:s')->equals(Kid::parse('KID:t')));

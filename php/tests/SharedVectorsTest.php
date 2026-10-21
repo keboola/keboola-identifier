@@ -28,6 +28,7 @@ final class SharedVectorsTest extends TestCase
         ksort($actual);
         ksort($expected);
         self::assertSame($expected, $actual, 'Decoded entities');
+        self::assertSame($case['encodedEntities'], $kid->encodedEntities(), 'Encoded entities, canonical order, no fallback');
         foreach (array_unique([...array_keys($case['array']), 'missing', 'constructor']) as $entity) {
             self::assertSame($case['entities'][$entity] ?? null, $kid->get($entity), 'get ' . $entity);
             self::assertSame(array_key_exists($entity, $case['entities']), $kid->has($entity), 'has ' . $entity);
@@ -94,6 +95,26 @@ final class SharedVectorsTest extends TestCase
         self::fail('Expected InvalidKidException from create');
     }
 
+    #[DataProvider('encodeValueCases')]
+    public function testEncodeValue(array $case): void
+    {
+        self::assertSame($case['encoded'], Kid::encodeValue($case['raw']));
+    }
+
+    #[DataProvider('invalidEncodeValueCases')]
+    public function testInvalidEncodeValue(array $case): void
+    {
+        try {
+            Kid::encodeValue($case['raw']);
+        } catch (InvalidKidException $error) {
+            self::assertSame($case['code'], $error->errorCode);
+            self::assertSame(0, $error->getCode());
+            self::assertSame($case['segment'], $error->segment);
+            return;
+        }
+        self::fail('Expected InvalidKidException from encodeValue');
+    }
+
     public static function validCases(): iterable
     {
         yield from self::vectors('valid');
@@ -131,6 +152,21 @@ final class SharedVectorsTest extends TestCase
         }
     }
 
+    public static function encodeValueCases(): iterable
+    {
+        yield from self::vectors('encodeValue');
+    }
+
+    public static function invalidEncodeValueCases(): iterable
+    {
+        foreach (self::vectors('encodeValueInvalid') as $label => [$case]) {
+            if (isset($case['rawHex'])) {
+                $case['raw'] = self::fixtureBytes($case['rawHex']);
+            }
+            yield $label => [$case];
+        }
+    }
+
     private static function fixtureBytes(string $hex): string
     {
         if (strlen($hex) % 2 !== 0 || preg_match('/\A[0-9a-fA-F]*\z/', $hex) !== 1) {
@@ -143,7 +179,7 @@ final class SharedVectorsTest extends TestCase
     {
         $vectors = json_decode(file_get_contents(__DIR__ . '/../../spec/test-vectors.json'), true, 512, JSON_THROW_ON_ERROR);
         foreach ($vectors[$group] as $index => $case) {
-            $description = $case['note'] ?? $case['code'] ?? $case['canonical'];
+            $description = $case['note'] ?? $case['code'] ?? $case['canonical'] ?? $case['encoded'];
             yield $group . ' #' . $index . ': ' . substr($description, 0, 100) => [$case];
         }
     }

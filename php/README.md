@@ -101,11 +101,33 @@ $dev->isPattern();             // true
 $dev->isWildcard('branch');     // false
 ```
 
-`create()` cannot represent a whole literal `*`; read `%2A` using `parse()`.
-A star within a longer raw string, such as `a*b`, is encoded normally.
-`entities()` is a decoded copy and therefore loses the whole-star distinction:
-recreating a literal-star identifier from that map turns it into a wildcard.
-Use `Kid::parse($kid->toString())` for a lossless round trip.
+`create()` cannot represent a whole literal `*`. A star within a longer raw string,
+such as `a*b`, is encoded normally. `entities()` is a decoded copy and therefore loses
+the whole-star distinction: recreating a literal-star identifier from that map turns it
+into a wildcard. Use `Kid::parse($kid->toString())` for a lossless round trip.
+
+## Lossless encoded view
+
+```php
+$literal = Kid::parse('KID:s:config-%2A:project-1');
+$literal->encodedEntities();   // ['config' => '%2A', 'project' => '1']
+Kid::parse('KID:s:config-*:project-1')->encodedEntities(); // ['config' => '*', 'project' => '1']
+Kid::encodeValue('*');         // '%2A', always a literal
+Kid::encodeValue('my config'); // 'my%20config'
+Kid::parse('KID:s:project-1:config-' . Kid::encodeValue('*'))->equals($literal); // true
+```
+
+`encodedEntities()` returns the values exactly as the canonical form carries them, in
+canonical order, so a literal `%2A` and the wildcard `*` stay distinct. It has no `stack`
+key and no default-branch fallback: `branch` is present only when the canonical form
+carries it, unlike `has('branch')` and `get('branch')`.
+
+`encodeValue()` encodes one raw value with the §5 table and the value checks `create()`
+applies to an open entity: it accepts a string or an integer, rejects an empty value
+(`bad_value`), more than 255 bytes (`too_long`) and invalid UTF-8 (`bad_utf8`), and its
+errors carry no segment. Unlike `create()`, a whole `*` becomes `%2A`. Validate text
+assembled from encoded values with `parse()`; a constrained entity such as `project-%2A`
+is still `bad_value`.
 
 Objects are final and readonly, with only the canonical string as instance state.
 `equals()` and PHP `==` compare canonical representations. There are no mutators.
@@ -115,10 +137,11 @@ Objects are final and readonly, with only the canonical string as instance state
 
 - Static methods on `Kid`: `validate(string): bool`, `parse(string): Kid`,
   `create(mixed, array): Kid` (stack must be a string),
+  `encodeValue(mixed): string` (a string or an integer),
   `canonicalize(string): string`, `isCanonical(string): bool`.
 - Accessors: `stack(): string`, `maintainer(): ?string`, `organization(): ?string`,
   `project(): ?string`, `branch(): string`, `get(string): ?string`,
-  `has(string): bool`, `entities(): array`, `toArray(): array`.
+  `has(string): bool`, `entities(): array`, `encodedEntities(): array`, `toArray(): array`.
 - Inspection: `isWildcard(string): bool`, `isPattern(): bool`, `equals(Kid): bool`.
 - Serialization: `toString(): string`, `__toString(): string`, `jsonSerialize(): string`
   (`json_encode($kid)` yields the canonical string), PHP `serialize()`/`unserialize()`
@@ -156,7 +179,8 @@ Codes, in text validation order: `bad_prefix`, `too_long` (whole input),
 `bad_value`, `non_canonical_encoding`, `bad_utf8`, `too_long` (decoded value).
 The first failure wins. `segment` is null for global errors and non-string values,
 `''` for an empty segment, otherwise the offending segment. Creation errors carry
-the raw value in the segment. Creation checks raw length before UTF-8 validity.
+the raw value in the segment; `encodeValue()` errors carry none. Creation and
+`encodeValue()` check raw length before UTF-8 validity.
 Exception messages are informational, not stable API.
 
 ## Development and distribution
@@ -176,9 +200,9 @@ composer archive --format=tar --dir=/path/to/output
 `#[DataProvider(...)]` methods provide named datasets:
 
 - `tests/SharedVectorsTest.php` reads `../spec/test-vectors.json` for valid,
-  invalid and creation cases. Every dataset is a separate PHPUnit test result;
-  failures identify the vector and, for errors, the public entry point.
-  Invalid UTF-8 creation cases use `entitiesHex` and `segmentHex` fixture fields;
+  invalid, creation and `encodeValue()` cases. Every dataset is a separate PHPUnit
+  test result; failures identify the vector and, for errors, the public entry point.
+  Invalid UTF-8 cases use `entitiesHex`, `rawHex` and `segmentHex` fixture fields;
   the provider decodes these to byte strings before calling the API (see SPEC §10).
 - `tests/KidTest.php` defines PHP-specific data providers and regression tests,
   including non-string inputs, invalid byte strings, all ASCII bytes and entity
