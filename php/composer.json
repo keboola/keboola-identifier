@@ -1,6 +1,6 @@
 {
     "name": "keboola/identifier",
-    "description": "Immutable offline Keboola Identifier (KID 1.0) parser, validator and builder",
+    "description": "Immutable offline Keboola Identifier (KID 1.0-draft) parser, validator and builder",
     "type": "library",
     "license": "proprietary",
     "require": {"php": "^8.3", "ext-pcre": "*"},
