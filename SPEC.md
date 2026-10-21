@@ -134,17 +134,29 @@ by producers. The alphabetical canonical order preserves them for the known enti
 
 Because `maintainer` and `org` are optional and parents are not enforced, one object can be written
 in several valid ways. The library validates all of them and canonicalizes each one
-individually; it cannot know which ancestors are "redundant". To make identities
-comparable across services, producers **should** write identities in the minimal form:
+individually; it cannot know which ancestors are "redundant". To make stored identities
+comparable across services, producers **should** store and log identities in the minimal form:
 
 - stack-level objects: `stack` + the object entity (`KID:s:org-42`, `KID:s:user-5`);
 - project-scoped objects: `project` + the object entity chain, **without** `maintainer` and `org`
   (`KID:s:bucket-in.c-main:project-9876:table-orders`);
 - `branch` only for non-default branches.
 
-`maintainer` and `org` on project-scoped KIDs are for patterns (grants) and for human context, not for
-stored identities. This also avoids stale ancestors when a project moves between
-organizations.
+`maintainer` and `org` on project-scoped KIDs are for patterns (grants), for identities a
+consumer builds for its own purpose and for human context, not for stored identities. This also
+avoids stale ancestors when a project moves between organizations.
+
+The minimal form applies to **stored and logged** identities only:
+
+- A KID that carries ancestors, such as `KID:s:org-5:project-123`, is a fully conforming identity.
+- A consumer may require ancestors on identities it builds for its own purpose, such as
+  authorization requests and patterns that pin an organization.
+- Consumers must not "normalize" such identities by dropping ancestors. A pattern that pins
+  `org-5` matches only requests that carry `org-5`; dropping it silently changes what the
+  pattern matches.
+- A request identity with ancestors and a stored minimal identity are different KIDs under
+  §6, and `equals()` is false for them. Relating them is consumer-side matching, which the
+  library does not provide (§11).
 
 ## 5. Values and encoding
 
