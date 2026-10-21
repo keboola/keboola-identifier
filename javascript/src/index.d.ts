@@ -18,6 +18,8 @@ export declare class Kid {
   private constructor();
   static parse(text: string): Kid;
   static create(stack: string, entities: EntityValues): Kid;
+  /** SPEC §5 encoding of one raw value; a whole '*' encodes as a literal '%2A'. */
+  static encodeValue(raw: string | number | bigint): string;
   static validate(text: string): boolean;
   static canonicalize(text: string): string;
   static isCanonical(text: string): boolean;
@@ -29,6 +31,8 @@ export declare class Kid {
   get(entity: string): string | undefined;
   has(entity: string): boolean;
   entities(): Record<string, string>;
+  /** Encoded values of the canonical form, without the default-branch fallback. */
+  encodedEntities(): Record<string, string>;
   toObject(): KidObject;
   isWildcard(entity: string): boolean;
   isPattern(): boolean;

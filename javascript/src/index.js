@@ -68,6 +68,28 @@ function decode(value, segment) {
   return raw;
 }
 
+/** The SPEC §5 byte table. */
+function encode(bytes) {
+  return Array.from(bytes, byte => {
+    const char = String.fromCharCode(byte);
+    return unencoded.includes(char) ? char : `%${byte.toString(16).toUpperCase().padStart(2, '0')}`;
+  }).join('');
+}
+
+/** Raw length before UTF-8 validity, as in create() (SPEC §8). */
+function rawBytes(value, segment) {
+  const bytes = encoder.encode(value);
+  if (bytes.length > 255) throw new InvalidKidError('too_long', segment);
+  // TextEncoder silently replaces lone surrogates; reject them explicitly.
+  if (!value.isWellFormed()) throw new InvalidKidError('bad_utf8', segment);
+  return bytes;
+}
+
+/** Integers (safe integers and bigints) become their decimal string form. */
+function decimal(value) {
+  return typeof value === 'bigint' || (typeof value === 'number' && Number.isSafeInteger(value)) ? String(value) : value;
+}
+
 function serialize(stack, entities) {
   return 'KID:' + stack + Object.keys(entities).sort()
     .filter(name => name !== 'branch' || entities[name] !== DEFAULT_BRANCH)
@@ -120,24 +142,28 @@ export class Kid {
     }
     const encoded = {};
     for (let [entity, value] of Object.entries(entities)) {
-      // Integers (safe integers and bigints) become their decimal string form; other non-strings are rejected.
-      if (typeof value === 'bigint' || (typeof value === 'number' && Number.isSafeInteger(value))) value = String(value);
+      // Other non-strings are rejected.
+      value = decimal(value);
       const segment = typeof value === 'string' ? `${entity}-${value}` : undefined;
       checkEntity(entity, segment);
       if (typeof value !== 'string') throw new InvalidKidError('bad_value');
       checkValue(entity, value, segment);
-      const bytes = encoder.encode(value);
-      if (bytes.length > 255) throw new InvalidKidError('too_long', segment);
-      // TextEncoder silently replaces lone surrogates; reject them explicitly.
-      if (!value.isWellFormed()) throw new InvalidKidError('bad_utf8', segment);
-      encoded[entity] = value === '*' ? '*' : Array.from(bytes, byte => {
-        const char = String.fromCharCode(byte);
-        return unencoded.includes(char) ? char : `%${byte.toString(16).toUpperCase().padStart(2, '0')}`;
-      }).join('');
+      const bytes = rawBytes(value, segment);
+      encoded[entity] = value === '*' ? '*' : encode(bytes);
     }
     const canonical = serialize(stack, encoded);
     if (canonical.length > 2048) throw new InvalidKidError('too_long');
     return new Kid(token, canonical);
+  }
+
+  /**
+   * The SPEC §5 encoding of one raw value, with the value checks create() applies to an open entity.
+   * A whole '*' is a literal (%2A), never the wildcard. Errors carry no segment.
+   */
+  static encodeValue(raw) {
+    const value = decimal(raw);
+    if (typeof value !== 'string' || value === '') throw new InvalidKidError('bad_value');
+    return encode(rawBytes(value, undefined));
   }
 
   static validate(text) {
@@ -151,12 +177,20 @@ export class Kid {
     catch (error) { if (error instanceof InvalidKidError) return false; throw error; }
   }
 
-  /** Canonical order; an absent branch reads as the default branch (SPEC §4.2). */
-  #encoded() {
-    const entities = Object.fromEntries(this.#canonical.split(':').slice(2).map(segment => {
+  /**
+   * Lossless: values exactly as in the canonical form (wildcard `*`, literal star `%2A`), in canonical
+   * order; `branch` only when the canonical form carries it.
+   */
+  encodedEntities() {
+    return Object.fromEntries(this.#canonical.split(':').slice(2).map(segment => {
       const index = segment.indexOf('-');
       return [segment.slice(0, index), segment.slice(index + 1)];
     }));
+  }
+
+  /** Canonical order; an absent branch reads as the default branch (SPEC §4.2). */
+  #encoded() {
+    const entities = this.encodedEntities();
     if (Object.hasOwn(entities, 'branch')) return entities;
     entities.branch = DEFAULT_BRANCH;
     return Object.fromEntries(Object.keys(entities).sort().map(name => [name, entities[name]]));
