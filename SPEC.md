@@ -116,6 +116,8 @@ and canonical serialization sorts every entity by its name using ASCII byte orde
   a canonical KID. Readers fall back to it: when a KID carries no `branch`, `branch()`,
   `get("branch")`, `entities()` and `toArray()` all report `default` and `has("branch")` is true.
   The canonical string is unaffected, so identity does not change.
+- `encodedEntities()` (§9) does not fall back: it lists `branch` only when the canonical form
+  carries it, so it can differ from `has("branch")` and `get("branch")`.
 - Producers must never write the default branch's numeric id (`branch-4321` where 4321 is the
   default branch). The library cannot recognize a numeric ID as the default branch,
   so it treats that KID as a different identity.
@@ -287,13 +289,15 @@ In text parsing, UTF-8 validity precedes the decoded-value length check as liste
 | `validate(text) -> bool` | true iff `parse` would succeed |
 | `parse(text) -> Kid` | runs the **full** check sequence 1–4g of §8 and throws on the first failure; returns the canonical identity. It is the only way from text to a `Kid` |
 | `create(stack, entities) -> Kid` | raw (decoded) string values, or integers converted to decimal strings; `*` means wildcard; throws |
+| `encodeValue(raw) -> text` | the §5 encoding of one raw value. Accepts the same types and applies the same value checks, in the same order, as `create()` for an open entity (non-empty `bad_value`, ≤ 255 bytes `too_long`, valid UTF-8 `bad_utf8`); the error carries no `segment`. A whole `*` is a **literal** and encodes as `%2A`; there is no wildcard here. Throws |
 | `canonicalize(text) -> text` | `parse(text).toString()`; throws the same error as `parse` |
 | `isCanonical(text) -> bool` | true iff the text is valid **and** equal to its canonical form; **false, never an error**, for invalid input |
 | `stack()` | stack |
 | `maintainer()`, `organization()`, `project()`, `branch()` | decoded value of `maintainer`, `org`, `project`, `branch`, or absent; `branch()` returns `default` for the default branch (§4.2) |
 | `get(entity)` | decoded value or absent; entity name as written (`get("project")`); `get("branch")` falls back to `default` |
 | `has(entity)` | presence; always true for `branch` |
-| `entities()` | map entity → decoded value in canonical order, wildcard as `*`, `branch` as `default` when absent from the canonical form. **Lossy**: a decoded literal `*` (`%2A`) and the wildcard are indistinguishable here, and `create(stack, kid.entities())` turns such a literal into a wildcard. The lossless round trip is `parse(kid.toString())`. |
+| `entities()` | map entity → decoded value in canonical order, wildcard as `*`, `branch` as `default` when absent from the canonical form. **Lossy**: a decoded literal `*` (`%2A`) and the wildcard are indistinguishable here, and `create(stack, kid.entities())` turns such a literal into a wildcard. The lossless views are `encodedEntities()` and `toString()`; the lossless round trip is `parse(kid.toString())`. |
+| `encodedEntities()` | map entity → encoded value exactly as in the canonical form, in canonical order: the wildcard as `*`, a literal star as `%2A`. **Lossless**. No `stack` key and no fallback: `branch` is present only when the canonical form carries it (§4.2) |
 | `toArray()` | `stack` first, then `entities()`; the whole identity as one flat map of decoded strings. `create(array.stack, array without stack)` rebuilds the same KID, with the same literal-`*` caveat as `entities()` |
 | `isWildcard(entity)` | value is the wildcard (distinguishes it from a decoded literal `*`) |
 | `isPattern()` | any wildcard or `branch-dev` |
@@ -309,8 +313,10 @@ Objects are immutable; there is no `with()`/`without()`.
 aliases or numeric conversions are performed. The name `stack` is reserved so an entity
 cannot overwrite it. The name `entities` remains an ordinary open entity name.
 
-A literal `*` cannot be produced through `create()` (its `*` always means wildcard); such
-a KID can be read via `parse()`.
+A literal `*` cannot be produced through `create()` (its `*` always means wildcard). Build
+such a KID from text with `encodeValue()`, which encodes every value literally:
+`parse("KID:s:config-" + encodeValue("*"))` is `KID:s:config-%2A`. `parse()` still validates
+the result, so a constrained entity (§4.1) rejects an encoded value such as `project-%2A`.
 
 ### 9.1 PHP API
 
@@ -336,6 +342,8 @@ installation and usage examples.
 |---|---|---|---|
 | `parse(text)` | `Parse(text) (Kid, error)` | `parse(text)`, `Kid.parse(text)`, `Kid(text)` | `Kid.parse(text)` |
 | `create(stack, entities)` | `New(stack, map[string]string)` | `Kid.create(stack, dict)` | `Kid.create(stack, object)` |
+| `encodeValue(raw)` | `EncodeValue(string) (string, error)` | `encode_value(raw)` | `Kid.encodeValue(raw)` |
+| `encodedEntities()` | `EncodedEntities() map[string]string` | `encoded_entities()` | `encodedEntities()` |
 | `toArray()` | `ToMap() map[string]string` | `to_dict()` | `toObject()` |
 | `branch()` | `Branch() string` | `branch` property | `branch()` |
 | `toString()` | `String()` | `str(kid)` | `toString()` |
@@ -355,7 +363,7 @@ installation and usage examples.
   number has no integer type, `1.0` and `1e2` are the integers `1` and `100` there
   while PHP and Python reject floats; Go's `map[string]string` has no integer values,
   so the caller converts with `strconv.Itoa`.
-- Go maps are unordered, so `Entities()` and `ToMap()` carry no order; `String()` is
+- Go maps are unordered, so `Entities()`, `EncodedEntities()` and `ToMap()` carry no order; `String()` is
   the only ordered representation. Parsing still validates segments left to right.
   Creation checks entities in ascending name order, so the reported error is
   deterministic but may differ from the insertion-ordered check in PHP and Python
@@ -381,7 +389,11 @@ installation and usage examples.
   bytes, a 255- vs 256-byte raw value, invalid UTF-8 (`%FF`), `+` and `~` handling, a
   multibyte UTF-8 value, `isCanonical` on invalid input (false);
 - `create()` cases: raw value → canonical, entities given in non-canonical order → canonical, `branch-default` dropped, integer values converted, other non-string input rejected, invalid UTF-8 rejected;
-- `entities()` on a `%2A` literal versus a `*` wildcard (both read back as `*`, `isWildcard` differs).
+- `entities()` on a `%2A` literal versus a `*` wildcard (both read back as `*`, `isWildcard` differs);
+- `encodedEntities()` on every valid case (`encodedEntities`), without the `branch` fallback;
+- `encodeValue()` cases (`encodeValue`: `raw` → `encoded`) and rejected inputs
+  (`encodeValueInvalid`: `raw` → `code`), including a literal `*`, integers, the 255- vs 256-byte
+  limit, invalid UTF-8 and non-string input.
 
 Every language's test suite loads this file directly. PHP-specific cases are documented in
 the [testing instructions](php/README.md#development-and-distribution).
@@ -395,15 +407,18 @@ even-length hexadecimal string describing the raw bytes passed to `create()`.
 bytes. Test loaders decode these fields before invoking the API and comparing the
 exception. They are fixture notation only, not an accepted API input format.
 
+`encodeValueInvalid` cases use `rawHex` instead of `raw` in the same way: an
+even-length hexadecimal string describing the raw bytes passed to `encodeValue()`.
+
 For example, `entitiesHex: {"config": "ff"}` means a raw one-byte string `0xFF`,
 not the two-character string `"ff"`; the expected code is `bad_utf8` and
 `segmentHex` is `"636f6e6669672dff"` (`config-` followed by `0xFF`).
 
-A creation fixture may carry `skip`, a list of language names whose API types cannot
+A creation or `encodeValue` fixture may carry `skip`, a list of language names whose API types cannot
 represent its input (`"go"` for null and boolean map values); those loaders skip it.
 Integer fixture values are loaded as integers where `create()` accepts them and as
 their decimal strings in Go. Python and JavaScript loaders additionally skip
-`entitiesHex` fixtures whose bytes are not valid Unicode text; Python can load
+`entitiesHex` and `rawHex` fixtures whose bytes are not valid Unicode text; Python can load
 encoded surrogates with `surrogatepass`. Unicode-string implementations test
 malformed native strings and byte-array rejection separately. All encoded
 text-parsing vectors apply to every language.

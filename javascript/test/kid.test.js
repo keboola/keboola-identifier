@@ -24,6 +24,8 @@ for (const [index, c] of vectors.valid.entries()) {
     assert.deepEqual(Object.keys(kid.toObject()), Object.keys(c.array), 'stack, then canonical order');
     assert.deepEqual(kid.entities(), c.entities);
     assert.deepEqual(Object.keys(kid.entities()), Object.keys(c.entities), 'canonical order');
+    assert.deepEqual(kid.encodedEntities(), c.encodedEntities);
+    assert.deepEqual(Object.keys(kid.encodedEntities()), Object.keys(c.encodedEntities), 'canonical order');
     for (const name of new Set([...Object.keys(c.array), 'missing', 'constructor'])) {
       assert.equal(kid.get(name), Object.hasOwn(c.entities, name) ? c.entities[name] : undefined);
       assert.equal(kid.has(name), Object.hasOwn(c.entities, name));
@@ -67,6 +69,36 @@ for (const [index, c] of vectors.createInvalid.entries()) {
     assert.throws(() => Kid.create(c.stack, c.entities), errorIs(c.code, c.segment));
   });
 }
+
+for (const [index, c] of vectors.encodeValue.entries()) {
+  test(`encodeValue #${index}`, () => {
+    assert.equal(Kid.encodeValue(c.raw), c.encoded);
+  });
+}
+for (const [index, c] of vectors.encodeValueInvalid.entries()) {
+  const skip = c.skip?.includes('javascript') ? 'Fixture marked as unrepresentable in JavaScript'
+    : c.rawHex ? 'Byte-string fixture; covered by the lone-surrogate encodeValue test' : false;
+  test(`encodeValueInvalid #${index}`, { skip }, () => {
+    assert.throws(() => Kid.encodeValue(c.raw), errorIs(c.code, c.segment));
+  });
+}
+
+test('encodedEntities() and encodeValue() keep a literal star', () => {
+  const literal = Kid.parse('KID:s:config-%2A:project-1');
+  const wildcard = Kid.parse('KID:s:config-*:project-1');
+  assert.deepEqual(literal.encodedEntities(), { config: '%2A', project: '1' });
+  assert.deepEqual(wildcard.encodedEntities(), { config: '*', project: '1' });
+  assert.deepEqual(literal.entities(), wildcard.entities());
+  assert.equal(literal.equals(Kid.parse(`KID:s:project-1:config-${Kid.encodeValue('*')}`)), true);
+  assert.throws(() => Kid.parse(`KID:s:project-${Kid.encodeValue('*')}`), errorIs('bad_value', 'project-%2A'));
+  // No default-branch fallback, unlike has() and get().
+  assert.deepEqual(Kid.parse('KID:s:branch-default:project-1').encodedEntities(), { project: '1' });
+  assert.deepEqual(Kid.parse('KID:s:project-1:branch-555').encodedEntities(), { branch: '555', project: '1' });
+  assert.throws(() => Kid.encodeValue('\uD800'), errorIs('bad_utf8'));
+  assert.throws(() => Kid.encodeValue('x'.repeat(253) + '\uD800'), errorIs('too_long'));
+  assert.throws(() => Kid.encodeValue(new Uint8Array([120])), errorIs('bad_value'));
+  assert.equal(Kid.encodeValue(10n), '10');
+});
 
 test('Unicode validity and length precedence', () => {
   for (const value of ['\uD800', '\uDFFF', 'a\uD800b']) {

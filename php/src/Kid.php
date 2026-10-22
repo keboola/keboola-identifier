@@ -90,6 +90,23 @@ final readonly class Kid implements \Stringable, \JsonSerializable
         return new self($canonical);
     }
 
+    /**
+     * The §5 encoding of one raw value, with the value checks create() applies to an open entity.
+     * A whole '*' is a literal (%2A), never the wildcard. Errors carry no segment.
+     */
+    public static function encodeValue(mixed $raw): string
+    {
+        if (is_int($raw)) {
+            $raw = (string) $raw;
+        }
+        if (!is_string($raw) || $raw === '') {
+            throw new InvalidKidException('bad_value');
+        }
+        self::checkValueLength($raw, null);
+        self::checkUtf8($raw, null);
+        return self::encode($raw);
+    }
+
     public static function canonicalize(string $text): string
     {
         return self::parse($text)->toString();
@@ -132,19 +149,33 @@ final readonly class Kid implements \Stringable, \JsonSerializable
 
     public function get(string $entity): ?string
     {
-        $value = $this->encodedEntities()[$entity] ?? null;
+        $value = $this->readEntities()[$entity] ?? null;
         return $value === null ? null : self::decode($value, null);
     }
 
     public function has(string $entity): bool
     {
-        return array_key_exists($entity, $this->encodedEntities());
+        return array_key_exists($entity, $this->readEntities());
     }
 
     /** @return array<string, string> Decoded copy; literal and wildcard stars are indistinguishable. */
     public function entities(): array
     {
-        return array_map(static fn(string $value): string => self::decode($value, null), $this->encodedEntities());
+        return array_map(static fn(string $value): string => self::decode($value, null), $this->readEntities());
+    }
+
+    /**
+     * @return array<string, string> Lossless: values exactly as in the canonical form (wildcard `*`,
+     *     literal star `%2A`), in canonical order; `branch` only when the canonical form carries it.
+     */
+    public function encodedEntities(): array
+    {
+        $entities = [];
+        foreach (array_slice(explode(':', $this->canonical), 2) as $segment) {
+            [$entity, $value] = explode('-', $segment, 2);
+            $entities[$entity] = $value;
+        }
+        return $entities;
     }
 
     /** @return array<string, string> Stack first, then decoded entities in canonical order. */
@@ -155,12 +186,12 @@ final readonly class Kid implements \Stringable, \JsonSerializable
 
     public function isWildcard(string $entity): bool
     {
-        return ($this->encodedEntities()[$entity] ?? null) === '*';
+        return ($this->readEntities()[$entity] ?? null) === '*';
     }
 
     public function isPattern(): bool
     {
-        $entities = $this->encodedEntities();
+        $entities = $this->readEntities();
         return ($entities['branch'] ?? null) === 'dev' || in_array('*', $entities, true);
     }
 
@@ -201,14 +232,10 @@ final readonly class Kid implements \Stringable, \JsonSerializable
         $this->canonical = self::parse($text)->canonical;
     }
 
-    /** @return array<string, string> Canonical order; an absent branch reads as `default` (§4.2). */
-    private function encodedEntities(): array
+    /** @return array<string, string> Encoded, canonical order; an absent branch reads as `default` (§4.2). */
+    private function readEntities(): array
     {
-        $entities = [];
-        foreach (array_slice(explode(':', $this->canonical), 2) as $segment) {
-            [$entity, $value] = explode('-', $segment, 2);
-            $entities[$entity] = $value;
-        }
+        $entities = $this->encodedEntities();
         if (!array_key_exists('branch', $entities)) {
             $entities['branch'] = 'default';
             ksort($entities, SORT_STRING);
@@ -264,14 +291,14 @@ final readonly class Kid implements \Stringable, \JsonSerializable
         }
     }
 
-    private static function checkValueLength(string $raw, string $segment): void
+    private static function checkValueLength(string $raw, ?string $segment): void
     {
         if (strlen($raw) > 255) {
             throw new InvalidKidException('too_long', $segment);
         }
     }
 
-    private static function checkUtf8(string $raw, string $segment): void
+    private static function checkUtf8(string $raw, ?string $segment): void
     {
         // Validate bytes without normalization or stripping a leading BOM.
         if (preg_match('//u', $raw) !== 1) {

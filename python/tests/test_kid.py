@@ -36,6 +36,7 @@ class SharedVectorsTest(ErrorAssertions):
                 self.assertEqual(case["array"]["stack"], value.stack)
                 self.assertEqual(list(case["array"].items()), list(value.to_dict().items()), "stack, then canonical order")
                 self.assertEqual(list(case["entities"].items()), list(value.entities().items()))
+                self.assertEqual(list(case["encodedEntities"].items()), list(value.encoded_entities().items()))
                 for name in set(case["array"]) | {"missing", "constructor"}:
                     self.assertEqual(case["entities"].get(name), value.get(name))
                     self.assertEqual(name in case["entities"], value.has(name))
@@ -86,6 +87,26 @@ class SharedVectorsTest(ErrorAssertions):
                 else:
                     entities, segment = case["entities"], case["segment"]
                 self.assert_error(lambda: Kid.create(case["stack"], entities), case["code"], segment)
+
+
+    def test_encode_value(self):
+        for case in VECTORS["encodeValue"]:
+            with self.subTest(raw=case["raw"]):
+                self.assertEqual(case["encoded"], kid.encode_value(case["raw"]))
+
+    def test_encode_value_invalid(self):
+        for index, case in enumerate(VECTORS["encodeValueInvalid"]):
+            with self.subTest(index=index, note=case.get("note")):
+                if "python" in case.get("skip", []):
+                    self.skipTest("Fixture marked as unrepresentable in Python")
+                if "rawHex" in case:
+                    try:
+                        raw = bytes.fromhex(case["rawHex"]).decode("utf-8", "surrogatepass")
+                    except UnicodeDecodeError:
+                        self.skipTest("Raw 0xFF is not representable in Python str")
+                else:
+                    raw = case["raw"]
+                self.assert_error(lambda: kid.encode_value(raw), case["code"], case["segment"])
 
 
 class PythonTest(ErrorAssertions):
@@ -183,6 +204,20 @@ class PythonTest(ErrorAssertions):
         self.assertNotEqual(literal, wildcard)
         self.assertFalse(literal.is_pattern())
         self.assertTrue(wildcard.is_pattern())
+
+    def test_encoded_entities_and_encode_value_keep_literal_star(self):
+        literal = Kid.parse("KID:s:config-%2A:project-1")
+        wildcard = Kid.parse("KID:s:config-*:project-1")
+        self.assertEqual({"config": "%2A", "project": "1"}, literal.encoded_entities())
+        self.assertEqual({"config": "*", "project": "1"}, wildcard.encoded_entities())
+        self.assertEqual(literal.entities(), wildcard.entities())
+        self.assertEqual(literal, Kid.parse("KID:s:project-1:config-" + kid.encode_value("*")))
+        self.assert_error(lambda: Kid.parse("KID:s:project-" + kid.encode_value("*")), "bad_value", "project-%2A")
+        # No default-branch fallback, unlike has() and get().
+        self.assertEqual({"project": "1"}, Kid.parse("KID:s:branch-default:project-1").encoded_entities())
+        self.assertEqual({"branch": "555", "project": "1"}, Kid.parse("KID:s:project-1:branch-555").encoded_entities())
+        self.assert_error(lambda: kid.encode_value("\ud800"), "bad_utf8", None)
+        self.assert_error(lambda: kid.encode_value(b"x"), "bad_value", None)
 
     def test_permutations(self):
         fields = [("project", "1"), ("org", "2"), ("branch", "default"), ("maintainer", "3"), ("constructor", "x"), ("bucket", "in.c-main")]

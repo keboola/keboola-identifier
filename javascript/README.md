@@ -34,10 +34,11 @@ console.log(Kid.parse('KID:s:project-1').toObject()); // { stack: 's', branch: '
 ## API
 
 - Static: `Kid.validate(text)`, `Kid.parse(text)`, `Kid.create(stack, entities)`,
-  `Kid.canonicalize(text)`, `Kid.isCanonical(text)`. `parse()` is the only way from
+  `Kid.canonicalize(text)`, `Kid.isCanonical(text)`, `Kid.encodeValue(raw)`. `parse()` is the only way from
   text to a `Kid`: it validates fully and returns the canonical identity.
 - Accessors: `stack()`, `maintainer()`, `organization()`, `project()`, `branch()`,
   `get(entity)`, `has(entity)`, `entities()` (a decoded copy in canonical order),
+  `encodedEntities()` (the encoded values of the canonical form, lossless),
   `toObject()` (`stack` first, then `entities()`; the counterpart of SPEC `toArray()`).
   Absent values are `undefined`; IDs remain strings. `branch()` is never `undefined`:
   a KID without a branch is on the default branch and reports `'default'`.
@@ -80,9 +81,9 @@ UTF-16 code units. Lone surrogates are rejected as `bad_utf8` rather than silent
 replaced. During creation, length is checked first using `TextEncoder` byte length
 (three bytes per unpaired surrogate), then Unicode validity. BOMs are preserved.
 
-The two shared byte-string creation fixtures are skipped: raw `0xFF` has no JS
-string form, and the encoded surrogate is exercised by the lone-surrogate test
-instead. Any fixture marked `skip: ["javascript"]` is skipped as well.
+The shared byte-string creation and `encodeValue()` fixtures are skipped: raw `0xFF`
+has no JS string form, and the encoded surrogate is exercised by the lone-surrogate
+tests instead. Any fixture marked `skip: ["javascript"]` is skipped as well.
 Separate tests verify lone-surrogate rejection, length precedence, surrogate pairs,
 integer conversion and rejection of byte arrays. Every encoded invalid-UTF-8 parsing
 vector runs unchanged.
@@ -95,6 +96,25 @@ distinguishes them. `branch-dev` is a pattern, not a wildcard. `entities()` and
 `toObject()` are therefore lossy when fed back into `create()`; use
 `Kid.parse(kid.toString())` for lossless round trips. Unicode normalization is never
 performed.
+
+`encodedEntities()` is the lossless view: it returns the values exactly as the
+canonical form carries them, in canonical order, so a literal `%2A` and the wildcard
+`*` stay distinct. It has no default-branch fallback (`branch` is present only when the
+canonical form carries it), unlike `has('branch')` and `get('branch')`.
+
+`Kid.encodeValue(raw)` encodes one raw value with the SPEC §5 table and the value
+checks `create()` applies to an open entity: it accepts a string or an integer,
+rejects an empty value (`bad_value`), more than 255 bytes (`too_long`) and lone
+surrogates (`bad_utf8`), and its errors carry no `segment`. A whole `*` becomes `%2A`,
+so it builds a literal star:
+
+```js
+Kid.encodeValue('*');                                // '%2A'
+Kid.parse(`KID:s:config-${Kid.encodeValue('*')}`);  // KID:s:config-%2A
+Kid.parse('KID:s:config-%2A').encodedEntities();     // { config: '%2A' }
+```
+
+`parse()` still validates the assembled text, so `project-%2A` is `bad_value`.
 
 Producers omit default branches rather than writing their numeric IDs. Pattern
 matching and object existence checks are outside this library's scope.

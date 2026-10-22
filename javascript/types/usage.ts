@@ -11,10 +11,14 @@ const equal: boolean = kid.equals(Kid.parse(kid.toString()));
 const error = new InvalidKidError('bad_value', 'config-');
 const code: ErrorCode = error.code;
 const json: string = kid.toJSON();
-void [stack, branch, project, entities, equal, code, json];
+const encoded: Record<string, string> = kid.encodedEntities();
+const star: string = Kid.encodeValue('*') + Kid.encodeValue(1) + Kid.encodeValue(2n);
+void [stack, branch, project, entities, equal, code, json, encoded, star];
 
 // @ts-expect-error Factories require string or integer values.
 Kid.create('s', { project: true });
+// @ts-expect-error encodeValue requires a string or integer value.
+Kid.encodeValue(true);
 // @ts-expect-error Factories require a string stack.
 Kid.create(1, {});
 // @ts-expect-error Constructor is private.

@@ -114,6 +114,23 @@ def _decode(value: str, segment: str | None = None) -> str:
     return decoded
 
 
+def _encode(raw: bytes) -> str:
+    """The SPEC §5 byte table."""
+    return "".join(chr(byte) if byte in _UNENCODED else f"%{byte:02X}" for byte in raw)
+
+
+def _raw_bytes(value: str, segment: str | None) -> bytes:
+    """Raw length before UTF-8 validity, as in create() (SPEC §8)."""
+    raw = _bytes(value)
+    if len(raw) > 255:
+        raise InvalidKidError("too_long", segment)
+    try:
+        raw.decode("utf-8")
+    except UnicodeDecodeError:
+        raise InvalidKidError("bad_utf8", segment) from None
+    return raw
+
+
 def _serialize(stack: str, entities: dict[str, str]) -> str:
     return "KID:" + stack + "".join(
         f":{name}-{entities[name]}" for name in sorted(entities)
@@ -163,6 +180,18 @@ def canonicalize(text: str) -> str:
     return str(Kid(text))
 
 
+def encode_value(raw: str | int) -> str:
+    """The SPEC §5 encoding of one raw value, with the value checks create() applies to an open entity.
+
+    A whole ``*`` is a literal (``%2A``), never the wildcard. Errors carry no segment.
+    """
+    if isinstance(raw, int) and not isinstance(raw, bool):
+        raw = _decimal(int(raw))
+    if not isinstance(raw, str) or not raw:
+        raise InvalidKidError("bad_value")
+    return _encode(_raw_bytes(raw, None))
+
+
 def is_canonical(text: str) -> bool:
     try:
         return canonicalize(text) == text
@@ -195,16 +224,8 @@ class Kid:
             if not isinstance(value, str):
                 raise InvalidKidError("bad_value")
             _value(entity, value, segment)
-            raw = _bytes(value)
-            if len(raw) > 255:
-                raise InvalidKidError("too_long", segment)
-            try:
-                raw.decode("utf-8")
-            except UnicodeDecodeError:
-                raise InvalidKidError("bad_utf8", segment) from None
-            encoded[entity] = "*" if value == "*" else "".join(
-                chr(byte) if byte in _UNENCODED else f"%{byte:02X}" for byte in raw
-            )
+            raw = _raw_bytes(value, segment)
+            encoded[entity] = "*" if value == "*" else _encode(raw)
         return cls(_serialize(stack, encoded))
 
     @property
@@ -228,9 +249,14 @@ class Kid:
         """Never None: a KID without a branch is on the default branch (SPEC §4.2)."""
         return _decode(self._encoded()["branch"])
 
+    def encoded_entities(self) -> dict[str, str]:
+        """Lossless: values exactly as in the canonical form (wildcard ``*``, literal star ``%2A``),
+        in canonical order; ``branch`` only when the canonical form carries it."""
+        return dict(segment.split("-", 1) for segment in self._canonical.split(":")[2:])
+
     def _encoded(self) -> dict[str, str]:
         """Canonical order; an absent branch reads as the default branch (SPEC §4.2)."""
-        entities = dict(segment.split("-", 1) for segment in self._canonical.split(":")[2:])
+        entities = self.encoded_entities()
         if "branch" not in entities:
             entities["branch"] = DEFAULT_BRANCH
             entities = dict(sorted(entities.items()))

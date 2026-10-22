@@ -18,6 +18,9 @@
         "branch": "default",
         "entities": "y"
       },
+      "encodedEntities": {
+        "entities": "y"
+      },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
@@ -34,6 +37,7 @@
       "entities": {
         "branch": "default"
       },
+      "encodedEntities": {},
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
@@ -52,6 +56,9 @@
         "branch": "default",
         "maintainer": "123"
       },
+      "encodedEntities": {
+        "maintainer": "123"
+      },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
@@ -67,6 +74,9 @@
       },
       "entities": {
         "branch": "default",
+        "org": "42"
+      },
+      "encodedEntities": {
         "org": "42"
       },
       "wildcards": [],
@@ -90,6 +100,11 @@
         "org": "42",
         "project": "9876"
       },
+      "encodedEntities": {
+        "maintainer": "123",
+        "org": "42",
+        "project": "9876"
+      },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
@@ -104,6 +119,10 @@
         "project": "9876"
       },
       "entities": {
+        "branch": "555",
+        "project": "9876"
+      },
+      "encodedEntities": {
         "branch": "555",
         "project": "9876"
       },
@@ -128,6 +147,11 @@
         "project": "9876",
         "table": "orders"
       },
+      "encodedEntities": {
+        "bucket": "in.c-main",
+        "project": "9876",
+        "table": "orders"
+      },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": false,
@@ -145,6 +169,12 @@
         "table": "orders"
       },
       "entities": {
+        "branch": "555",
+        "bucket": "in.c-main",
+        "project": "9876",
+        "table": "orders"
+      },
+      "encodedEntities": {
         "branch": "555",
         "bucket": "in.c-main",
         "project": "9876",
@@ -173,6 +203,12 @@
         "project": "9876",
         "row": "7"
       },
+      "encodedEntities": {
+        "component": "keboola.ex-db-snowflake",
+        "config": "1234",
+        "project": "9876",
+        "row": "7"
+      },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": false,
@@ -194,6 +230,11 @@
         "config": "my config",
         "project": "9876"
       },
+      "encodedEntities": {
+        "component": "keboola.ex-db-snowflake",
+        "config": "my%20config",
+        "project": "9876"
+      },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": false,
@@ -212,6 +253,9 @@
         "branch": "default",
         "user": "555"
       },
+      "encodedEntities": {
+        "user": "555"
+      },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
@@ -228,6 +272,10 @@
       },
       "entities": {
         "branch": "default",
+        "project": "9876",
+        "workspace": "8812"
+      },
+      "encodedEntities": {
         "project": "9876",
         "workspace": "8812"
       },
@@ -250,6 +298,10 @@
         "dashboard": "abc-42",
         "project": "9876"
       },
+      "encodedEntities": {
+        "dashboard": "abc-42",
+        "project": "9876"
+      },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": false,
@@ -266,6 +318,9 @@
       },
       "entities": {
         "branch": "default",
+        "project": "1"
+      },
+      "encodedEntities": {
         "project": "1"
       },
       "wildcards": [],
@@ -285,6 +340,9 @@
         "branch": "default",
         "project": "1"
       },
+      "encodedEntities": {
+        "project": "1"
+      },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
@@ -301,6 +359,7 @@
       "entities": {
         "branch": "default"
       },
+      "encodedEntities": {},
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
@@ -319,6 +378,11 @@
       },
       "entities": {
         "branch": "default",
+        "bucket": "*",
+        "org": "42",
+        "project": "*"
+      },
+      "encodedEntities": {
         "bucket": "*",
         "org": "42",
         "project": "*"
@@ -347,6 +411,12 @@
         "config": "*",
         "project": "9876"
       },
+      "encodedEntities": {
+        "branch": "dev",
+        "component": "keboola.wr-db",
+        "config": "*",
+        "project": "9876"
+      },
       "wildcards": [
         "config"
       ],
@@ -365,6 +435,11 @@
         "project": "9876"
       },
       "entities": {
+        "branch": "*",
+        "bucket": "in.c-main",
+        "project": "9876"
+      },
+      "encodedEntities": {
         "branch": "*",
         "bucket": "in.c-main",
         "project": "9876"
@@ -388,6 +463,9 @@
         "branch": "default",
         "project": "*"
       },
+      "encodedEntities": {
+        "project": "*"
+      },
       "wildcards": [
         "project"
       ],
@@ -406,6 +484,12 @@
         "project": "*"
       },
       "entities": {
+        "branch": "*",
+        "maintainer": "*",
+        "org": "*",
+        "project": "*"
+      },
+      "encodedEntities": {
         "branch": "*",
         "maintainer": "*",
         "org": "*",
@@ -437,6 +521,11 @@
         "config": "*",
         "project": "9876"
       },
+      "encodedEntities": {
+        "component": "x",
+        "config": "%2A",
+        "project": "9876"
+      },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": false,
@@ -457,6 +546,10 @@
         "config": "a*b",
         "project": "9876"
       },
+      "encodedEntities": {
+        "config": "a%2Ab",
+        "project": "9876"
+      },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": false,
@@ -474,6 +567,10 @@
       "entities": {
         "branch": "default",
         "config": "řeší",
+        "project": "9876"
+      },
+      "encodedEntities": {
+        "config": "%C5%99e%C5%A1%C3%AD",
         "project": "9876"
       },
       "wildcards": [],
@@ -496,6 +593,10 @@
         "config": "a~b+c!d(e)f'g/h:i%j",
         "project": "9876"
       },
+      "encodedEntities": {
+        "config": "a%7Eb%2Bc%21d%28e%29f%27g%2Fh%3Ai%25j",
+        "project": "9876"
+      },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": false,
@@ -513,6 +614,10 @@
       },
       "entities": {
         "branch": "default",
+        "config": "A-Za_z0.9",
+        "project": "9876"
+      },
+      "encodedEntities": {
         "config": "A-Za_z0.9",
         "project": "9876"
       },
@@ -536,6 +641,10 @@
         "config": "😀",
         "project": "9876"
       },
+      "encodedEntities": {
+        "config": "%F0%9F%98%80",
+        "project": "9876"
+      },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": false,
@@ -554,6 +663,10 @@
       "entities": {
         "branch": "default",
         "config": "́",
+        "project": "9876"
+      },
+      "encodedEntities": {
+        "config": "%CC%81",
         "project": "9876"
       },
       "wildcards": [],
@@ -576,6 +689,10 @@
         "bucket": "in.c-main",
         "project": "9876"
       },
+      "encodedEntities": {
+        "bucket": "in.c-main",
+        "project": "9876"
+      },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": false,
@@ -592,6 +709,7 @@
       "entities": {
         "branch": "default"
       },
+      "encodedEntities": {},
       "wildcards": [],
       "isPattern": false,
       "isCanonical": false,
@@ -610,6 +728,12 @@
       },
       "entities": {
         "branch": "default",
+        "bucket": "in.c-main",
+        "org": "42",
+        "project": "9876",
+        "table": "orders"
+      },
+      "encodedEntities": {
         "bucket": "in.c-main",
         "org": "42",
         "project": "9876",
@@ -637,6 +761,11 @@
         "maintainer": "5",
         "zeta": "1"
       },
+      "encodedEntities": {
+        "alpha": "2",
+        "maintainer": "5",
+        "zeta": "1"
+      },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": false,
@@ -658,6 +787,11 @@
         "ab": "z",
         "branch": "default"
       },
+      "encodedEntities": {
+        "a": "y",
+        "a1": "x",
+        "ab": "z"
+      },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": false,
@@ -675,6 +809,12 @@
         "project": "9876"
       },
       "entities": {
+        "branch": "555",
+        "maintainer": "1",
+        "org": "42",
+        "project": "9876"
+      },
+      "encodedEntities": {
         "branch": "555",
         "maintainer": "1",
         "org": "42",
@@ -702,6 +842,12 @@
         "branch": "*",
         "project": "9876"
       },
+      "encodedEntities": {
+        "a": "1",
+        "b2": "x",
+        "branch": "*",
+        "project": "9876"
+      },
       "wildcards": [
         "branch"
       ],
@@ -724,6 +870,10 @@
         "config": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         "project": "9876"
       },
+      "encodedEntities": {
+        "config": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "project": "9876"
+      },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": false,
@@ -742,6 +892,10 @@
       "entities": {
         "branch": "default",
         "config": "€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€",
+        "project": "9876"
+      },
+      "encodedEntities": {
+        "config": "%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC%E2%82%AC",
         "project": "9876"
       },
       "wildcards": [],
@@ -776,6 +930,16 @@
         "h": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         "z": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
       },
+      "encodedEntities": {
+        "a": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "c": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "d": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "e": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "f": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "g": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "h": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "z": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
@@ -793,6 +957,9 @@
       "entities": {
         "branch": "default",
         "config": "﻿x"
+      },
+      "encodedEntities": {
+        "config": "%EF%BB%BFx"
       },
       "wildcards": [],
       "isPattern": false,
@@ -812,6 +979,9 @@
         "branch": "default",
         "config": "﻿"
       },
+      "encodedEntities": {
+        "config": "%EF%BB%BF"
+      },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
@@ -829,6 +999,9 @@
       "entities": {
         "branch": "default",
         "config": "\u0000"
+      },
+      "encodedEntities": {
+        "config": "%00"
       },
       "wildcards": [],
       "isPattern": false,
@@ -848,6 +1021,9 @@
         "branch": "default",
         "config": "\r\n"
       },
+      "encodedEntities": {
+        "config": "%0D%0A"
+      },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
@@ -865,6 +1041,9 @@
       "entities": {
         "branch": "default",
         "config": "é"
+      },
+      "encodedEntities": {
+        "config": "%C3%A9"
       },
       "wildcards": [],
       "isPattern": false,
@@ -884,6 +1063,9 @@
         "branch": "default",
         "config": "é"
       },
+      "encodedEntities": {
+        "config": "e%CC%81"
+      },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
@@ -902,6 +1084,9 @@
         "branch": "default",
         "config": "�"
       },
+      "encodedEntities": {
+        "config": "%EF%BF%BD"
+      },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
@@ -918,6 +1103,9 @@
       },
       "entities": {
         "branch": "default",
+        "constructor": "x"
+      },
+      "encodedEntities": {
         "constructor": "x"
       },
       "wildcards": [],
@@ -946,6 +1134,14 @@
         "project": "3",
         "zeta": "9"
       },
+      "encodedEntities": {
+        "alpha": "x",
+        "branch": "555",
+        "maintainer": "1",
+        "org": "2",
+        "project": "3",
+        "zeta": "9"
+      },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": false,
@@ -962,6 +1158,9 @@
       },
       "entities": {
         "branch": "default",
+        "maintainer": "0"
+      },
+      "encodedEntities": {
         "maintainer": "0"
       },
       "wildcards": [],
@@ -982,6 +1181,9 @@
         "branch": "default",
         "maintainer": "999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
       },
+      "encodedEntities": {
+        "maintainer": "999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
+      },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
@@ -998,6 +1200,9 @@
       },
       "entities": {
         "branch": "default",
+        "maintainer": "*"
+      },
+      "encodedEntities": {
         "maintainer": "*"
       },
       "wildcards": [
@@ -1020,6 +1225,9 @@
         "branch": "default",
         "org": "0"
       },
+      "encodedEntities": {
+        "org": "0"
+      },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
@@ -1038,6 +1246,9 @@
         "branch": "default",
         "org": "999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
       },
+      "encodedEntities": {
+        "org": "999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
+      },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
@@ -1054,6 +1265,9 @@
       },
       "entities": {
         "branch": "default",
+        "org": "*"
+      },
+      "encodedEntities": {
         "org": "*"
       },
       "wildcards": [
@@ -1076,6 +1290,9 @@
         "branch": "default",
         "project": "0"
       },
+      "encodedEntities": {
+        "project": "0"
+      },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
@@ -1092,6 +1309,9 @@
       },
       "entities": {
         "branch": "default",
+        "project": "999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
+      },
+      "encodedEntities": {
         "project": "999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
       },
       "wildcards": [],
@@ -1112,6 +1332,9 @@
         "branch": "default",
         "project": "*"
       },
+      "encodedEntities": {
+        "project": "*"
+      },
       "wildcards": [
         "project"
       ],
@@ -1130,6 +1353,9 @@
       "entities": {
         "branch": "0"
       },
+      "encodedEntities": {
+        "branch": "0"
+      },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": true,
@@ -1144,6 +1370,9 @@
         "branch": "999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
       },
       "entities": {
+        "branch": "999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
+      },
+      "encodedEntities": {
         "branch": "999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
       },
       "wildcards": [],
@@ -1162,6 +1391,9 @@
       "entities": {
         "branch": "*"
       },
+      "encodedEntities": {
+        "branch": "*"
+      },
       "wildcards": [
         "branch"
       ],
@@ -1178,6 +1410,9 @@
         "branch": "dev"
       },
       "entities": {
+        "branch": "dev"
+      },
+      "encodedEntities": {
         "branch": "dev"
       },
       "wildcards": [],
@@ -1218,6 +1453,20 @@
         "project": "3",
         "tail": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
       },
+      "encodedEntities": {
+        "branch": "4",
+        "extra0": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "extra1": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "extra2": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "extra3": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "extra4": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "extra5": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "extra6": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "maintainer": "1",
+        "org": "2",
+        "project": "3",
+        "tail": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      },
       "wildcards": [],
       "isPattern": false,
       "isCanonical": false,
@@ -1234,6 +1483,9 @@
       },
       "entities": {
         "branch": "default",
+        "project": "1"
+      },
+      "encodedEntities": {
         "project": "1"
       },
       "wildcards": [],
@@ -2846,5 +3098,125 @@
       "note": "leading zero in a numeric ID is rejected, not normalized"
     }
   ],
-  "canonicalOrder": "ascii"
+  "canonicalOrder": "ascii",
+  "encodeValue": [
+    {
+      "raw": "*",
+      "encoded": "%2A",
+      "note": "a whole star is a literal, never the wildcard"
+    },
+    {
+      "raw": "a*b",
+      "encoded": "a%2Ab"
+    },
+    {
+      "raw": "my config",
+      "encoded": "my%20config"
+    },
+    {
+      "raw": "in.c-main",
+      "encoded": "in.c-main",
+      "note": "unencoded bytes stay as they are"
+    },
+    {
+      "raw": "A-Za_z0.9",
+      "encoded": "A-Za_z0.9"
+    },
+    {
+      "raw": "a~b+c:d/e%f!g(h)i'j",
+      "encoded": "a%7Eb%2Bc%3Ad%2Fe%25f%21g%28h%29i%27j"
+    },
+    {
+      "raw": "dev",
+      "encoded": "dev",
+      "note": "no entity, so branch values have no special meaning"
+    },
+    {
+      "raw": "řeší",
+      "encoded": "%C5%99e%C5%A1%C3%AD"
+    },
+    {
+      "raw": "﻿x",
+      "encoded": "%EF%BB%BFx",
+      "note": "a leading BOM is kept"
+    },
+    {
+      "raw": "é",
+      "encoded": "e%CC%81",
+      "note": "no Unicode normalization"
+    },
+    {
+      "raw": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "encoded": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "note": "255 raw bytes is the limit"
+    },
+    {
+      "raw": 9876,
+      "encoded": "9876",
+      "note": "integers are converted to their decimal string form"
+    },
+    {
+      "raw": 0,
+      "encoded": "0"
+    }
+  ],
+  "encodeValueInvalid": [
+    {
+      "raw": "",
+      "code": "bad_value",
+      "segment": null,
+      "note": "empty value"
+    },
+    {
+      "raw": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "code": "too_long",
+      "segment": null,
+      "note": "256 raw bytes"
+    },
+    {
+      "rawHex": "ff",
+      "code": "bad_utf8",
+      "segment": null,
+      "note": "invalid raw UTF-8 byte"
+    },
+    {
+      "rawHex": "eda080",
+      "code": "bad_utf8",
+      "segment": null,
+      "note": "UTF-8 encoded surrogate"
+    },
+    {
+      "rawHex": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "code": "too_long",
+      "segment": null,
+      "note": "length is checked before UTF-8 validity"
+    },
+    {
+      "raw": null,
+      "code": "bad_value",
+      "segment": null,
+      "note": "null is not a string",
+      "skip": [
+        "go"
+      ]
+    },
+    {
+      "raw": true,
+      "code": "bad_value",
+      "segment": null,
+      "note": "bool is not a string",
+      "skip": [
+        "go"
+      ]
+    },
+    {
+      "raw": 1.5,
+      "code": "bad_value",
+      "segment": null,
+      "note": "float is not a string",
+      "skip": [
+        "go"
+      ]
+    }
+  ]
 }
