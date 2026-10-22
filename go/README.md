@@ -55,7 +55,8 @@ fmt.Println(value.ToMap())     // map[branch:default config:my config project:98
   `ToMap()` returns `stack` plus the decoded entities as one flat map (SPEC `toArray()`).
 - Constants: `EntityMaintainer`, `EntityOrg`, `EntityProject`, `EntityBranch`,
   `EntityBucket`, `EntityTable`, `EntityComponent`, `EntityConfig`, `EntityRow`,
-  `EntityWorkspace`, `EntityUser`, `EntityApp`, `EntityStream`, `DefaultBranch`.
+  `EntityWorkspace`, `EntityUser`, `EntityApp`, `EntityStream`, `EntityServiceAccount`,
+  `EntityRole`, `DefaultBranch`.
   Ordinary strings support the open catalog.
 
 `Kid` is a comparable value type with no exported state: factories validate and
@@ -65,8 +66,8 @@ entity and `Parse` rejects it. Input and output maps do not alias internal state
 
 `New` takes `map[string]string`, so numeric IDs are passed as their decimal strings
 (`strconv.Itoa(9876)`); this is the Go counterpart of the integer conversion in
-SPEC §8. `maintainer`, `org`, `project` and `branch` reject leading zeros
-(`project-007` is `bad_value`); `0` is accepted. Open-catalog values keep their bytes.
+SPEC §8. `maintainer`, `org`, `project`, `branch`, `user`, `workspace` and
+`serviceaccount` reject leading zeros (`project-007` is `bad_value`); `0` is accepted. Open-catalog values keep their bytes.
 
 When a KID carries no `branch`, every reader falls back to the default branch:
 `Branch()`, `Get("branch")`, `Entities()` and `ToMap()` report `"default"` and

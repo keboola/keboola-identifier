@@ -16,19 +16,21 @@ import (
 
 // Entity names of the launch catalog (SPEC §4.3); any other syntactically valid name is an open entity.
 const (
-	EntityMaintainer = "maintainer"
-	EntityOrg        = "org"
-	EntityProject    = "project"
-	EntityBranch     = "branch"
-	EntityBucket     = "bucket"
-	EntityTable      = "table"
-	EntityComponent  = "component"
-	EntityConfig     = "config"
-	EntityRow        = "row"
-	EntityWorkspace  = "workspace"
-	EntityUser       = "user"
-	EntityApp        = "app"
-	EntityStream     = "stream"
+	EntityMaintainer     = "maintainer"
+	EntityOrg            = "org"
+	EntityProject        = "project"
+	EntityBranch         = "branch"
+	EntityBucket         = "bucket"
+	EntityTable          = "table"
+	EntityComponent      = "component"
+	EntityConfig         = "config"
+	EntityRow            = "row"
+	EntityWorkspace      = "workspace"
+	EntityUser           = "user"
+	EntityApp            = "app"
+	EntityStream         = "stream"
+	EntityServiceAccount = "serviceaccount"
+	EntityRole           = "role"
 	// DefaultBranch is what Branch, Get and Entities report when a KID carries no branch (SPEC §4.2).
 	DefaultBranch = "default"
 	unencoded     = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789._-"
@@ -70,7 +72,7 @@ func checkEntity(entity, segment string) error {
 func checkValue(entity, value, segment string) error {
 	valid := value != ""
 	switch entity {
-	case EntityMaintainer, EntityOrg, EntityProject, EntityBranch:
+	case EntityMaintainer, EntityOrg, EntityProject, EntityBranch, EntityUser, EntityWorkspace, EntityServiceAccount:
 		valid = value == "*" || numberPattern.MatchString(value) || (entity == EntityBranch && (value == "dev" || value == DefaultBranch))
 	}
 	if !valid {
