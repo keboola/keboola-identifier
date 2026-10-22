@@ -56,14 +56,15 @@ assert kid.parse("KID:s:project-1").to_dict() == {"stack": "s", "branch": "defau
   `TypeError` as for any object; serialize `str(value)` instead.
 - `Entity` is a `StrEnum` of the launch catalog (`MAINTAINER`, `ORG`, `PROJECT`,
   `BRANCH`, `BUCKET`, `TABLE`, `COMPONENT`, `CONFIG`, `ROW`, `WORKSPACE`, `USER`,
-  `APP`, `STREAM`). Plain strings also support the open catalog. `DEFAULT_BRANCH`
+  `APP`, `STREAM`, `SERVICE_ACCOUNT`, `ROLE`). Plain strings also support the open catalog. `DEFAULT_BRANCH`
   is the `"default"` fallback value.
 
 `create()` accepts decoded string values and integers, which it converts to their
 decimal string form (`{"project": 9876}` equals `{"project": "9876"}`; `-1` becomes
 `"-1"` and fails the numeric entity sets). `bool` is an `int` subclass in Python but
 is rejected like floats, bytes, `None` and containers (`bad_value`). Numeric IDs of
-`maintainer`, `org`, `project` and `branch` must not have leading zeros (`bad_value`);
+`maintainer`, `org`, `project`, `branch`, `user`, `workspace` and `serviceaccount`
+must not have leading zeros (`bad_value`);
 `0` is accepted. Open-catalog values keep their characters as given. An integer
 beyond CPython's int-to-str digit limit is rendered anyway and fails the usual
 checks in order, ending in `too_long`. `dataclasses.asdict()` is
