@@ -230,6 +230,17 @@ final class KidTest extends TestCase
         self::assertSame('007', Kid::create('s', ['config' => '007'])->get('config'));
     }
 
+    public function testUserWorkspaceAndServiceAccountTakeNumericIds(): void
+    {
+        $this->assertInvalid(static fn() => Kid::create('s', ['user' => '007']), 'bad_value', 'user-007');
+        $this->assertInvalid(static fn() => Kid::parse('KID:s:workspace-01'), 'bad_value', 'workspace-01');
+        $this->assertInvalid(static fn() => Kid::create('s', ['serviceaccount' => 'abc']), 'bad_value', 'serviceaccount-abc');
+        self::assertSame('7', Kid::create('s', ['org' => 5, 'serviceaccount' => 7])->get('serviceaccount'));
+        self::assertTrue(Kid::parse('KID:s:org-5:user-*')->isWildcard('user'));
+        // role stays an open-catalog value: a role definition id.
+        self::assertSame('0192f3a4-7b8c-7d9e-a1b2-c3d4e5f60718', Kid::parse('KID:s:org-5:role-0192f3a4-7b8c-7d9e-a1b2-c3d4e5f60718')->get('role'));
+    }
+
     public function testInstanceStateIsImmutableAndCanonicalOnly(): void
     {
         $class = new ReflectionClass(Kid::class);

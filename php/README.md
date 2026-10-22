@@ -48,8 +48,8 @@ a negative integer becomes `"-1"` and fails the numeric entity sets). Booleans, 
 null, arrays and stringable objects raise `bad_value`. It validates in map iteration order.
 Raw strings must be valid UTF-8; bytes, including leading U+FEFF, NUL and control
 characters, are preserved without trimming or Unicode normalization.
-Numeric IDs of `maintainer`, `org`, `project` and `branch` must not have leading zeros
-(`bad_value`); `0` is accepted. Open-catalog values keep their bytes as given.
+Numeric IDs of `maintainer`, `org`, `project`, `branch`, `user`, `workspace` and
+`serviceaccount` must not have leading zeros (`bad_value`); `0` is accepted. Open-catalog values keep their bytes as given.
 
 The stack must also be a string, even when the caller does not enable
 `strict_types`. Other stack types raise `bad_stack` without conversion, before
