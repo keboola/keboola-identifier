@@ -7,6 +7,7 @@ export declare const Entity: Readonly<{
   MAINTAINER: 'maintainer'; ORG: 'org'; PROJECT: 'project'; BRANCH: 'branch';
   BUCKET: 'bucket'; TABLE: 'table'; COMPONENT: 'component'; CONFIG: 'config';
   ROW: 'row'; WORKSPACE: 'workspace'; USER: 'user'; APP: 'app'; STREAM: 'stream';
+  SERVICE_ACCOUNT: 'serviceaccount'; ROLE: 'role';
 }>;
 export declare const DEFAULT_BRANCH: 'default';
 export declare class InvalidKidError extends Error {

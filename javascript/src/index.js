@@ -8,6 +8,7 @@ export const Entity = Object.freeze({
   MAINTAINER: 'maintainer', ORG: 'org', PROJECT: 'project', BRANCH: 'branch',
   BUCKET: 'bucket', TABLE: 'table', COMPONENT: 'component', CONFIG: 'config',
   ROW: 'row', WORKSPACE: 'workspace', USER: 'user', APP: 'app', STREAM: 'stream',
+  SERVICE_ACCOUNT: 'serviceaccount', ROLE: 'role',
 });
 
 /** What branch(), get('branch'), entities() and toObject() report when a KID carries no branch (SPEC §4.2). */
@@ -36,7 +37,7 @@ function checkEntity(entity, segment) {
 
 function checkValue(entity, value, segment) {
   let valid = value.length > 0;
-  if (['maintainer', 'org', 'project', 'branch'].includes(entity)) {
+  if (['maintainer', 'org', 'project', 'branch', 'user', 'workspace', 'serviceaccount'].includes(entity)) {
     // No leading zeros: project-007 would be a second identity for project 7 (SPEC §4.1).
     valid = value === '*' || /^(?:0|[1-9][0-9]*)(?![\s\S])/.test(value)
       || (entity === 'branch' && ['dev', DEFAULT_BRANCH].includes(value));

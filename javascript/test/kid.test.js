@@ -160,6 +160,16 @@ test('leading zeros in numeric IDs are rejected, not normalized', () => {
   assert.equal(Kid.create('s', { config: '007' }).get('config'), '007');
 });
 
+test('user, workspace and serviceaccount take numeric IDs', () => {
+  assert.throws(() => Kid.create('s', { [Entity.USER]: '007' }), errorIs('bad_value', 'user-007'));
+  assert.throws(() => Kid.parse('KID:s:workspace-01'), errorIs('bad_value', 'workspace-01'));
+  assert.throws(() => Kid.create('s', { [Entity.SERVICE_ACCOUNT]: 'abc' }), errorIs('bad_value', 'serviceaccount-abc'));
+  assert.equal(Kid.create('s', { org: 5, serviceaccount: 7 }).get(Entity.SERVICE_ACCOUNT), '7');
+  assert.equal(Kid.parse('KID:s:org-5:user-*').isWildcard(Entity.USER), true);
+  // role stays an open-catalog value: a role definition id.
+  assert.equal(Kid.parse('KID:s:org-5:role-0192f3a4-7b8c-7d9e-a1b2-c3d4e5f60718').get(Entity.ROLE), '0192f3a4-7b8c-7d9e-a1b2-c3d4e5f60718');
+});
+
 test('strict inputs, precedence and immutable state', () => {
   for (const stack of [1, true, null, undefined, {}, [], new String('s')]) {
     assert.throws(() => Kid.create(stack, { Bad: '' }), errorIs('bad_stack'));

@@ -49,7 +49,8 @@ console.log(Kid.parse('KID:s:project-1').toObject()); // { stack: 's', branch: '
   `structuredClone(kid)` cannot see the private state and yields `{}`; clone the
   string instead.
 - `Entity` is a frozen constants object: `MAINTAINER`, `ORG`, `PROJECT`, `BRANCH`,
-  `BUCKET`, `TABLE`, `COMPONENT`, `CONFIG`, `ROW`, `WORKSPACE`, `USER`, `APP`, `STREAM`.
+  `BUCKET`, `TABLE`, `COMPONENT`, `CONFIG`, `ROW`, `WORKSPACE`, `USER`, `APP`, `STREAM`,
+  `SERVICE_ACCOUNT`, `ROLE`.
   Unknown entity names are accepted as plain strings. `DEFAULT_BRANCH` is `'default'`.
 
 Instances are frozen and keep their canonical text private. Use factories rather
@@ -68,8 +69,8 @@ and `bigint` values for IDs beyond `Number.MAX_SAFE_INTEGER`. A JavaScript numbe
 has no integer type, so `1.0` and `1e2` are the integers `1` and `100`. A negative
 integer becomes `'-1'` and fails the numeric entity sets. Non-integer numbers, unsafe
 integers, booleans, `null`, wrapper objects and containers raise `bad_value`.
-Numeric IDs of `maintainer`, `org`, `project` and `branch` must not have leading
-zeros (`bad_value`); `0` is accepted. Open-catalog values keep their characters.
+Numeric IDs of `maintainer`, `org`, `project`, `branch`, `user`, `workspace` and
+`serviceaccount` must not have leading zeros (`bad_value`); `0` is accepted. Open-catalog values keep their characters.
 
 Failures raise `InvalidKidError extends Error`, with `code` and optional `segment`.
 See SPEC §8 for precedence. `validate()` and `isCanonical()` return false for invalid
