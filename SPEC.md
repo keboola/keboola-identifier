@@ -77,15 +77,15 @@ Connection, not of this specification.
 - `stack` is reserved for the mandatory stack field and is not an entity name.
   A segment using it, such as `stack-x`, is `bad_segment`.
 - The catalog of entities is **open**: an unknown entity passes validation and its value is
-  treated as an opaque string. Known entities are listed in §4.3. The hierarchy
-  entities have dedicated accessors and the value constraints in §4.1; other
-  entities use the general value rules in §5.
+  treated as an opaque string. Known entities are listed in §4.3. The entities in §4.1
+  have constrained values, and the hierarchy entities among them also have dedicated
+  accessors; other entities use the general value rules in §5.
 - No aliases: one object kind has exactly one registered entity name. Unknown names
   remain opaque entities; they are never translated to known names or read by typed accessors.
 - Combinations are not interpreted. `project-1:user-5` is syntactically valid; what it means is
   defined by the producer.
 
-### 4.1 Hierarchy entities with constrained values
+### 4.1 Entities with constrained values
 
 | Entity | Meaning | Allowed values |
 |---|---|---|
@@ -93,6 +93,12 @@ Connection, not of this specification.
 | `org` | organization | `^(0|[1-9][0-9]*)$` or `*` |
 | `project` | project | `^(0|[1-9][0-9]*)$` or `*` |
 | `branch` | branch | `^(0|[1-9][0-9]*)$`, `dev`, `default` or `*` |
+| `user` | user | `^(0|[1-9][0-9]*)$` or `*` |
+| `workspace` | workspace | `^(0|[1-9][0-9]*)$` or `*` |
+| `serviceaccount` | service account | `^(0|[1-9][0-9]*)$` or `*` |
+
+The first four are the hierarchy entities with dedicated accessors (§9). `user`, `workspace`
+and `serviceaccount` have numeric ids in the platform and are read with `get()`.
 
 Any other value for these entities is `bad_value`, including a numeric ID with leading
 zeros: `project-007` would otherwise be a second canonical identity for project 7, and
@@ -137,9 +143,9 @@ and canonical serialization sorts every entity by its name using ASCII byte orde
 | `component` | component id (`keboola.ex-db-snowflake`) | `project`, `branch` | classification, not ownership |
 | `config` | configuration id | `component` | user-supplied string, ≤ 100 chars in Connection |
 | `row` | configuration row id | `config` | user-supplied string, ≤ 100 chars in Connection (`rowId VARCHAR(100)`) |
-| `workspace` | number | `project`, `branch` | a workspace always belongs to one branch |
-| `user` | number | | no project |
-| `serviceaccount` | number | `org` | an organization-owned machine principal (§4.3.1) |
+| `workspace` | number, `*` | `project`, `branch` | a workspace always belongs to one branch |
+| `user` | number, `*` | | no project |
+| `serviceaccount` | number, `*` | `org` | an organization-owned machine principal (§4.3.1) |
 | `role` | role definition id | `org` | built-in and custom role definitions (§4.3.1) |
 | `app`, `stream` | object id | `project`, `branch` | a data app is a configuration (≤ 100); stream ids are not stored by Connection and are bounded only by the 255-byte value cap (§7) |
 
@@ -274,7 +280,7 @@ yield the same code everywhere:
 | 4a | segment is non-empty (also covers a trailing colon) | `empty_segment` |
 | 4b | segment contains a hyphen and the entity part matches `^[a-z][a-z0-9]*$` and is not the reserved name `stack` | `bad_segment` |
 | 4c | the entity has not occurred before | `duplicate_entity` (reachable only from text input; `create()` receives a map whose keys are unique by construction) |
-| 4d | value is non-empty; for `maintainer`/`org`/`project`/`branch` it is in the allowed set; otherwise it is exactly `*`, or every character is one of `A-Z a-z 0-9 . _ -` or `%` (structure only; a bare `*` anywhere in a longer value fails here) | `bad_value` |
+| 4d | value is non-empty; for an entity of §4.1 it is in the allowed set; otherwise it is exactly `*`, or every character is one of `A-Z a-z 0-9 . _ -` or `%` (structure only; a bare `*` anywhere in a longer value fails here) | `bad_value` |
 | 4e | every `%` is followed by exactly two **uppercase** hex digits, and no escape encodes a byte from the unencoded set (`%69`, `%2E`, `%2D` are non-canonical); a `%` at the end, `%F`, `%2a`, `%zz` all fail here | `non_canonical_encoding` |
 | 4f | the decoded value is valid UTF-8 | `bad_utf8` |
 | 4g | the decoded value is ≤ 255 bytes | `too_long` (with `segment` set; check 2 reports `too_long` without a segment, which is how a consumer tells "shorten this value" from "drop an entity") |
@@ -401,7 +407,7 @@ installation and usage examples.
   `branch-default`, both together);
 - invalid inputs with the expected error code, including: each error code at least once,
   `%2A` vs `*`, bare `*` inside a value, `%2a`, `%69`, trailing `%`, `%F`, empty value,
-  `project-abc`, `project-001` (leading zero), `branch-main`, duplicate entity, uppercase entity, missing hyphen, 2048 vs 2049
+  `project-abc`, `project-001` (leading zero), the same rules for `user`, `workspace` and `serviceaccount`, `branch-main`, duplicate entity, uppercase entity, missing hyphen, 2048 vs 2049
   bytes, a 255- vs 256-byte raw value, invalid UTF-8 (`%FF`), `+` and `~` handling, a
   multibyte UTF-8 value, `isCanonical` on invalid input (false);
 - `create()` cases: raw value → canonical, entities given in non-canonical order → canonical, `branch-default` dropped, integer values converted, other non-string input rejected, invalid UTF-8 rejected;
