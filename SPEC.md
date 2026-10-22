@@ -139,7 +139,23 @@ and canonical serialization sorts every entity by its name using ASCII byte orde
 | `row` | configuration row id | `config` | user-supplied string, ≤ 100 chars in Connection (`rowId VARCHAR(100)`) |
 | `workspace` | number | `project`, `branch` | a workspace always belongs to one branch |
 | `user` | number | | no project |
+| `serviceaccount` | number | `org` | an organization-owned machine principal (§4.3.1) |
+| `role` | role definition id | `org` | built-in and custom role definitions (§4.3.1) |
 | `app`, `stream` | object id | `project`, `branch` | a data app is a configuration (≤ 100); stream ids are not stored by Connection and are bounded only by the 255-byte value cap (§7) |
+
+#### 4.3.1 Principals and roles
+
+- `serviceaccount` is a Keboola service account: a machine principal owned by an organization.
+  It is not a Kubernetes ServiceAccount, which is deployment infrastructure and not a KID
+  object. The value is the service account's admin id, the same numbering as `user`.
+  `user-7` and `serviceaccount-7` are different KIDs: the entity name states which kind of
+  principal a producer means. `sa` or `service-account` are not registered; the entity regex
+  forbids the hyphen.
+- `role` is a role **definition**, identified by its stable server-assigned id. Built-in
+  definitions, including the project roles `admin`, `readOnly` and others, are role definitions
+  with ids of their own; their names are never `role` values. A custom definition belongs to
+  one organization and is usually written with `org`; a built-in definition is stack-global and
+  has no `org`. Producers write the id exactly as the server stores it (lowercase UUID text).
 
 Parent relationships (`table` under `bucket`, `row` under `config` under `component`) are
 **not enforced** by the library. They describe the object relationships represented
