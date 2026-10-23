@@ -21,6 +21,8 @@ class Entity(StrEnum):
     USER = "user"
     APP = "app"
     STREAM = "stream"
+    SERVICE_ACCOUNT = "serviceaccount"
+    ROLE = "role"
 
 
 #: What ``branch``, ``get("branch")``, ``entities()`` and ``to_dict()`` report when a KID
@@ -80,7 +82,7 @@ def _entity(entity: str, segment: str | None) -> None:
 
 def _value(entity: str, value: str, segment: str | None) -> None:
     valid = bool(value)
-    if entity in ("maintainer", "org", "project", "branch"):
+    if entity in ("maintainer", "org", "project", "branch", "user", "workspace", "serviceaccount"):
         # No leading zeros: project-007 would be a second identity for project 7 (SPEC §4.1).
         valid = value == "*" or re.fullmatch(r"0|[1-9][0-9]*", value) is not None
         if entity == "branch" and value in ("dev", DEFAULT_BRANCH):

@@ -178,6 +178,15 @@ class PythonTest(ErrorAssertions):
         # Open-catalog entities keep their value bytes as given.
         self.assertEqual("007", Kid.create("s", {"config": "007"}).get("config"))
 
+    def test_user_workspace_and_service_account_take_numeric_ids(self):
+        self.assert_error(lambda: Kid.create("s", {Entity.USER: "007"}), "bad_value", "user-007")
+        self.assert_error(lambda: Kid.parse("KID:s:workspace-01"), "bad_value", "workspace-01")
+        self.assert_error(lambda: Kid.create("s", {Entity.SERVICE_ACCOUNT: "abc"}), "bad_value", "serviceaccount-abc")
+        self.assertEqual("7", Kid.create("s", {"org": 5, "serviceaccount": 7}).get(Entity.SERVICE_ACCOUNT))
+        self.assertTrue(Kid.parse("KID:s:org-5:user-*").is_wildcard(Entity.USER))
+        # role stays an open-catalog value: a role definition id.
+        self.assertEqual("0192f3a4-7b8c-7d9e-a1b2-c3d4e5f60718", Kid.parse("KID:s:org-5:role-0192f3a4-7b8c-7d9e-a1b2-c3d4e5f60718").get(Entity.ROLE))
+
     def test_pickle_round_trips_through_canonical_form(self):
         value = Kid.parse("KID:s:project-1:branch-default:config-my%20config")
         restored = pickle.loads(pickle.dumps(value))

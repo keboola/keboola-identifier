@@ -39,7 +39,8 @@ implement this contract and are tested against the shared test vectors.
 - Entity order has no effect on identity. Canonical output sorts all entities by
   ASCII name, without exceptions. Segments split on their first hyphen.
 - `maintainer`, `org`, `project` and `branch` identify their respective platform objects.
-- Their numeric IDs have no leading zeros (`project-007` is `bad_value`); `0` is valid.
+- `maintainer`, `org`, `project`, `branch`, `user`, `workspace` and `serviceaccount` take
+  numeric IDs without leading zeros (`project-007` is `bad_value`); `0` is valid.
 - `branch-default` is accepted but omitted from canonical output.
 - Bare `*` is a wildcard. `branch-dev` is also a pattern, but not a wildcard.
 - Values use the fixed encoding table in §5, without trimming or Unicode normalization.

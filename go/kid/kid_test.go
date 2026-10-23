@@ -269,6 +269,28 @@ func TestLeadingZerosAreRejectedNotNormalized(t *testing.T) {
 	}
 }
 
+func TestUserWorkspaceAndServiceAccountTakeNumericIds(t *testing.T) {
+	_, err := kid.New("s", map[string]string{kid.EntityUser: "007"})
+	checkError(t, err, "bad_value", "user-007")
+	_, err = kid.Parse("KID:s:workspace-01")
+	checkError(t, err, "bad_value", "workspace-01")
+	_, err = kid.New("s", map[string]string{kid.EntityServiceAccount: "abc"})
+	checkError(t, err, "bad_value", "serviceaccount-abc")
+	account, err := kid.New("s", map[string]string{kid.EntityOrg: "5", kid.EntityServiceAccount: "7"})
+	if value, ok := account.Get(kid.EntityServiceAccount); err != nil || !ok || value != "7" {
+		t.Fatal("service account", err)
+	}
+	pattern, err := kid.Parse("KID:s:org-5:user-*")
+	if err != nil || !pattern.IsWildcard(kid.EntityUser) {
+		t.Fatal("user wildcard", err)
+	}
+	// role stays an open-catalog value: a role definition id.
+	role, err := kid.Parse("KID:s:org-5:role-0192f3a4-7b8c-7d9e-a1b2-c3d4e5f60718")
+	if value, _ := role.Get(kid.EntityRole); err != nil || value != "0192f3a4-7b8c-7d9e-a1b2-c3d4e5f60718" {
+		t.Fatal("role id", err)
+	}
+}
+
 func TestNewChecksEntitiesInNameOrder(t *testing.T) {
 	entities := map[string]string{"zeta": "", "project": "abc", "Bad": "x", "alpha": ""}
 	for i := 0; i < 50; i++ {

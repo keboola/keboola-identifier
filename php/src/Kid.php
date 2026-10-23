@@ -275,7 +275,7 @@ final readonly class Kid implements \Stringable, \JsonSerializable
     {
         $valid = match ($entity) {
             // No leading zeros: `project-007` would be a second identity for project 7 (§4.1).
-            'maintainer', 'org', 'project' => preg_match('/\A(?:0|[1-9][0-9]*|\*)\z/', $value) === 1,
+            'maintainer', 'org', 'project', 'user', 'workspace', 'serviceaccount' => preg_match('/\A(?:0|[1-9][0-9]*|\*)\z/', $value) === 1,
             'branch' => preg_match('/\A(?:0|[1-9][0-9]*|dev|default|\*)\z/', $value) === 1,
             default => $value !== '',
         };

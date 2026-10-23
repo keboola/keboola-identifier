@@ -1493,6 +1493,127 @@
       "isCanonical": true,
       "branch": "default",
       "note": "flat toArray() result with string-valued numeric project ID"
+    },
+    {
+      "input": "KID:kbc-eu-central-1:serviceaccount-7:org-5",
+      "canonical": "KID:kbc-eu-central-1:org-5:serviceaccount-7",
+      "array": {
+        "stack": "kbc-eu-central-1",
+        "branch": "default",
+        "org": "5",
+        "serviceaccount": "7"
+      },
+      "entities": {
+        "branch": "default",
+        "org": "5",
+        "serviceaccount": "7"
+      },
+      "encodedEntities": {
+        "org": "5",
+        "serviceaccount": "7"
+      },
+      "wildcards": [],
+      "isPattern": false,
+      "isCanonical": false,
+      "branch": "default",
+      "note": "service account 7 owned by organization 5"
+    },
+    {
+      "input": "KID:kbc-eu-central-1:org-5:serviceaccount-*",
+      "canonical": "KID:kbc-eu-central-1:org-5:serviceaccount-*",
+      "array": {
+        "stack": "kbc-eu-central-1",
+        "branch": "default",
+        "org": "5",
+        "serviceaccount": "*"
+      },
+      "entities": {
+        "branch": "default",
+        "org": "5",
+        "serviceaccount": "*"
+      },
+      "encodedEntities": {
+        "org": "5",
+        "serviceaccount": "*"
+      },
+      "wildcards": [
+        "serviceaccount"
+      ],
+      "isPattern": true,
+      "isCanonical": true,
+      "branch": "default",
+      "note": "every service account of organization 5"
+    },
+    {
+      "input": "KID:kbc-eu-central-1:org-5:role-0192f3a4-7b8c-7d9e-a1b2-c3d4e5f60718",
+      "canonical": "KID:kbc-eu-central-1:org-5:role-0192f3a4-7b8c-7d9e-a1b2-c3d4e5f60718",
+      "array": {
+        "stack": "kbc-eu-central-1",
+        "branch": "default",
+        "org": "5",
+        "role": "0192f3a4-7b8c-7d9e-a1b2-c3d4e5f60718"
+      },
+      "entities": {
+        "branch": "default",
+        "org": "5",
+        "role": "0192f3a4-7b8c-7d9e-a1b2-c3d4e5f60718"
+      },
+      "encodedEntities": {
+        "org": "5",
+        "role": "0192f3a4-7b8c-7d9e-a1b2-c3d4e5f60718"
+      },
+      "wildcards": [],
+      "isPattern": false,
+      "isCanonical": true,
+      "branch": "default",
+      "note": "role is a role definition id, an open-catalog value"
+    },
+    {
+      "input": "KID:kbc-eu-central-1:user-0",
+      "canonical": "KID:kbc-eu-central-1:user-0",
+      "array": {
+        "stack": "kbc-eu-central-1",
+        "branch": "default",
+        "user": "0"
+      },
+      "entities": {
+        "branch": "default",
+        "user": "0"
+      },
+      "encodedEntities": {
+        "user": "0"
+      },
+      "wildcards": [],
+      "isPattern": false,
+      "isCanonical": true,
+      "branch": "default",
+      "note": "zero is a valid user id"
+    },
+    {
+      "input": "KID:kbc-eu-central-1:workspace-*:project-9876",
+      "canonical": "KID:kbc-eu-central-1:project-9876:workspace-*",
+      "array": {
+        "stack": "kbc-eu-central-1",
+        "branch": "default",
+        "project": "9876",
+        "workspace": "*"
+      },
+      "entities": {
+        "branch": "default",
+        "project": "9876",
+        "workspace": "*"
+      },
+      "encodedEntities": {
+        "project": "9876",
+        "workspace": "*"
+      },
+      "wildcards": [
+        "workspace"
+      ],
+      "isPattern": true,
+      "isCanonical": false,
+      "branch": "default",
+      "note": "every workspace of project 9876"
     }
   ],
   "invalid": [
@@ -2229,6 +2350,35 @@
       "code": "bad_value",
       "segment": "branch-001",
       "note": "leading zero in a numeric ID would alias another identity"
+    },
+    {
+      "input": "KID:s:user-007",
+      "code": "bad_value",
+      "segment": "user-007",
+      "note": "user ids have no leading zeros"
+    },
+    {
+      "input": "KID:s:workspace-abc",
+      "code": "bad_value",
+      "segment": "workspace-abc",
+      "note": "workspace ids are numbers"
+    },
+    {
+      "input": "KID:s:org-5:serviceaccount-01",
+      "code": "bad_value",
+      "segment": "serviceaccount-01",
+      "note": "service account ids have no leading zeros"
+    },
+    {
+      "input": "KID:s:org-5:serviceaccount-%2A",
+      "code": "bad_value",
+      "segment": "serviceaccount-%2A",
+      "note": "constrained entities take digits or a bare *, never an encoded star"
+    },
+    {
+      "input": "KID:s:user-*1",
+      "code": "bad_value",
+      "segment": "user-*1"
     }
   ],
   "create": [
@@ -2582,6 +2732,29 @@
         "tail": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
       },
       "canonical": "KID:s:branch-4:extra0-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra1-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra2-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra3-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra4-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra5-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:extra6-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:maintainer-1:org-2:project-3:tail-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "serviceaccount": 7,
+        "org": 5
+      },
+      "canonical": "KID:s:org-5:serviceaccount-7"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "user": "0"
+      },
+      "canonical": "KID:s:user-0"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "role": "0192f3a4-7b8c-7d9e-a1b2-c3d4e5f60718",
+        "org": "5"
+      },
+      "canonical": "KID:s:org-5:role-0192f3a4-7b8c-7d9e-a1b2-c3d4e5f60718"
     }
   ],
   "createInvalid": [
@@ -3096,6 +3269,39 @@
       "code": "bad_value",
       "segment": "branch-001",
       "note": "leading zero in a numeric ID is rejected, not normalized"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "user": "007"
+      },
+      "code": "bad_value",
+      "segment": "user-007"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "workspace": "abc"
+      },
+      "code": "bad_value",
+      "segment": "workspace-abc"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "serviceaccount": "*1"
+      },
+      "code": "bad_value",
+      "segment": "serviceaccount-*1"
+    },
+    {
+      "stack": "s",
+      "entities": {
+        "serviceaccount": -1
+      },
+      "code": "bad_value",
+      "segment": "serviceaccount--1",
+      "note": "a negative integer fails the numeric set"
     }
   ],
   "canonicalOrder": "ascii",
